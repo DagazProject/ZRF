@@ -1,0 +1,40 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=SimpleShogi.zrf
+VariantName=Simple Shogi
+1. King b1 - a2
+1. King b5 - c4
+2. King a2 - a3
+2. King c4 - c3
+3. King a3 - a2
+3. Silver m5 - a4
+4. Silver z1 - c1
+4. Silver a4 - b5
+5. Pawn b2 - b3
+5. Pawn b4 x b3 Pawn b3 - m5 flip m5
+6. Gold y1 - c2
+6. King c3 - b4
+7. Gold c2 x b3 Pawn b3 - y1 flip y1
+7. King b4 - c5
+8. Silver c1 - c2
+8. Pawn m5 - b4
+9. Gold b3 - b2
+9. Silver b5 - a4
+10. Gold b2 - a3
+10. King c5 - b5
+11. Gold a3 x a4 Silver a4 - z1 flip z1
+11. King b5 x a4 Gold a4 - m5 flip m5
+12. Silver z1 - a3
+12. King a4 - b5
+13. Pawn y1 - b3
+13. Pawn b4 x b3 Pawn b3 - n4 flip n4
+14. Silver c2 x b3 Pawn b3 - y1 flip y1
+14. Gold n5 - a5
+15. Pawn y1 - a4
+15. King b5 - c5
+16. Pawn a4 x a5 Gold a5 - y1 = PawnP on a5 flip y1
+16. Gold m5 - a1
+17. King a2 x a1 Gold a1 - z1 flip z1
+17. Pawn n4 - a2
+18. King a1 - b2
+18. Pawn a2 - a1 = PawnP
+19. Silver a3 - b4

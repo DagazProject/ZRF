@@ -1,0 +1,362 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=Cyvasse.zrf
+VariantName=Nine-Tile Cyvasse
+1. White Mount d6
+1. White Mount i7
+1. White Mount f8
+1. White Mount h8
+1. White King j8 x a9
+1. White Tower c6
+1. White Tower h6
+1. White Dragon e6
+1. White LightHorse g6
+1. White LightHorse f7
+1. White LightHorse f6
+1. White HeavyHorse k8
+1. White HeavyHorse e7
+1. White Crossbow i6
+1. White Crossbow h9
+1. White Rabble e8
+1. White Rabble k6
+1. White Rabble j7
+1. White Rabble h7
+1. White Rabble g8
+1. White Rabble d7
+1. White Elephant k7
+1. White Trebuchet i8
+1. White Elephant g7
+1. White Spears k9
+1. White Spears d8
+1. White Spears l9
+1. Black Mount h2
+1. Black Mount f1
+1. Black Mount g2
+1. Black Mount c2
+1. Black King e2 x a8
+1. Black Tower c1
+1. Black Tower e1
+1. Black Dragon f4
+1. Black LightHorse h4
+1. Black LightHorse f3
+1. Black LightHorse d4
+1. Black HeavyHorse e3
+1. Black HeavyHorse d3
+1. Black Crossbow a3
+1. Black Crossbow b4
+1. Black Elephant j4
+1. Black Elephant c4
+1. Black Rabble b2
+1. Black Rabble i3
+1. Black Rabble i4
+1. Black Rabble g3
+1. Black Rabble d2
+1. Black Rabble g4
+1. Black Trebuchet b3
+1. Black Spears i2
+1. Black Spears k4
+1. Black Spears e4
+2. HeavyHorse e7 - d5
+2. HeavyHorse d3 x d5
+3. LightHorse f7 x d5
+3. LightHorse d4 x d5
+4. Dragon e6 - g5
+4. Rabble g4 - h5 Black Point a8 @ h5 0 1
+5. Pass
+5. Rabble d2 - d3 @ h5 0 0 x a8
+6. Dragon g5 x h5
+6. LightHorse f3 x f6
+7. Elephant g7 x f6
+7. Elephant c4 x c6
+8. Rabble e8 - e7 White Point a8 @ e7 0 1
+8. Pass
+9. Rabble h7 - g7 @ e7 0 0 x a8
+9. Elephant c6 x d7
+10. Spears d8 x d7
+10. Crossbow a3 - c5
+11. Rabble g7 - h7 White Point a8 @ h7 0 1
+11. Pass
+12. Rabble e7 - e6 @ h7 0 0 x a8
+12. Trebuchet b3 - a2 x e6
+13. Trebuchet i8 - j9 x e4
+13. Dragon f4 - e7
+14. Spears d7 - c6
+14. Rabble i4 - j5 Black Point a8 @ j5 0 1
+15. Pass
+15. Rabble i3 - i4 @ j5 0 0 x a8
+16. Spears c6 x c5
+16. LightHorse d5 x c5
+17. Rabble k6 x j5
+17. Rabble i4 x j5
+18. Trebuchet j9 - i8
+18. Rabble d3 - e4 Black Point a8 @ e4 0 1
+19. Pass
+19. Rabble j5 - j6 @ e4 0 0 x a8
+20. Rabble j7 x j6
+20. Rabble b2 - c3 Black Point a8 @ c3 0 1
+21. Pass
+21. Rabble g3 - g4 @ c3 0 0 x a8
+22. Dragon h5 x g4
+22. Elephant j4 x j6
+23. Elephant k7 x j6
+23. LightHorse h4 - f3
+24. Trebuchet i8 - j9 x e4
+24. Dragon e7 - d5
+25. Elephant f6 - f7
+25. Dragon d5 - d3
+26. Dragon g4 - i4
+26. Trebuchet a2 - b2
+27. Crossbow i6 - h5
+27. Rabble c3 - d4
+28. Rabble h7 - i8 White Point a8 @ i8 0 1
+28. Pass
+29. Rabble g8 - g7 @ i8 0 0 x a8
+29. Dragon d3 - e5
+30. Dragon i4 - g5
+30. HeavyHorse e3 - e4
+31. Dragon g5 x e5
+31. HeavyHorse e4 x e5
+32. HeavyHorse k8 - k6
+32. LightHorse c5 - e4
+33. Crossbow h9 - f9
+33. LightHorse f3 - f4
+34. King j8 - j7
+34. Crossbow b4 - b3
+35. Crossbow f9 - e7
+35. Spears i2 - i3
+36. HeavyHorse k6 - i4
+36. Trebuchet b2 - c3
+37. Rabble i8 - j8 White Point a8 @ j8 0 1
+37. Pass
+38. Rabble g7 - h7 @ j8 0 0 x a8
+38. Rabble d4 - d5
+39. HeavyHorse i4 x i3
+39. King e2 - f3
+40. LightHorse g6 - g5
+40. LightHorse f4 - e3
+41. Rabble h7 - i8 White Point a8 @ i8 0 1
+41. Pass
+42. Rabble j8 - k8 @ i8 0 0 x a8
+42. Rabble d5 - e6
+43. HeavyHorse i3 - h3
+43. King f3 - e2
+44. Elephant f7 - g7
+44. HeavyHorse e5 - d5
+45. Crossbow e7 - c6
+45. Trebuchet c3 - c4
+46. Elephant g7 - g6
+46. LightHorse e4 - d4
+47. Elephant g6 - f6
+47. Rabble e6 - e5
+48. Elephant f6 x e5
+48. LightHorse d4 - g7 x e5
+49. Rabble k8 - k7 White Point a8 @ k7 0 1
+49. Pass
+50. Rabble i8 - h7 @ k7 0 0 x a8
+50. LightHorse g7 - d7
+51. Crossbow c6 - b4
+51. Trebuchet c4 - d4
+52. Crossbow b4 - a3
+52. HeavyHorse d5 - e5
+53. Trebuchet j9 - i8
+53. LightHorse d7 - b4
+54. Crossbow a3 - a5
+54. Crossbow b3 - b5
+55. Crossbow a5 - c7
+55. HeavyHorse e5 - g7
+56. Rabble k7 - k6 White Point a8 @ k6 0 1
+56. Pass
+57. Rabble h7 - g6 @ k6 0 0 x a8
+57. LightHorse b4 - d5
+58. Crossbow h5 - f5
+58. LightHorse d5 - e6
+59. Crossbow c7 - d7
+59. HeavyHorse g7 - e5
+60. Elephant j6 - i5
+60. Crossbow b5 - c6
+61. HeavyHorse h3 - h4
+61. King e2 - f3
+62. HeavyHorse h4 - g3
+62. King f3 - e2
+63. LightHorse g5 - h5
+63. LightHorse e3 - f4
+64. Crossbow f5 - d3
+64. LightHorse e6 - c3
+65. Elephant i5 - h4
+65. LightHorse f4 - e6
+66. HeavyHorse g3 - e3
+66. LightHorse c3 - b3
+67. Elephant h4 - i4
+67. Spears k4 - l5
+68. Spears l9 - l8
+68. LightHorse e6 - e7
+69. Crossbow d7 - d8
+69. LightHorse b3 - c4
+70. Crossbow d8 - b6
+70. LightHorse e7 - b5
+71. Crossbow b6 - d8
+71. LightHorse b5 - e7
+72. HeavyHorse e3 - f4
+72. LightHorse c4 - c3
+73. Crossbow d3 - f5
+73. LightHorse c3 - d3
+74. Trebuchet i8 - j9
+74. LightHorse e7 - c7
+75. Rabble g6 - f6 White Point a8 @ f6 0 1
+75. Pass
+76. Rabble k6 - k5 @ f6 0 0 x a8
+76. Trebuchet d4 - c3 x f6
+77. LightHorse h5 - g6
+77. HeavyHorse e5 - g5 x f5
+78. HeavyHorse f4 - d4
+78. LightHorse d3 - b2
+79. LightHorse g6 x g5
+79. LightHorse c7 - e9 x d8
+80. HeavyHorse d4 - c4
+80. LightHorse e9 - d7
+81. Rabble k5 x l5
+81. LightHorse b2 - d3
+82. HeavyHorse c4 - d4
+82. LightHorse d3 - e6
+83. HeavyHorse d4 x c3
+83. LightHorse d7 - d5
+84. HeavyHorse c3 - d4
+84. LightHorse d5 - f7
+85. Rabble l5 - k5
+85. Crossbow c6 - c5
+86. HeavyHorse d4 - c4
+86. Crossbow c5 - a3
+87. HeavyHorse c4 - d5
+87. LightHorse e6 - e4
+88. HeavyHorse d5 - e6
+88. LightHorse f7 - d4
+89. HeavyHorse e6 - c4
+89. LightHorse d4 - e5
+90. Trebuchet j9 - i8
+90. LightHorse e4 - e6
+91. HeavyHorse c4 - d4
+91. LightHorse e5 - f3
+92. HeavyHorse d4 - f4
+92. LightHorse f3 - d4
+93. HeavyHorse f4 - e4
+93. LightHorse d4 - d5
+94. HeavyHorse e4 - c4
+94. LightHorse d5 - f7
+95. HeavyHorse c4 - d5
+95. LightHorse e6 - e3
+96. King j7 - j6
+96. King e2 - f3
+97. LightHorse g5 - e5
+97. Crossbow a3 - b4
+98. HeavyHorse d5 - e6
+98. LightHorse f7 - f4
+99. HeavyHorse e6 - f5
+99. LightHorse f4 - c4
+100. HeavyHorse f5 - d5
+100. LightHorse c4 - b5
+101. HeavyHorse d5 - c4
+101. Crossbow b4 - b6
+102. Elephant i4 - h4
+102. LightHorse e3 - d3
+103. Elephant h4 - g3
+103. King f3 - e2
+104. Elephant g3 - f3
+104. LightHorse d3 - b2
+105. Elephant f3 - e3
+105. LightHorse b5 - e7
+106. LightHorse e5 - d4
+106. LightHorse e7 - e6
+107. HeavyHorse c4 - d5
+107. LightHorse e6 - f7
+108. HeavyHorse d5 - e6
+108. LightHorse f7 - h7
+109. Trebuchet i8 - j8
+109. LightHorse h7 - f5
+110. HeavyHorse e6 - c5
+110. Crossbow b6 - d7
+111. Elephant e3 - f3
+111. LightHorse f5 - g5
+112. Elephant f3 - e3
+112. LightHorse g5 - g4
+113. HeavyHorse c5 - c3
+113. LightHorse b2 - c5
+114. HeavyHorse c3 - d5
+114. LightHorse c5 - e7
+115. HeavyHorse d5 - e6
+115. LightHorse e7 - g7
+116. HeavyHorse e6 - e7
+116. Crossbow d7 - c5
+117. LightHorse d4 - d5
+117. Crossbow c5 - b4
+118. Elephant e3 - e4
+118. LightHorse g4 - i4
+119. Spears l8 - l7
+119. LightHorse i4 - f3
+120. Elephant e4 - f5
+120. LightHorse f3 - h4
+121. Elephant f5 - f4
+121. LightHorse h4 - h3
+122. Elephant f4 - f3
+122. LightHorse h3 - i4
+123. Elephant f3 - g4
+123. LightHorse i4 - i3
+124. LightHorse d5 - f4
+124. LightHorse g7 - d5
+125. HeavyHorse e7 - e5
+125. LightHorse d5 - c4
+126. Elephant g4 - g3
+126. LightHorse i3 - h5
+127. Elephant g3 x e1
+127. King e2 - d2
+128. Elephant e1 x c1
+128. King d2 - d3
+129. Elephant c1 - d2
+129. King d3 - c3
+130. HeavyHorse e5 - d4
+130. LightHorse c4 - e4 x d4
+131. LightHorse f4 - d4 x e4
+131. King c3 - b2
+132. LightHorse d4 - a4 x b4
+132. LightHorse h5 - g6
+133. Elephant d2 - d3
+133. LightHorse g6 - e6
+134. LightHorse a4 - c3
+134. King b2 - a2
+135. Elephant d3 - e4
+135. LightHorse e6 - d5
+136. Elephant e4 - f5
+136. LightHorse d5 - e6
+137. Trebuchet j8 - k8
+137. King a2 - a3
+138. LightHorse c3 - c4
+138. LightHorse e6 - e3
+139. Elephant f5 - e4
+139. LightHorse e3 - f3
+140. King j6 - i5
+140. King a3 - a4
+141. Trebuchet k8 - j7
+141. LightHorse f3 - f6
+142. Trebuchet j7 - j6
+142. LightHorse f6 - f7
+143. LightHorse c4 - e5
+143. King a4 - b5
+144. LightHorse e5 - d5
+144. LightHorse f7 - g7
+145. King i5 - h5
+145. LightHorse g7 - e7
+146. Elephant e4 - e5
+146. LightHorse e7 - f7
+147. King h5 - g4
+147. King b5 - b4
+148. LightHorse d5 - g5
+148. LightHorse f7 - d7
+149. Elephant e5 - d4
+149. King b4 - b5
+150. Elephant d4 - c4
+150. LightHorse d7 - e7
+151. Elephant c4 - c5
+151. King b5 - a4
+152. Elephant c5 - b4
+152. King a4 - a5
+153. Elephant b4 - b5
+153. LightHorse e7 - d5
+154. Elephant b5 x a5

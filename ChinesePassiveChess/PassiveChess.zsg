@@ -1,0 +1,34 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=PassiveChess.zrf
+VariantName=Passive Chess (with checkmated)
+1. Elephant h2 - f4 = Chariot
+1. Elephant a7 - c5 = Chariot
+2. Horse e2 - d4 = Cannon
+2. Horse d7 - e5 = Cannon
+3. Cannon g2 - g3
+3. Cannon e5 - e3
+4. Mandarin f2 x e3
+4. Cannon g7 x g1 = Horse
+5. Cannon g3 - g2 = Cannon
+5. Chariot c5 - e5 = Cannon
+6. Mandarin e3 - f2 = Mandarin
+6. Horse h7 - g5 = Cannon
+7. Chariot h1 x h8 = Chariot
+7. Elephant f8 - h6 = Mandarin
+8. Cannon b2 - b3
+8. Chariot a8 - a6 = General
+9. Horse a2 - b4 = Cannon
+9. Cannon e5 - a5 = Horse
+10. Cannon b4 - a4
+10. Horse a5 - c4
+11. Cannon a4 - b4 = Cannon
+11. Cannon g5 - a5 = Horse
+12. Cannon b4 - a4
+12. Horse a5 - c6 = Elephant
+13. Cannon a4 - b4 = Cannon
+13. Elephant c6 - a4
+14. Chariot a1 x a4
+14. General a6 - a5 = Horse
+15. Cannon b3 - d3
+15. Cannon b7 x b1 = Horse
+16. Cannon d3 x d8 = General

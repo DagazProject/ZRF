@@ -1,0 +1,684 @@
+(define check-attacked-kaze
+  (if (and (not-position-flag? is-from?)
+           (or (and (enemy? $1)
+               (or (piece? SKing $1) (piece? WKing $1) (piece? NKing $1) (piece? EKing $1)))
+               (and (enemy? $2)
+               (or (piece? SKing $2) (piece? WKing $2) (piece? NKing $2) (piece? EKing $2)))
+               (and (enemy? $3)
+               (or (piece? SKing $3) (piece? WKing $3) (piece? NKing $3) (piece? EKing $3))))
+           (or (and (friend? $1)
+               (or (piece? SKing $1) (piece? WKing $1) (piece? NKing $1) (piece? EKing $1)))
+               (and (friend? $2)
+               (or (piece? SKing $2) (piece? WKing $2) (piece? NKing $2) (piece? EKing $2)))
+               (and (friend? $3)
+               (or (piece? SKing $3) (piece? WKing $3) (piece? NKing $3) (piece? EKing $3)))))
+      (set-position-flag $4 true)
+      (set-position-flag $5 true $1)
+      (set-position-flag $5 true $2)
+      (set-position-flag $5 true $3)
+  )
+)
+
+(define check-attacked-arashi
+  (if (and (not-position-flag? is-from?)
+           (or (and (enemy? $1)
+               (or (piece? SKing $1) (piece? WKing $1) (piece? NKing $1) (piece? EKing $1)))
+               (and (enemy? $2)
+               (or (piece? SKing $2) (piece? WKing $2) (piece? NKing $2) (piece? EKing $2)))
+               (and (enemy? $3)
+               (or (piece? SKing $3) (piece? WKing $3) (piece? NKing $3) (piece? EKing $3)))
+               (and (enemy? $4)
+               (or (piece? SKing $4) (piece? WKing $4) (piece? NKing $4) (piece? EKing $4)))
+               (and (enemy? $5)
+               (or (piece? SKing $5) (piece? WKing $5) (piece? NKing $5) (piece? EKing $5))))
+           (or (and (friend? $1)
+               (or (piece? SKing $1) (piece? WKing $1) (piece? NKing $1) (piece? EKing $1)))
+               (and (friend? $2)
+               (or (piece? SKing $2) (piece? WKing $2) (piece? NKing $2) (piece? EKing $2)))
+               (and (friend? $3)
+               (or (piece? SKing $3) (piece? WKing $3) (piece? NKing $3) (piece? EKing $3)))
+               (and (friend? $4)
+               (or (piece? SKing $4) (piece? WKing $4) (piece? NKing $4) (piece? EKing $4)))
+               (and (friend? $5)
+               (or (piece? SKing $5) (piece? WKing $5) (piece? NKing $5) (piece? EKing $5)))))
+      (set-position-flag $6 true)
+      (set-position-flag $7 true $1)
+      (set-position-flag $7 true $2)
+      (set-position-flag $7 true $3)
+      (set-position-flag $7 true $4)
+      (set-position-flag $7 true $5)
+  )
+)
+
+(define check-attacked
+  mark START
+  (while (on-board? next)
+     next
+     (if (and (in-zone? board-zone) not-empty?)
+         (if (piece? SKaze) 
+             (check-attacked-kaze n sw se $1 $2)
+         )
+         (if (piece? WKaze) 
+             (check-attacked-kaze e nw sw $1 $2)
+         )
+         (if (piece? NKaze) 
+             (check-attacked-kaze s ne nw $1 $2)
+         )
+         (if (piece? EKaze) 
+             (check-attacked-kaze w se ne $1 $2)
+         )
+         (if (piece? SArashi) 
+             (check-attacked-arashi n w e nw ne $1 $2)
+         )
+         (if (piece? WArashi) 
+             (check-attacked-arashi e s n ne se $1 $2)
+         )
+         (if (piece? NArashi) 
+             (check-attacked-arashi s e w sw se $1 $2)
+         )
+         (if (piece? EArashi) 
+             (check-attacked-arashi w s n sw nw $1 $2)
+         )
+     )
+  )
+  back
+)
+
+(define change-owners
+  mark START
+  (while (on-board? next)
+     next
+     (if friend?
+         (if (piece? SKaze)
+             (if (in-zone? I-AM S)
+                 (create North SKaze)
+              else
+                 (create South SKaze)
+             )
+         )
+         (if (piece? WKaze)
+             (if (in-zone? I-AM S)
+                 (create North WKaze)
+              else
+                 (create South WKaze)
+             )
+         )
+         (if (piece? NKaze)
+             (if (in-zone? I-AM S)
+                 (create North NKaze)
+              else
+                 (create South NKaze)
+             )
+         )
+         (if (piece? EKaze)
+             (if (in-zone? I-AM S)
+                 (create North EKaze)
+              else
+                 (create South EKaze)
+             )
+         )
+         (if (piece? SArashi)
+             (if (in-zone? I-AM S)
+                 (create North SArashi)
+              else
+                 (create South SArashi)
+             )
+         )
+         (if (piece? WArashi)
+             (if (in-zone? I-AM S)
+                 (create North WArashi)
+              else
+                 (create South WArashi)
+             )
+         )
+         (if (piece? NArashi)
+             (if (in-zone? I-AM S)
+                 (create North NArashi)
+              else
+                 (create South NArashi)
+             )
+         )
+         (if (piece? EArashi)
+             (if (in-zone? I-AM S)
+                 (create North EArashi)
+              else
+                 (create South EArashi)
+             )
+         )
+     )
+  )
+  back
+)
+
+(define drop-mark (
+  Ic
+  (change-owners)
+  add
+))
+
+(define check-opposite
+  (if (on-board? $1)
+      mark $1
+      (verify (not-piece? $2))
+      back
+  )
+)
+
+(define add-king (
+  (verify (not-in-zone? board-zone))
+  $1
+  (check-opposite $2 $3)
+  (verify empty?)
+  (if (in-zone? I-AM S)
+      (create SKaze IIIb)
+      (create WKaze IVb)
+      (create NKaze IVc)
+      (create EKaze IIIc)
+   else
+      (create NArashi IIb)
+      (create EArashi Ib)
+      (create SArashi Ia)
+      (create WArashi IIa)
+  )
+  add
+))
+
+(define check-mated
+  mark START
+  (while (on-board? next)
+     next
+     (if (and friend?
+              (or (piece? SKing) (piece? WKing) (piece? NKing) (piece? EKing)))
+         (verify (not-position-flag? is-checked?))
+         (verify (not-position-flag? is-self?))
+     )
+  )
+  back
+)
+
+(define check-piece
+  (set-flag to-n? false) (set-flag to-nw? false)
+  (set-flag to-s? false) (set-flag to-ne? false)
+  (set-flag to-w? false) (set-flag to-sw? false)
+  (set-flag to-e? false) (set-flag to-se? false)  
+  (if (piece? SKaze)
+      (set-flag to-n?  true)
+      (set-flag to-se? true)
+      (set-flag to-sw? true)
+  )  
+  (if (piece? WKaze)
+      (set-flag to-e?  true)
+      (set-flag to-sw? true)
+      (set-flag to-nw? true)
+  )
+  (if (piece? NKaze)
+      (set-flag to-s?  true)
+      (set-flag to-nw? true)
+      (set-flag to-ne? true)
+  )  
+  (if (piece? EKaze)
+      (set-flag to-w?  true)
+      (set-flag to-ne? true)
+      (set-flag to-se? true)
+  )  
+  (if (piece? SArashi)
+      (set-flag to-n?  true)
+      (set-flag to-w?  true)
+      (set-flag to-e?  true)
+      (set-flag to-nw? true)
+      (set-flag to-ne? true)
+  )  
+  (if (piece? WArashi)
+      (set-flag to-e?  true)
+      (set-flag to-n?  true)
+      (set-flag to-s?  true)
+      (set-flag to-ne? true)
+      (set-flag to-se? true)
+  )
+  (if (piece? NArashi)
+      (set-flag to-s?  true)
+      (set-flag to-e?  true)
+      (set-flag to-w?  true)
+      (set-flag to-se? true)
+      (set-flag to-sw? true)
+  )
+  (if (piece? EArashi)
+      (set-flag to-w?  true)
+      (set-flag to-s?  true)
+      (set-flag to-n?  true)
+      (set-flag to-sw? true)
+      (set-flag to-nw? true)
+  )
+)
+
+(define find-king
+  (if (and (flag? $3) (on-board? $4))
+      mark $4
+      (if (and $2
+               (or (piece? SKing) (piece? WKing) (piece? NKing) (piece? EKing)))
+          (set-flag $1 true)
+      )
+      back
+  )
+)
+
+(define check-drop
+  (set-flag  friend-king-found? false)
+  (find-king friend-king-found? friend? to-n? n) (find-king friend-king-found? friend? to-nw? nw)
+  (find-king friend-king-found? friend? to-s? s) (find-king friend-king-found? friend? to-sw? sw)
+  (find-king friend-king-found? friend? to-w? w) (find-king friend-king-found? friend? to-se? se)
+  (find-king friend-king-found? friend? to-e? e) (find-king friend-king-found? friend? to-ne? ne)
+  (if (flag? friend-king-found?)
+      (set-flag  enemy-king-found? false)
+      (find-king enemy-king-found? enemy? to-n? n) (find-king enemy-king-found? enemy? to-nw? nw)
+      (find-king enemy-king-found? enemy? to-s? s) (find-king enemy-king-found? enemy? to-sw? sw)
+      (find-king enemy-king-found? enemy? to-w? w) (find-king enemy-king-found? enemy? to-se? se)
+      (find-king enemy-king-found? enemy? to-e? e) (find-king enemy-king-found? enemy? to-ne? ne)
+      (verify (not-flag? enemy-king-found?))
+  )
+)
+
+(define add-kaze (
+  (check-piece)
+  (set-position-flag f true)
+  (verify (not-in-zone? board-zone))
+  (check-attacked is-self? is-checked?)
+  $1
+  (verify empty?)
+  (check-drop)
+  (check-mated)
+  (if (not-position-flag? f IIIb)
+      (capture IIIb)
+  )
+  (if (not-position-flag? f IVb)
+      (capture IVb)
+  )
+  (if (not-position-flag? f IVc)
+      (capture IVc)
+  )
+  (if (not-position-flag? f IIIc)
+      (capture IIIc)
+  )
+  (if (in-zone? I-AM S)
+      (create North)
+   else
+      (create South)
+  )
+  add
+))
+
+(define add-arashi (
+  (check-piece)
+  (set-position-flag f true)
+  (verify (not-in-zone? board-zone))
+  (check-attacked is-self? is-checked?)
+  $1
+  (verify empty?)
+  (check-drop)
+  (check-mated)
+  (if (not-position-flag? f IIb)
+      (capture IIb)
+  )
+  (if (not-position-flag? f Ib)
+      (capture Ib)
+  )
+  (if (not-position-flag? f IIa)
+      (capture IIa)
+  )
+  (if (not-position-flag? f Ia)
+      (capture Ia)
+  )
+  add
+))
+
+(define common-step
+  (verify (or empty? 
+              (piece? SKaze) (piece? WKaze) (piece? NKaze) (piece? EKaze)
+              (piece? SArashi) (piece? WArashi) (piece? NArashi) (piece? EArashi)))
+  (if (or (piece? SKaze) (piece? WKaze) (piece? NKaze) (piece? EKaze))
+      (if (in-zone? I-AM S)
+          (create North SKaze IIIb)
+          (create North WKaze IVb)
+          (create North NKaze IVc)
+          (create North EKaze IIIc)
+       else
+          (create South SKaze IIIb)
+          (create South WKaze IVb)
+          (create South NKaze IVc)
+          (create South EKaze IIIc)
+      )
+  )
+  (if (or (piece? SArashi) (piece? WArashi) (piece? NArashi) (piece? EArashi))
+      (if (in-zone? I-AM S)
+          (create North NArashi IIb)
+          (create North EArashi Ib)
+          (create North SArashi Ia)
+          (create North WArashi IIa)
+       else
+          (create South NArashi IIb)
+          (create South EArashi Ib)
+          (create South SArashi Ia)
+          (create South WArashi IIa)
+      )
+  )
+)
+
+(define step (
+  (check-attacked is-self? is-checked?)
+  (verify (not-position-flag? is-self?))
+  $1
+  (if (not-position-flag? is-self?)
+      (check-mated)
+  )
+  (common-step)
+  (add $2)
+))
+
+(define step-king (
+  (check-attacked is-self? is-checked?)
+  (set-flag start-checked? (position-flag? is-checked?))
+  $1
+  (if (flag? start-checked?)
+      (verify (not-position-flag? is-checked?))
+      (verify (not-position-flag? is-self?))
+  )
+  (check-opposite $3 $4)
+  (common-step)
+  (add $2)
+))
+
+(define rotate-king (
+  (verify (in-zone? board-zone))
+  (check-attacked is-self? is-checked?)
+  (verify (not-position-flag? is-checked?))
+  (check-opposite $2 $3)
+  (add $1)
+))
+
+(define rotate (
+  (verify (in-zone? board-zone))
+  (check-attacked is-self? is-checked?)
+  (verify (not-position-flag? is-self?))
+  (check-mated)
+  (add $1)
+))
+
+(game
+  (title "Gufuu Shogi")
+  (description "Four modes to do the move:\\
+1. Dropping: A piece in hand can be dropped to the board to any free square. When drop the piece there is four directions choose to set the piece on the square, North(N), East(E), South(S) and West(W).\
+2. Ordinary move: After the move to empty square, the face of piece has to rotate 90 degrees to clockwise.\
+3. Capture move: After the capture, the face of piece has to rotate 90 degrees to clockwise.\
+4. Rotation only: The piece can be rotated in current without moving other square. The face of piece has to rotate 90 degrees to clockwise.\\
+Coming from the small board Kings are allowed to stay side by side. The only limitation is that Kings can't be next to each other face-to-face position.\\
+As in original shogi, the captured piece transfers to the Hand and it can be returned later back to the board. Player can select to do his move on the board \
+or to return piece from hand to any empty square on the board.\\
+Note: It's illegal to check by dropping a piece.\\
+When it's Black's turn the Kaze and Arashi are Black's pieces, and when move will change to White, the same pieces are White's pieces. Same rule relates also to pieces in hand.\
+Because Arashi and Kaze are shared pieces, they can also captured each others regardless of own or opponents pieces. Also King is allowred to capture ''own'' Arashi or Kaze if they don't check.\
+Only when Kaze or Arashi are checking, they get fixed owner and then the King is not allowed to capture the checking piece. Still the other shared piece can capture the checking piece.\
+Necessity for check is a little bit different compared original shogi or chess: It's not enough if piece reach to threaten opponent's King, besides that the checking piece has to have contact to own King.")
+  (history "Gufuu Shogi is a modern variant of shogi invented by Georg Dunkel in 1998.")
+  (players South North ?N)
+  (turn-order (South normal) (North normal) (South normal) repeat 
+      (North normal) (?N North support) (South normal) (?N South support))
+  (option "prevent flipping" true)
+  (recycle-captures true)
+  (animate-drops false)
+  (animate-captures false)
+  (move-sound "Audio\Pickup.wav")
+  (release-sound "Audio\Pickup.wav")
+  (capture-sound "")
+  (drop-sound "")
+  (board
+        (image "Images/GufuuShogi/Board.bmp")
+        (grid
+               (start-rectangle 12 14 52 59)
+               (dimensions ("I/II/O/2/1/Q/III/IV" (41 0))
+                           ("a/b/c" (0 41))
+               )
+        )
+        (dummy S N START)
+        (zone  (name I-AM)
+               (players South)
+               (positions S)
+        )
+        (zone  (name I-AM)
+               (players North)
+               (positions N)
+        )
+        (zone  (name board-zone)
+               (players South North)
+               (positions 1a 1b 1c 2a 2b 2c)              
+        )
+        (links next
+               (START 1a) (1a 1b) (1b 1c) (1c 2a) (2a 2b) (2b 2c)
+               (2c Ia) (Ia Ib) (Ib IIa) (IIa IIb) (IIb IIIb) (IIIb IIIc) 
+               (IIIc IVb) (IVb IVc)
+        )
+        (links n
+               (2c 2b) (2b 2a) (1c 1b) (1b 1a)
+        )
+        (links s
+               (2a 2b) (2b 2c) (1a 1b) (1b 1c)
+        )
+        (links w
+               (1c 2c) (1b 2b) (1a 2a)
+        )
+        (links e
+               (2c 1c) (2b 1b) (2a 1a)
+        )
+        (links nw
+               (1c 2b) (1b 2a)
+        )
+        (links ne
+               (2c 1b) (2b 1a)
+        )
+        (links sw
+               (1a 2b) (1b 2c)
+        )
+        (links se
+               (2a 1b) (2b 1c)
+        )
+  )
+  (piece
+        (name  Mark)
+        (help " ")
+        (image South "Images/GufuuShogi/mark.bmp"
+               North "Images/GufuuShogi/mark.bmp")
+        (drops
+           (move-type support)
+           (drop-mark)
+        )
+  )
+  (piece
+        (name  SKing)
+        (help "King")
+        (image South "Images/GufuuShogi/Kanji/SKingS.bmp" "Images/GufuuShogi/Alpha/SKingS.bmp" "Images/GufuuShogi/Draw/SKingS.bmp"
+               North "Images/GufuuShogi/Kanji/SKingN.bmp" "Images/GufuuShogi/Alpha/SKingN.bmp" "Images/GufuuShogi/Draw/SKingN.bmp")
+        (moves
+           (move-type normal)
+           (add-king 1a n NKing) (add-king 1b n NKing) (add-king 1c n NKing)
+           (add-king 2a n NKing) (add-king 2b n NKing) (add-king 2c n NKing)
+           (step-king n WKing e EKing) (step-king nw WKing e EKing)
+           (step-king s WKing e EKing) (step-king sw WKing e EKing)
+           (step-king w WKing e EKing) (step-king ne WKing e EKing)
+           (step-king e WKing e EKing) (step-king se WKing e EKing)
+           (rotate-king WKing e EKing)
+        )
+  )
+  (piece
+        (name  WKing)
+        (help "King")
+        (image South "Images/GufuuShogi/Kanji/WKingS.bmp" "Images/GufuuShogi/Alpha/WKingS.bmp" "Images/GufuuShogi/Draw/WKingS.bmp"
+               North "Images/GufuuShogi/Kanji/WKingN.bmp" "Images/GufuuShogi/Alpha/WKingN.bmp" "Images/GufuuShogi/Draw/WKingN.bmp")
+        (moves
+           (move-type normal)
+           (add-king 1a e EKing) (add-king 1b e EKing) (add-king 1c e EKing)
+           (add-king 2a e EKing) (add-king 2b e EKing) (add-king 2c e EKing)
+           (step-king n NKing s SKing) (step-king nw NKing s SKing)
+           (step-king s NKing s SKing) (step-king sw NKing s SKing)
+           (step-king w NKing s SKing) (step-king ne NKing s SKing)
+           (step-king e NKing s SKing) (step-king se NKing s SKing)
+           (rotate-king NKing s SKing)
+        )
+  )
+  (piece
+        (name  NKing)
+        (help "King")
+        (image South "Images/GufuuShogi/Kanji/NKingS.bmp" "Images/GufuuShogi/Alpha/NKingS.bmp" "Images/GufuuShogi/Draw/NKingS.bmp"
+               North "Images/GufuuShogi/Kanji/NKingN.bmp" "Images/GufuuShogi/Alpha/NKingN.bmp" "Images/GufuuShogi/Draw/NKingN.bmp")
+        (moves
+           (move-type normal)
+           (add-king 1a s SKing) (add-king 1b s SKing) (add-king 1c s SKing)
+           (add-king 2a s SKing) (add-king 2b s SKing) (add-king 2c s SKing)
+           (step-king n EKing w WKing) (step-king nw EKing w WKing)
+           (step-king s EKing w WKing) (step-king sw EKing w WKing)
+           (step-king w EKing w WKing) (step-king ne EKing w WKing)
+           (step-king e EKing w WKing) (step-king se EKing w WKing)
+           (rotate-king EKing w WKing)
+        )
+  )
+  (piece
+        (name  EKing)
+        (help "King")
+        (image South "Images/GufuuShogi/Kanji/EKingS.bmp" "Images/GufuuShogi/Alpha/EKingS.bmp" "Images/GufuuShogi/Draw/EKingS.bmp"
+               North "Images/GufuuShogi/Kanji/EKingN.bmp" "Images/GufuuShogi/Alpha/EKingN.bmp" "Images/GufuuShogi/Draw/EKingN.bmp")
+        (moves
+           (move-type normal)
+           (add-king 1a w WKing) (add-king 1b w WKing) (add-king 1c w WKing)
+           (add-king 2a w WKing) (add-king 2b w WKing) (add-king 2c w WKing)
+           (step-king n SKing n NKing) (step-king nw SKing n NKing)
+           (step-king s SKing n NKing) (step-king sw SKing n NKing)
+           (step-king w SKing n NKing) (step-king ne SKing n NKing)
+           (step-king e SKing n NKing) (step-king se SKing n NKing)
+           (rotate-king SKing n NKing)
+        )
+  )
+  (piece
+        (name  SKaze)
+        (help "Kaze")
+        (image South "Images/GufuuShogi/Kanji/SKaze.bmp" "Images/GufuuShogi/Alpha/SKaze.bmp" "Images/GufuuShogi/Draw/SKaze.bmp"
+               North "Images/GufuuShogi/Kanji/SKaze.bmp" "Images/GufuuShogi/Alpha/SKaze.bmp" "Images/GufuuShogi/Draw/SKaze.bmp")
+        (moves
+           (move-type normal)
+           (add-kaze 1a) (add-kaze 1b) (add-kaze 1c)
+           (add-kaze 2a) (add-kaze 2b) (add-kaze 2c)
+           (step n WKaze) (step sw WKaze) (step se WKaze)
+           (rotate WKaze)
+        )
+  )
+  (piece
+        (name  WKaze)
+        (help "Kaze")
+        (image South "Images/GufuuShogi/Kanji/WKaze.bmp" "Images/GufuuShogi/Alpha/WKaze.bmp" "Images/GufuuShogi/Draw/WKaze.bmp"
+               North "Images/GufuuShogi/Kanji/WKaze.bmp" "Images/GufuuShogi/Alpha/WKaze.bmp" "Images/GufuuShogi/Draw/WKaze.bmp")
+        (moves
+           (move-type normal)
+           (add-kaze 1a) (add-kaze 1b) (add-kaze 1c)
+           (add-kaze 2a) (add-kaze 2b) (add-kaze 2c)
+           (step e NKaze) (step nw NKaze) (step sw NKaze)
+           (rotate NKaze)
+        )
+  )
+  (piece
+        (name  NKaze)
+        (help "Kaze")
+        (image South "Images/GufuuShogi/Kanji/NKaze.bmp" "Images/GufuuShogi/Alpha/NKaze.bmp" "Images/GufuuShogi/Draw/NKaze.bmp"
+               North "Images/GufuuShogi/Kanji/NKaze.bmp" "Images/GufuuShogi/Alpha/NKaze.bmp" "Images/GufuuShogi/Draw/NKaze.bmp")
+        (moves
+           (move-type normal)
+           (add-kaze 1a) (add-kaze 1b) (add-kaze 1c)
+           (add-kaze 2a) (add-kaze 2b) (add-kaze 2c)
+           (step s EKaze) (step nw EKaze) (step ne EKaze)
+           (rotate EKaze)
+        )
+  )
+  (piece
+        (name  EKaze)
+        (help "Kaze")
+        (image South "Images/GufuuShogi/Kanji/EKaze.bmp" "Images/GufuuShogi/Alpha/EKaze.bmp" "Images/GufuuShogi/Draw/EKaze.bmp"
+               North "Images/GufuuShogi/Kanji/EKaze.bmp" "Images/GufuuShogi/Alpha/EKaze.bmp" "Images/GufuuShogi/Draw/EKaze.bmp")
+        (moves
+           (move-type normal)
+           (add-kaze 1a) (add-kaze 1b) (add-kaze 1c)
+           (add-kaze 2a) (add-kaze 2b) (add-kaze 2c)
+           (step w SKaze) (step ne SKaze) (step se SKaze)
+           (rotate SKaze)
+        )
+  )
+  (piece
+        (name  SArashi)
+        (help "Arashi")
+        (image South "Images/GufuuShogi/Kanji/SArashi.bmp" "Images/GufuuShogi/Alpha/SArashi.bmp" "Images/GufuuShogi/Draw/SArashi.bmp"
+               North "Images/GufuuShogi/Kanji/SArashi.bmp" "Images/GufuuShogi/Alpha/SArashi.bmp" "Images/GufuuShogi/Draw/SArashi.bmp")
+        (moves
+           (move-type normal)
+           (add-arashi 1a) (add-arashi 1b) (add-arashi 1c)
+           (add-arashi 2a) (add-arashi 2b) (add-arashi 2c)
+           (step n WArashi) (step w WArashi) (step e WArashi)
+           (step nw WArashi) (step ne WArashi)
+           (rotate WArashi)
+        )
+  )
+  (piece
+        (name  WArashi)
+        (help "Arashi")
+        (image South "Images/GufuuShogi/Kanji/WArashi.bmp" "Images/GufuuShogi/Alpha/WArashi.bmp" "Images/GufuuShogi/Draw/WArashi.bmp"
+               North "Images/GufuuShogi/Kanji/WArashi.bmp" "Images/GufuuShogi/Alpha/WArashi.bmp" "Images/GufuuShogi/Draw/WArashi.bmp")
+        (moves
+           (move-type normal)
+           (add-arashi 1a) (add-arashi 1b) (add-arashi 1c)
+           (add-arashi 2a) (add-arashi 2b) (add-arashi 2c)
+           (step e NArashi) (step n NArashi) (step s NArashi)
+           (step ne NArashi) (step se NArashi)
+           (rotate NArashi)
+        )
+  )
+  (piece
+        (name  NArashi)
+        (help "Arashi")
+        (image South "Images/GufuuShogi/Kanji/NArashi.bmp" "Images/GufuuShogi/Alpha/NArashi.bmp" "Images/GufuuShogi/Draw/NArashi.bmp"
+               North "Images/GufuuShogi/Kanji/NArashi.bmp" "Images/GufuuShogi/Alpha/NArashi.bmp" "Images/GufuuShogi/Draw/NArashi.bmp")
+        (moves
+           (move-type normal)
+           (add-arashi 1a) (add-arashi 1b) (add-arashi 1c)
+           (add-arashi 2a) (add-arashi 2b) (add-arashi 2c)
+           (step s EArashi) (step w EArashi) (step e EArashi)
+           (step sw EArashi) (step se EArashi)
+           (rotate EArashi)
+        )
+  )
+  (piece
+        (name  EArashi)
+        (help "Arashi")
+        (image South "Images/GufuuShogi/Kanji/EArashi.bmp" "Images/GufuuShogi/Alpha/EArashi.bmp" "Images/GufuuShogi/Draw/EArashi.bmp"
+               North "Images/GufuuShogi/Kanji/EArashi.bmp" "Images/GufuuShogi/Alpha/EArashi.bmp" "Images/GufuuShogi/Draw/EArashi.bmp")
+        (moves
+           (move-type normal)
+           (add-arashi 1a) (add-arashi 1b) (add-arashi 1c)
+           (add-arashi 2a) (add-arashi 2b) (add-arashi 2c)
+           (step w SArashi) (step n SArashi) (step s SArashi)
+           (step nw SArashi) (step sw SArashi)
+           (rotate SArashi)
+        )
+  )
+  (board-setup
+       (South
+          (SKing IIIb)
+          (WKing IVb)
+          (NKing IVc)
+          (EKing IIIc)
+          (Mark  off 1)
+       )
+       (North
+          (NKing IIb)
+          (EKing Ib)
+          (SKing Ia)
+          (WKing IIa)
+          (Mark  off 1)
+       )
+  )
+  (loss-condition (South North) stalemated)
+  (loss-condition (South North) repetition)
+)

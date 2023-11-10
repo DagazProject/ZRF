@@ -1,0 +1,186 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=Gwangsanghui.zrf
+VariantName=Gwangsanghui
+1. Soldier o6 - n7
+1. Soldier a9 - b8
+2. Horse o4 - m5
+2. Horse o11 - m10
+3. Soldier e6 - d7
+3. Cannon c11 - c7
+4. Cannon g4 - e4
+4. Cannon i11 x i6 North Pawn blood
+5. Cannon e4 x e13 South Pawn blood
+5. Forward h10 x h5 North Pawn blood
+6. Horse f4 x h5 South Pawn blood
+6. Cannon c7 x n7 North Pawn blood
+7. Soldier m6 x n7 South Pawn blood
+7. Cannon m11 - h11
+8. Soldier g6 - h7
+8. Cannon h11 - h6
+9. Horse h5 - f4
+9. Horse f11 x e13 North Pawn blood
+10. Guard i2 - h2
+10. Cannon h6 - h11
+11. Elephant f2 - h5
+11. Cannon i6 x c6 North Pawn blood
+12. Pawn b6 x c6 South Pawn blood
+12. Cannon h11 - h6
+13. Cannon c4 - h4
+13. Cannon h6 x c6 North Pawn blood
+14. Elephant h5 - j8
+14. Horse j11 - h10
+15. Elephant j8 x m10 South Pawn blood
+15. Cannon c6 - c1
+16. Chariot k2 - k1
+16. Cannon c1 x h1 North Pawn blood
+17. Chariot k1 x h1 South Pawn blood
+17. Horse a11 - c10
+18. Horse a4 - b6
+18. Elephant m13 - j11
+19. Soldier h7 - g7
+19. Soldier i9 - h9
+20. Elephant m2 - k5
+20. Cannon g11 x g7 North Pawn blood
+21. Soldier f6 x g7 South Pawn blood
+21. Soldier k9 - l9
+22. Knight d5 - f7
+22. Pawn n9 - n8
+23. Soldier n7 - m7
+23. Pawn m9 - m8
+24. Cannon i4 - l4
+24. Soldier l9 - k8
+25. Chariot a2 - a5
+25. Pawn o9 - n9
+26. Knight f7 x h9 South Pawn blood
+26. Chariot o13 x o2 North Pawn blood
+27. Knight h9 - f7
+27. Elephant j11 - h8
+28. Killer l1 x o2 South Pawn blood
+28. Soldier j9 - i9
+29. Chariot h1 - i1
+29. Pawn g9 - h9
+30. Knight f7 x h9 South Pawn blood
+30. Soldier b8 - c7
+31. Chariot i1 x i9 South Pawn blood
+31. Soldier c7 - b7
+32. Soldier g7 x h8 South Pawn blood
+32. Pawn m8 x m7 North Pawn blood
+33. Soldier n6 x m7 South Pawn blood
+33. Elephant c13 - e10
+34. Soldier h8 - g8
+34. Chariot a13 x a6 North Pawn blood
+35. Chariot a5 x a6 South Pawn blood
+35. Soldier b7 x a6 North Pawn blood
+36. Chariot i9 x n9 South Pawn blood
+36. Pawn n8 - m8
+37. Soldier g8 x f9 South Pawn blood
+37. Pawn e9 x f9 North Pawn blood
+38. Knight h9 - j11
+38. Elephant e10 - h8
+39. Chariot n9 x f9 South Pawn blood
+39. Pawn m8 x m7 North Pawn blood
+40. Cannon m4 x m7 South Pawn blood
+40. Warrior d12 - d13
+41. Horse b6 - c4
+41. Backward h14 - f14
+42. Horse f4 - g6
+42. Chariot k13 - k11
+43. Cannon m7 - m14
+43. Soldier k8 - j7
+44. Pawn j6 x j7 South Pawn blood
+44. Backward f14 - k14
+45. Cannon m14 x k14 South Pawn blood
+45. Chariot k11 x j11 North Pawn blood
+46. Chariot f9 - f7
+46. Chariot j11 - m11
+47. Cannon l4 - l6
+47. Knight l10 - n8
+48. Cannon k14 - n14
+48. Guard n13 - o13
+49. Cannon n14 x n8 South Pawn blood
+49. Soldier a6 - b5
+50. Horse m5 - l7
+50. Elephant j13 - l10
+51. Horse g6 x h8 South Pawn blood
+51. Chariot m11 x m10 North Pawn blood
+52. Chariot f7 x f13 South Pawn blood
+52. Horse c10 - d12
+53. Chariot f13 - f10
+53. Horse e13 - g12
+54. Chariot f10 x d10 South Pawn blood
+54. Chariot m10 - m1
+55. Cannon h4 - h9
+55. Horse h10 - j9
+56. Chariot d10 - h10
+56. King h12 - i12
+57. Chariot h10 - i10
+57. King i12 - h12
+58. Cannon h9 - h4
+58. Horse j9 - h10
+59. Chariot i10 x l10 South Pawn blood
+59. Warrior l12 - l11
+60. Cannon l6 - d6
+60. Soldier b5 x c4 North Pawn blood
+61. WestGeneral b3 x c4 South Pawn blood
+61. Chariot m1 - j1
+62. Warrior l3 - j3
+62. Warrior l11 - i11
+63. Chariot e2 - e12
+63. King h12 - h13
+64. Cannon h4 x h10 South Pawn blood
+64. Chariot j1 - m1
+65. Cannon h10 - h4
+65. Guard i13 - h12
+66. Soldier d7 - c7
+66. Warrior d13 - f13
+67. Chariot e12 x d12 South Pawn blood
+67. EastGeneral b12 - c11
+68. Chariot l10 - n10
+68. WestGeneral n12 - m13
+69. Cannon h4 - h9
+69. King h13 - i13
+70. Chariot d12 x d14 South Pawn blood
+70. King i13 - i12
+71. Elephant j2 - m4
+71. Chariot m1 - e1
+72. Cannon h9 x b9 South Pawn blood
+72. Soldier c9 x b9 North Pawn blood
+73. Chariot d14 - i14
+73. Guard h12 - i13
+74. Chariot i14 x l14 South Pawn blood
+74. King i12 - h12
+75. Chariot n10 - n9
+75. Chariot e1 - e4
+76. WestGeneral c4 - b3
+76. Chariot e4 - e7
+77. Horse h8 - g10
+77. King h12 - g11
+78. Cannon n8 - n11
+78. Warrior i11 x n11 North Pawn blood
+79. Chariot n9 x n11 South Pawn blood
+79. Horse g12 - i11
+80. Chariot n11 x i11 South Pawn blood
+80. King g11 - g12
+81. Chariot i11 - i7
+81. Chariot e7 - e6
+82. Cannon d6 - j6
+82. Guard g13 - h12
+83. Cannon j6 - j13
+83. Chariot e6 - h6
+84. King h3 - i2
+84. Guard h12 - h13
+85. Chariot l14 - l11
+85. Warrior f13 - g13
+86. Chariot l11 x c11 South Pawn blood x b13
+86. Guard o13 - n12
+87. Chariot i7 - h7
+87. Chariot h6 x h7 North Pawn blood
+88. Elephant k5 x h7 South Pawn blood
+88. Warrior g13 - e13
+89. Elephant h7 - j10
+89. King g12 - g13
+90. Chariot c11 - c14
+90. Warrior e13 - e12
+91. Chariot c14 - g14
+91. King g13 - g12
+92. Chariot g14 x g12 South Pawn blood

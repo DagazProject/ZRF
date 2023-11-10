@@ -1,0 +1,11 @@
+Duel
+----
+This game was distributed in the Soviet Union under the name of "Poedinok".
+Game inventor unknown.
+
+Players roll the cubes on a number of steps, shown on their upper face.
+Royal cube always moves to one step. To win, you must capture the opponent's 
+Royal cube or place your Royal cube on its initial place.
+
+See Video: https://www.youtube.com/watch?v=PiT2WN8ixpg
+

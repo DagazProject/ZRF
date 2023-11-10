@@ -1,0 +1,44 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=RocketShogi.zrf
+VariantName=Rocket Shogi
+1. Knight a1 - b3
+1. Lance c5 x c3 Lance c3 - n7 flip n7
+2. Silver b2 x c3 Lance c3 - y1 flip y1
+2. Bishop d7 - a4
+3. Bishop b1 - c2
+3. Lance n7 - c6
+4. Lance y1 - c4
+4. Lance c6 x c4 Lance c4 - n7 flip n7
+5. Silver c3 x c4 Lance c4 - y1 flip y1
+5. Lance n7 - c6
+6. Gold d2 - c3
+6. Lance c6 x c4 Silver c4 - n7 flip n7
+7. Gold c3 x c4 Lance c4 - z1 flip z1
+7. Silver n7 - e2
+8. Rook d1 x d6 Silver d6 - y2 flip y2
+8. King c7 x d6 Rook d6 - n7 flip n7
+9. Lance z1 - d2
+9. Rook n7 - d5
+10. Silver y2 - c5
+10. Gold b6 x c5 Silver c5 - n7 flip n7
+11. Knight b3 x c5 Gold c5 - z1 = KnightP on c5 flip z1
+11. King d6 - c7
+12. Bishop c2 x a4 Bishop a4 - y2 flip y2
+12. Silver n7 - b2
+13. King c1 - c2
+13. Silver b2 - b1
+14. King c2 - c1
+14. Rook b7 - b2 = RookP
+15. King c1 x b2 RookP b2 - z2 = Rook flip z2
+15. Rook d5 x d2 Lance d2 - n7 flip n7
+16. King b2 x b1 Silver b1 - y3 flip y3
+16. Lance n7 - b5
+17. KnightP c5 x b5 Lance b5 - z3 flip z3
+17. Knight a7 x b5 KnightP b5 - n7 = Knight flip n7
+18. Rook z2 - a7
+18. Knight n7 - b7
+19. Lance y1 - c5
+19. King c7 - d6
+20. Rook a7 - a6
+20. King d6 - e5
+21. Lance z3 - e3

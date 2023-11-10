@@ -1,0 +1,26 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=Ragnarok.zrf
+VariantName=Bifrost (normal)
+1. EldthursarA g8 - e6 Dark Mount g8 = EldthursarR on e6
+1. AlfrA d3 - c3 = AlfrR
+2. EldthursarA a8 - b7 Dark Mount a8 = EldthursarR on b7
+2. AlfrA b2 - c2 = AlfrR
+3. EldthursarR b7 - c5 Dark Mount b7 = EldthursarA on c5
+3. AlfrR c3 - e2 = AlfrA
+4. EldthursarR e6 - d4 Dark Mount e6 = EldthursarA on d4
+4. AlfrR c2 - b3 = AlfrA
+5. EldthursarA d4 - b2 Dark Mount d4 x c1 = EldthursarR on b2
+5. AlfrA e2 - e3 = AlfrR
+6. EldthursarR b2 x b3 Dark Mount b2 = EldthursarA on b3
+6. AlfrR e3 x c5 Light AlfrA e3 x c5
+7. EldthursarA b3 - c2 Dark Mount b3 = EldthursarR on c2
+7. AlfrA f2 - g4 = AlfrR
+8. EldthursarR c2 - e2 Dark Mount c2 x e3 x e1 = EldthursarA on e2
+8. AlfrR g4 x e2 Light AlfrA g4 x e2
+9. SurtrA d9 - c7 Dark Mount d9 = SurtrR on c7
+9. AlfrA g4 - g3 = AlfrR
+10. SurtrR c7 - d5 Dark Mount c7 = SurtrA on d5
+10. AlfrR g3 - f2 = AlfrA
+11. SurtrA d5 - c3 Dark Mount d5 = SurtrR on c3
+11. AlfrA f2 - e2 = AlfrR
+12. SurtrR c3 - d1 Dark Mount c3 x e2 = SurtrA on d1

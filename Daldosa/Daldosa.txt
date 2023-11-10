@@ -1,0 +1,44 @@
+Daldosa
+-------
+
+Daldosa is known to have been historically played in only about four different 
+isolated locations in Scandinavia. These are Jaeren in Norway, Thy of Jutland, 
+Denmark, Mors of northern Denmark, Fano of southwestern Denmark and Bornholm, 
+a Swedish island in the Baltic Sea.
+
+Objective 
+
+The goal is to capture all of the opponent's counters. To make a quicker game, 
+it may be agreed beforehand that the game is over when one player has been 
+reduced to one counter (the other player then being the winner).
+
+Play 
+
+To start the game each player throws both dice, adds their totals and the 
+player that rolls highest goes first. Turns alternate and on their turn each 
+player throws both dice once. A throw showing "A" is a special throw called 
+a dal. When a player throws a dal, they may turn one counter parallel to its 
+row (or in whatever method used to show rank) and move it forward one position. 
+
+An undalled counter may not move and only a throw of dal allows a player to 
+start moving any one of their counters. All other numbers shown on the dice 
+only entitle the player to move a previously dalled counter forward the 
+equivalent amount. The two dice totals may be added to move forward one 
+counter or they may be used separately for two different counters. 
+
+If a player has no dalled counters and does not throw any dals, the turn 
+is forfeit. A throw of two dals allots the player who cast it an extra turn 
+after their move. Any move that can be taken must be taken.
+
+No two counters may ever occupy the same cell. When landing by exact throw 
+at a cell occupied by an opposing counter that counter is captured by 
+replacement and removed from the board and game. Friendly or opposing counters 
+may be passed over without effect to either counter.
+
+Each player's counters move first through the home row to the stern or rear of 
+the ship/board, then through the middle row towards the prow (front), then into 
+the opponent's home row back towards the stern. From here, it moves into 
+the middle row again. Any counter never returns to its own home row.
+
+See Also: https://sites.google.com/site/boardandpieces/list-of-games/dalds
+And Video: https://www.youtube.com/watch?v=F8n6U-CMK_c

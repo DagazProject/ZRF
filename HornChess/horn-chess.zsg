@@ -1,0 +1,40 @@
+Zillions Save Game File Version 0.02 HC
+RulesFile=horn-chess.zrf
+VariantName=Horn Chess
+1. BlackStone b1 - b2
+1. WhiteStone a7 - a6
+2. BlackStone a1 - a2
+2. WhiteStone a6 - b5
+3. BlackStone b2 - b3
+3. WhiteStone b5 - b4
+4. BlackStone a2 - b2
+4. WhiteStone b4 - a5
+5. BlackStone b2 - a2
+5. WhiteStone a5 - a4
+6. BlackStone a2 - a3
+6. WhiteStone a4 - a5
+7. BlackStone b3 - a4
+7. WhiteStone a5 - b5
+8. BlackStone a4 - b4
+8. WhiteStone b5 - a6
+9. BlackStone a3 - b3
+9. WhiteStone a6 - b5
+10. BlackStone b3 - a3
+10. WhiteStone b5 - a5
+11. BlackStone a3 - a4
+11. WhiteStone a5 - a6
+12. BlackStone b4 - a5
+12. WhiteStone a6 - b6
+13. BlackStone a5 - b5
+13. WhiteStone b6 - a7
+14. BlackStone a4 - b4
+14. WhiteStone a7 - b6
+15. BlackStone b4 - a4
+15. WhiteStone b6 - a6
+16. BlackStone a4 - a5
+16. WhiteStone a6 - a7
+17. BlackStone b5 - a6
+17. WhiteStone a7 - b6
+18. BlackStone a5 - b5
+18. WhiteStone b6 - a7
+19. BlackStone b5 - b6

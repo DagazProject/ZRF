@@ -1,0 +1,144 @@
+Zillions Save Game File Version 0.02 CCC
+RulesFile=Duke.zrf
+VariantName=Dynastic Dispute
+1. South Blank f2 x a5 x R2 x R3 x R4 x f2
+1. North Blank d5 x c2 x S5 x d5
+1. South Blank b2 x e5 x R12 x b2
+1. North Blank b4 x e3 x S16 x b4
+1. South Blank c3 x d4 x R10 x c3
+1. North Blank f5 x a2 x S9 x f5
+1. South Blank f1 x a6 x R7 x f1
+1. North Blank e6 x b1 x S13 x e6
+1. South Blank c1 x d6 x R11 x c1
+1. North Blank b6 x e1 x S14 x b6
+1. South Blank e2 x b5 x R15 x e2
+1. North Blank f6 x a1 x S17 x f6
+1. South Blank d1 x c6 x R8 x d1
+1. North Blank c5 x d2 x S6 x c5
+1. South DukeA c1
+1. South FootmanA c2
+1. South FootmanA d1
+1. North DukeA f6
+1. North FootmanA f5
+1. North FootmanA e6
+2. South Blank b1
+2. South DragoonA b1 x S15
+2. FootmanA e6 - e5 = FootmanR
+2. Pass
+3. FootmanA c2 - c3 = FootmanR
+3. Pass
+3. North Blank e6
+3. North BowmanA e6 x R13
+4. South Blank c2
+4. South GeneralA c2 x S11
+4. BowmanA e6 - d6 = BowmanR
+4. Pass
+5. GeneralA c2 - d4 = GeneralR
+5. Pass
+5. BowmanR d6 x d4 North BowmanA d6 x d4
+5. Pass
+6. South Blank c2
+6. South FootmanA c2 x S1
+6. North Blank e6
+6. North AssassinA e6 x R16
+7. FootmanA c2 - d2 = FootmanR
+7. Pass
+7. AssassinA e6 - e3 = AssassinR
+7. Pass
+8. FootmanR d2 x e3 = FootmanA
+8. Pass
+8. FootmanR e5 x e3 = FootmanA
+8. Pass
+9. South Blank c2
+9. South PriestA c2 x S7
+9. North Blank e6
+9. North FootmanA e6 x R1
+10. PriestA c2 x f5 = PriestR
+10. Pass
+10. FootmanA e6 - e5 = FootmanR
+10. Pass
+11. South Blank c2
+11. South RangerA c2 x S10
+11. North Blank e6
+11. North LongbowmanA e6 x R14
+12. RangerA c2 x e3 = RangerR
+12. Pass
+12. FootmanR e5 x e3 = FootmanA
+12. Pass
+13. PriestR f5 x e6 = PriestA
+13. Pass
+13. DukeA f6 x e6 = DukeR
+13. Pass
+14. South Blank c2
+14. South MarshallA c2 x S8
+14. North Blank e5
+14. North SeerA e5 x R6
+15. DragoonA b1 - a1 = DragoonR
+15. Pass
+15. North Blank f6
+15. North KnightA f6 x R9
+16. South Blank b1
+16. South ChampionA b1 x S12
+16. BowmanA d6 - d5 = BowmanR
+16. Pass
+17. MarshallA c2 - b2 = MarshallR
+17. Pass
+17. North Blank d6
+17. North DuchessA d6 x R17
+18. South Blank c2
+18. South PikemanA c2 x S4
+18. DuchessA d6 - c6 = DuchessR
+18. Pass
+19. FootmanR c3 - b4 = FootmanA
+19. Pass
+19. North Blank d6
+19. North WizardA d6 x R5
+20. FootmanA b4 - b5 = FootmanR
+20. Pass
+20. WizardA d6 - c5 = WizardR
+20. Pass
+21. FootmanR b5 x c6 = FootmanA
+21. Pass
+21. BowmanR d5 x c6 = BowmanA
+21. Pass
+22. DragoonR a1 - a3 = DragoonA
+22. Pass
+22. WizardR c5 x a3 = WizardA
+22. Pass
+23. MarshallR b2 x a3 = MarshallA
+23. Pass
+23. KnightA f6 - e4 = KnightR
+23. Pass
+24. PikemanA c2 x e4 = PikemanR
+24. Pass
+24. FootmanA e3 x e4 = FootmanR
+24. Pass
+25. South Blank c2
+25. South PikemanA c2 x S3
+25. BowmanA c6 - c5 = BowmanR
+25. Pass
+26. PikemanA c2 x e4 = PikemanR
+26. Pass
+26. SeerA e5 - e3 = SeerR
+26. Pass
+27. PikemanR e4 x e3 = PikemanA
+27. Pass
+27. DukeR e6 - e5 = DukeA
+27. Pass
+28. MarshallA a3 x c5 = MarshallR
+28. Pass
+28. DukeA e5 - f5 = DukeR
+28. Pass
+29. FootmanA d1 - d2 = FootmanR
+29. Pass
+29. DukeR f5 - f2 = DukeA
+29. Pass
+30. ChampionA b1 - b2 = ChampionR
+30. Pass
+30. DukeA f2 - e2 = DukeR
+30. Pass
+31. MarshallR c5 - e5 = MarshallA
+31. Pass
+31. DukeR e2 x e3 = DukeA
+31. Pass
+32. MarshallA e5 x e3 = MarshallR

@@ -1,0 +1,9 @@
+Qiguo Xiangqi
+-------------
+Game of the Seven Kingdoms (Qiguo Xiangqi) is a seven-player variant of the game Xiangqi.
+It was invented by Sima Guang (1019-1086).
+
+There are a total of 120 pieces used in this variant
+symbolizing the seven Warring States (403-221 B.C.) period.
+
+See Also: http://www.chessvariants.com/xiangqivariants.dir/chin7.html

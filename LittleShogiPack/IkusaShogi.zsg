@@ -1,0 +1,26 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=IkusaShogi.zrf
+VariantName=Ikusa Shogi
+1. Knight z1 - c4
+1. Gold d6 - d5
+2. Knight c4 x b6 Silver b6 - z1 = KnightP on b6 flip z1
+2. King c7 x b6 KnightP b6 - n5 = Knight flip n5
+3. Rook z2 - b3
+3. Bishop n6 - b5
+4. Lance y1 - b4
+4. Rook m6 - a5
+5. Gold b2 - c3
+5. Gold d5 - c5
+6. Bishop y2 - d6
+6. Knight n5 - c7
+7. Lance b4 x b5 Bishop b5 - y1 flip y1
+7. Gold c5 x b5 Lance b5 - n6 flip n6
+8. Gold c3 - c4
+8. Knight m7 - d3
+9. Silver d2 x d3 Knight d3 - y2 flip y2
+9. Lance n6 - c5
+10. Bishop d6 x c7 Knight c7 - z2 flip z2
+10. King b6 x c7 Bishop c7 - m7 flip m7
+11. Knight y2 - d5
+11. King c7 - b6
+12. Silver z1 - c7

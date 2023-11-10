@@ -1,0 +1,85 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=Mana.zrf
+VariantName=Mana (SW)
+1. Ronin aY - a2 = Ronin
+1. Ronin bY - b2 = Ronin
+1. Ronin cY - c2 = Ronin
+1. Ronin dY - d2 = Ronin
+1. Ronin eY - e2 = Ronin
+1. Damyo fY - c1 = Damyo
+1. Ronin aX - b5 = Ronin
+1. Ronin bX - c5 = Ronin
+1. Ronin cX - d5 = Ronin
+1. Ronin dX - e5 = Ronin
+1. Ronin eX - f5 = Ronin
+1. Damyo fX - d6 = Damyo
+2. partial 4 Ronin e2 - f2
+2. partial 5 Ronin f2 - f1
+2. Ronin f1 - e1 = RoninMana
+2. Damyo d6 - e6 = Ronin on e1 = DamyoMana on e6
+3. partial 5 Damyo c1 - b1 = Damyo on e6
+3. Damyo b1 - a1 = DamyoMana
+3. Ronin c5 - c4 = Damyo on a1 = RoninMana on c4
+4. partial 5 Ronin a2 - a3 = Ronin on c4
+4. Ronin a3 - a4 = RoninMana
+4. partial 4 Ronin d5 - d6 = Ronin on a4
+4. partial 5 Ronin d6 - c6
+4. Ronin c6 - b6 = RoninMana
+5. Ronin b2 - a2 = Ronin on b6 = RoninMana on a2
+5. partial 5 Ronin b6 - a6 = Ronin on a2
+5. Ronin a6 - a5 = RoninMana
+6. Damyo a1 - b1 = Ronin on a5 = DamyoMana on b1
+6. partial 4 Ronin b5 - b4 = Damyo on b1
+6. partial 5 Ronin b4 - b3
+6. Ronin b3 - b2 = RoninMana
+7. Ronin e1 - d1 = Ronin on b2 = RoninMana on d1
+7. partial 5 Ronin c4 - c3 = Ronin on d1
+7. Ronin c3 x c2 Ronin c2 - aY = RoninMana on c2 = Ronin on aY
+8. partial 4 Ronin a4 - a3 = Ronin on c2
+8. partial 5 Ronin a3 - b3
+8. Ronin b3 x b2 Ronin b2 - aX = RoninMana on b2 = Ronin on aX
+8. Ronin e5 - e4 = Ronin on b2 = RoninMana on e4
+9. partial 4 Damyo b1 - c1 = Ronin on e4
+9. partial 4 Ronin e4 - e3
+9. partial 5 Ronin e3 - f3
+9. Ronin f3 - f4 = RoninMana
+10. Ronin d2 - e2 = Ronin on f4 = RoninMana on e2
+10. partial 4 Ronin c2 - c3 = Ronin on e2
+10. partial 5 Ronin c3 - c4
+10. Ronin c4 - c5 = RoninMana
+11. Ronin b2 - b1 = Ronin on c5 = RoninMana on b1
+11. partial 4 Ronin f5 - e5 = Ronin on b1
+11. partial 5 Ronin e5 - e4
+11. Ronin e4 - d4 = RoninMana
+12. partial 5 Ronin a2 - b2 = Ronin on d4
+12. Ronin b2 - b3 = RoninMana
+12. Ronin a5 - a6 = Ronin on b3 = RoninMana on a6
+13. partial 5 Ronin d1 - d2 = Ronin on a6
+13. Ronin d2 - c2 = RoninMana
+13. Ronin aX - d1 = Ronin on c2 = RoninMana on d1
+14. Ronin aY - a2 = Ronin on d1 = RoninMana on a2
+14. partial 5 Damyo e6 - e5 = Ronin on a2
+14. Damyo e5 - e4 = DamyoMana
+15. partial 4 Ronin b3 - b4 = Damyo on e4
+15. partial 5 Ronin b4 - b5
+15. Ronin b5 - b6 = RoninMana
+15. partial 5 Ronin a6 - a5 = Ronin on b6
+15. Ronin a5 - a4 = RoninMana
+16. partial 4 Ronin c2 - c3 = Ronin on a4
+16. partial 5 Ronin c3 - c4
+16. Ronin c4 x c5 Ronin c5 - aX = RoninMana on c5 = Ronin on aX
+16. Ronin f4 - f3 = Ronin on c5 = RoninMana on f3
+17. partial 5 Ronin b6 - b5 = Ronin on f3
+17. Ronin b5 - b4 = RoninMana
+17. Ronin aX - b3 = Ronin on b4 = RoninMana on b3
+18. partial 4 Ronin e2 - e3 = Ronin on b3
+18. partial 5 Ronin e3 - d3
+18. Ronin d3 x d4 Ronin d4 - aX = RoninMana on d4 = Ronin on aX
+18. partial 5 Ronin d1 - e1 = Ronin on d4
+18. Ronin e1 - f1 = RoninMana
+19. partial 4 Ronin b1 - b2 = Ronin on f1
+19. partial 5 Ronin b2 - c2
+19. Ronin c2 - d2 = RoninMana
+19. partial 4 Ronin b3 - b2 = Ronin on d2
+19. partial 5 Ronin b2 - c2
+19. Ronin c2 x c1 = RoninMana

@@ -1,0 +1,58 @@
+(version "2.0")
+
+(game
+   (title "Ordo")
+   (description "The goal of Classic Ordo is to reach the opposite row with one of the player's checkers.  A player can also win the game \
+                 by capturing all opponent's checkers or by breaking the group of opponent's checkers in such a way that the opponent is unable \
+                 to reconnect his group on his next move.\\
+                 During the game, after a player's move, all of that player's checkers must be connected (orthogonally or diagonally) \
+                 in one sole group.  If a group of a player's checkers is disconnected as a result of a capture made by the opponent, \
+                 the player must move to reconnect his group again.  If no such move is possible, the player loses the game.")
+   (history "Ordo is a two-player board game invented by Dieter Stein in 2009.")
+   (engine "Axiom/Ordo/axiom.dll")
+   (players Light Dark)
+   (turn-order Light Dark)
+   (option "animate captures" false)
+   (move-sound "Audio/Pickup.wav")
+   (release-sound "Audio/Pickup.wav")
+   (capture-sound "")
+   (board 
+      (image "Images/Ordo/board.bmp")
+      (grid
+               (start-rectangle 5 5 53 53)
+               (dimensions
+                   ("a/b/c/d/e/f/g/h/i/j" (49 0)) ; files
+                   ("8/7/6/5/4/3/2/1" (0 49)) ; ranks
+               )
+      )
+   )
+   (board-setup
+      (Light
+              (Man a2 a3 b2 b3 c1 c2 d1 d2 e2 e3 f2 f3 g1 g2 h1 h2 i2 i3 j2 j3)
+      )
+      (Dark
+              (Man a7 a6 b7 b6 c8 c7 d8 d7 e7 e6 f7 f6 g8 g7 h8 h7 i7 i6 j7 j6)
+      )
+   )
+   (piece
+      (name Man)
+      (image Light "Images/Ordo/GoW.bmp"
+             Dark  "Images/Ordo/GoB.bmp")
+   )
+   ; The following dummy piece is required in order to placate the Zillions engine.
+   ; It appears as though Zillions must find at least one "moves" keyword somewhere
+   ; in the zrf in order for it to be happy and thus allow "moves" to work correctly.
+   (piece (name Dummy) (dummy) (moves (from)))
+)
+
+(variant
+   (title "Ordo (simple)")
+)
+
+(variant
+   (title "Ordo (advanced)")
+)
+
+(variant
+   (title "Ordo (crazy)")
+)

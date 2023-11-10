@@ -1,0 +1,28 @@
+(game
+  (title "Blank")
+
+  (option "pass turn" true)
+
+  (players You)
+  (turn-order You)
+
+  (board
+    (image "P18.bmp")
+    (grid
+      (start-rectangle 0 0 60 270)
+      (dimensions
+        ("a" (60 0)) ; files
+        ("1" (0 270)) ; ranks
+      )
+    )
+  )
+
+  (piece
+     (name  Blank)
+     (image You "ball.bmp")
+  )
+
+  (board-setup
+     (You (Blank a1))
+  )
+)

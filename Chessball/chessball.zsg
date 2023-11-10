@@ -1,0 +1,63 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=chessball.zrf
+VariantName=Chessball
+1. partial 11 Bishop c3 x c4
+1. Bishop c4 - c5 White Bishop c4 = Ball on c5
+1. partial 11 Bishop c6 x c5
+1. Bishop c5 - c6 Black Bishop c5 = Ball on c6
+2. Bishop c4 - b5
+2. partial 11 Bishop c5 x c6
+2. Bishop c6 - c4 Black Bishop c6 = Ball on c4
+3. partial 12 Bishop d3 x c4
+3. Bishop c4 - d3 White Bishop c4 = Ball on d3
+3. Bishop b6 - a7
+4. partial 6 Pawn c2 x d3
+4. Pawn d3 - d4 White Pawn d3 = Ball on d4
+4. Bishop d6 - e7
+5. partial 11 Bishop c4 x d4
+5. Bishop d4 - c4 White Bishop d4 = Ball on c4
+5. Bishop c6 - a6
+6. partial 11 Bishop d4 x c4
+6. Bishop c4 - c6 White Bishop c4 = Ball on c6
+6. partial 10 Pawn b7 x c6
+6. Pawn c6 - e4 Black Pawn c6 = Ball on e4
+7. partial 6 Pawn d3 x e4
+7. Pawn e4 - e5 White Pawn e4 = Ball on e5
+7. Pawn d7 - e6
+8. partial 3 Pawn e4 x e5
+8. Pawn e5 - d6 White Pawn e5 = Ball on d6
+8. partial 12 Bishop e7 x d6
+8. Bishop d6 - c5 Black Bishop d6 = Ball on c5
+9. partial 11 Bishop b5 x c5
+9. Bishop c5 - d5 White Bishop c5 = Ball on d5
+9. partial 10 Pawn c6 x d5
+9. Pawn d5 - e4 Black Pawn d5 = Ball on e4
+10. partial 9 Pawn e5 x e4
+10. Pawn e4 - d3 White Pawn e4 = Ball on d3
+10. Pawn c7 - a5
+11. partial 8 Pawn e4 x d3
+11. Pawn d3 - c3 White Pawn d3 = Ball on c3
+11. Bishop a6 - b7
+12. partial 6 Pawn b2 x c3
+12. Pawn c3 - d4 White Pawn c3 = Ball on d4
+12. partial 9 Pawn d5 x d4
+12. Pawn d4 - e3 Black Pawn d4 = Ball on e3
+13. partial 6 Pawn d2 x e3
+13. Pawn e3 - e5 White Pawn e3 = Ball on e5
+13. partial 9 Pawn e6 x e5
+13. Pawn e5 - e4 Black Pawn e5 = Ball on e4
+14. partial 3 Pawn e3 x e4
+14. Pawn e4 - d5 White Pawn e4 = Ball on d5
+14. partial 3 Pawn d4 x d5
+14. Pawn d5 - e6 Black Pawn d5 = Ball on e6
+15. Bishop c5 - c6
+15. partial 11 Bishop d6 x e6
+15. Bishop e6 - e7 Black Bishop e6 = Ball on e7
+16. Bishop c6 - c7
+16. partial 11 Bishop e6 x e7
+16. Bishop e7 - e6 Black Bishop e7 = Ball on e6
+17. Bishop c7 - d6
+17. partial 11 Bishop e7 x e6
+17. Bishop e6 - e7 Black Bishop e6 = Ball on e7
+18. partial 12 Bishop d6 x e7
+18. Bishop e7 - d8 White Bishop e7 = Ball on d8

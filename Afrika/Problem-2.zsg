@@ -1,0 +1,26 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=Afrika.zrf
+VariantName=Problem 2
+1. p8 g1 x h1 First p2 h1 Second p2 h2 Second p5 g2 Second p8 f2 Second p10 e2 Second p2 d2 Second p2 c2 Second p2 b2
+1. p1 a2 x a1 First p2 a1 First q2 d2 First q2 c2
+2. q2 d2 x east First p50 east Second q2 a1 Second p2 c2
+2. q2 a1 x west Second p34 west First q2 c2
+3. q2 c2 x east First p52 east
+3. p5 g2 x f2 Second p9 f2 Second p11 e2 First q1 d2 First q1 c2 Second p3 b2
+4. q1 c2 x east First p53 east Second p1 d2
+4. p11 e2 x d2 Second p2 d2 Second p1 c2 Second p4 b2 Second p1 a2 First p1 a1 First p2 b1 First p1 c1 First p1 d1 First p1 e1 First p13 f1 First p1 g1
+5. p13 f1 x g1 First p2 g1 First p3 h1 Second p3 h2 Second p1 g2 Second p10 f2 Second p1 e2 Second p3 d2 Second p2 c2 Second p5 b2 Second p2 a2 First p2 a1 First p3 b1 First p2 c1
+5. p10 f2 x e2 Second p2 e2 Second p4 d2 Second p3 c2 Second p6 b2 Second p3 a2 First p3 a1 First p4 b1 First p3 c1 First p2 d1 First p2 e1
+6. p4 b1 x c1 First p4 c1 First p3 d1 First p3 e1 Second q1 f1
+6. q1 f1 x west Second p35 west First q6 b2
+7. q6 b2 x east First p59 east
+7. p3 h2 x g2 Second p2 g2 First q1 f2 Second p3 e2
+8. q1 f2 x east First p60 east Second q3 h1
+8. q3 h1 x west Second p38 west
+9. p3 d1 x e1 First p4 e1 Second q1 f1 First p3 g1
+9. q1 f1 x west Second p39 west First q4 d2
+10. q4 d2 x east First p64 east
+10. p3 a2 x a1 First p4 a1 First p1 b1 First p5 c1
+11. p3 g1 - h1 First p1 h1 Second p1 h2 Second p3 g2 Second q1 b1
+11. q1 b1 x west Second p40 west First q3 g2
+12. q3 g2 x east First p67 east Second q4 a1

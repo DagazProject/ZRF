@@ -1,0 +1,52 @@
+Zillions Save Game File Version 0.02 CCC
+RulesFile=Duke.zrf
+VariantName=Dark Riders
+1. South PikemanA c1
+1. South PikemanA d1
+1. South PikemanA b1
+1. South PikemanA e1
+1. South PikemanA a1
+1. North KnightA c6
+1. North KnightA a6
+2. KnightA a6 - b4 = KnightR
+2. PikemanA b1 - c2 = PikemanR
+3. KnightR b4 - c5 = KnightA
+3. PikemanA d1 - f3 = PikemanR
+4. KnightA c6 - d6 = KnightR
+4. PikemanA e1 - c3 = PikemanR
+5. KnightR d6 - d1 = KnightA
+5. PikemanR f3 - f1 = PikemanA
+6. KnightA c5 - c6 = KnightR
+6. PikemanA f1 - e2 = PikemanR
+7. KnightR c6 - c5 = KnightA
+7. PikemanR e2 - e3 = PikemanA
+8. KnightA c5 - d3 = KnightR
+8. PikemanA a1 - b2 = PikemanR
+9. KnightR d3 - e4 = KnightA
+9. PikemanR c3 - c4 = PikemanA
+10. KnightA d1 - e1 = KnightR
+10. PikemanA c4 - b5 = PikemanR
+11. KnightA e4 - e5 = KnightR
+11. PikemanA e3 - d4 = PikemanR
+12. KnightR e1 - f2 = KnightA
+12. PikemanR c2 - c3 = PikemanA
+13. KnightA f2 - f3 = KnightR
+13. PikemanR b2 - b1 = PikemanA
+14. KnightR e5 - e2 = KnightA
+14. PikemanA b1 - d3 = PikemanR
+15. KnightA e2 - e4 = KnightR
+15. PikemanR d3 - d2 = PikemanA
+16. KnightR e4 - e1 = KnightA
+16. PikemanA d2 - e3 = PikemanR
+17. KnightA e1 - d1 = KnightR
+17. PikemanR d4 - d3 = PikemanA
+18. KnightR f3 - f1 = KnightA
+18. PikemanA d3 - f5 = PikemanR
+19. KnightR d1 - c2 = KnightA
+19. PikemanR f5 - f6 = Pikeman
+20. KnightA c2 x c3 = KnightR
+20. PikemanR e3 - e4 = PikemanA
+21. KnightR c3 x c1 = KnightA
+21. PikemanR b5 - b6 = Pikeman
+22. KnightA c1 - c3 = KnightR
+22. PikemanA e4 - c6 = Pikeman

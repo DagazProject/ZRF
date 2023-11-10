@@ -1,0 +1,126 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=PyonPyonShogi.zrf
+VariantName=Pyon Pyon Shogi (extended)
+1. partial 3 Pawn a3 - d3
+1. partial 3 Pawn g9 - g6
+2. partial 3 Pawn a2 - d2
+2. Pawn h7 - h6
+3. partial 2 Pawn d2 - d4
+3. Pawn i7 - h7
+4. partial 2 Pawn c2 - c4
+4. Pass
+4. Pawn g6 - g5
+5. Pawn b3 - b4
+5. partial 2 Pawn h9 - h5
+5. Pass
+6. Pawn c1 - c2
+6. Pawn g5 - g4
+7. Pawn b2 - b3
+7. partial 2 Pawn h8 - h4
+7. partial 2 Pawn h4 - f4
+8. Pawn d4 - d5
+8. partial 2 Pawn g4 - e4
+9. partial 2 Pawn a1 - c1
+9. partial 2 Pawn c1 - c5
+9. partial 2 Pawn c5 - e5
+9. partial 2 Pawn f4 - d4
+9. partial 2 Pawn d4 - d2
+10. partial 2 Pawn d5 - f5
+10. Pawn e4 - d4
+11. partial 2 Pawn d3 - d5
+11. partial 2 Pawn d5 - g5
+11. partial 2 Pawn g5 - i5
+11. partial 2 Pawn i9 - i7
+11. Pass
+12. partial 2 Pawn b4 - e4
+12. Pass
+12. partial 2 Pawn i8 - i6
+12. partial 2 Pawn i6 - g6
+13. partial 2 Pawn c4 - f4
+13. partial 2 Pawn f4 - f6
+13. Pass
+13. partial 2 Pawn g8 - g5
+13. partial 2 Pawn g5 - d5
+13. partial 2 Pawn d5 - d3
+13. Pass
+14. partial 2 Pawn c2 - c4
+14. partial 2 Pawn c4 - f4
+14. partial 2 Pawn f4 - f7
+14. Pawn i7 - i6
+15. partial 2 Pawn f5 - f8
+15. Pawn d4 - c4
+16. partial 2 Pawn f6 - f9
+16. partial 2 Pawn d3 - d1
+17. Pawn b1 - c1
+17. Pawn h5 - g5
+18. partial 2 Pawn e4 - e6
+18. partial 2 Pawn h7 - h5
+18. partial 2 Pawn h5 - f5
+18. partial 2 Pawn f5 - d5
+19. Pawn e6 - f6
+19. Pawn d5 - d4
+20. Pawn c1 - c2
+20. partial 2 Pawn g6 - e6
+20. partial 2 Pawn e6 - e4
+20. partial 2 Pawn e4 - b4
+21. partial 2 Pawn c3 - c5
+21. Pawn g7 - g6
+22. partial 2 Pawn c2 - e2
+22. partial 2 Pawn b4 - b2
+23. Pawn b3 - b4
+23. Pawn c4 - c3
+24. Pawn e5 - f5
+24. partial 2 Pawn g5 - e5
+25. Pawn f9 - g9
+25. partial 2 Pawn i6 - e6
+25. partial 2 Pawn e6 - e4
+25. partial 2 Pawn e4 - c4
+25. partial 2 Pawn c4 - c2
+25. Pass
+26. partial 2 Pawn f6 - f9
+26. partial 2 Pawn f9 - h9
+26. Pawn d1 - c1
+27. Pawn f7 - g7
+27. Pawn d4 - d3
+28. Pawn i5 - i6
+28. partial 2 Pawn d3 - b3
+28. Pass
+29. Pawn i6 - i7
+29. Pawn b2 - b1
+30. Pawn f8 - g8
+30. partial 2 Pawn d2 - b2
+31. Pawn f5 - f6
+31. partial 2 Pawn h6 - e6
+31. partial 2 Pawn e6 - e4
+32. Pawn b4 - b5
+32. partial 2 Pawn e5 - e3
+32. partial 2 Pawn e3 - e1
+33. Pawn g7 - h7
+33. Pawn e1 - d1
+34. partial 2 Pawn f6 - h6
+34. partial 2 Pawn h6 - h8
+34. Pawn e4 - e3
+35. partial 2 Pawn b5 - d5
+35. Pawn e3 - d3
+36. partial 2 Pawn c5 - e5
+36. Pawn g6 - g5
+37. partial 2 Pawn d5 - f5
+37. partial 2 Pawn f5 - h5
+37. partial 2 Pawn d3 - a3
+38. Pawn h5 - h6
+38. Pawn g5 - g4
+39. Pawn e5 - f5
+39. Pawn g4 - g3
+40. Pawn f5 - f6
+40. Pawn g3 - f3
+41. Pawn h9 - i9
+41. Pawn f3 - f2
+42. Pawn e2 - e3
+42. Pawn f2 - e2
+43. Pawn f6 - g6
+43. Pawn e2 - d2
+44. partial 2 Pawn g6 - i6
+44. partial 2 Pawn i6 - i8
+44. partial 2 Pawn d2 - a2
+45. partial 2 Pawn h6 - h9
+45. partial 2 Pawn d1 - a1

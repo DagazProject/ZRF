@@ -1,0 +1,364 @@
+(define checker-shift (
+  $1
+  (verify empty?)
+  (if (in-zone? promotion)
+      (add King)
+   else
+      add
+  )
+))
+
+(define checker-captured-find
+   mark
+   (if (on-board? $1)  
+      $1    
+      (if (and enemy? (on-board? $1) (empty? $1) (not captured?)) 
+          (set-flag more-captures true)
+      )
+   )
+   back
+)
+
+(define markit 
+  (set-attribute captured? true)
+)
+
+(define capture-all
+   mark  
+   a0 
+   (while (on-board? next) 
+      next
+      (if captured? capture)
+   )
+   back  
+)
+
+(define international-checker-jump (
+  (verify (not captured?))    
+  $1
+  (verify enemy?)
+  (verify (not captured?))
+  $1
+  (verify empty?)
+  (set-flag more-captures false)
+  (checker-captured-find $1)
+  (checker-captured-find $2)
+  (checker-captured-find $3)
+  (checker-captured-find $4)
+  (checker-captured-find $5)
+  (if (flag? more-captures)
+      (opposite $1)
+      (markit)
+      $1
+   else
+      (opposite $1) 
+      (if enemy?
+          capture
+      )
+      $1
+      (capture-all)
+  )
+  (if (in-zone? promotion)
+      (if (flag? more-captures)
+          (add-partial jumptype)
+       else
+          (add-partial King notype)
+      )
+   else
+      (if (flag? more-captures)
+          (add-partial jumptype)
+       else
+          (add-partial notype)
+      )
+  )
+))
+
+(define king-shift (
+  (while (empty? $1)
+      $1
+      add
+  )
+))
+
+(define king-captured-find
+   mark
+   (while (and (on-board? $1) (empty? $1))
+      $1
+   )
+   (if (on-board? $1)  
+      $1    
+      (if (and enemy? (empty? $1) (not captured?)) 
+          (set-flag more-captures true)
+      )
+   )
+   back
+)
+
+(define long-king-jump (
+  (while (or (empty? $1) captured?)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (empty? $1))
+  $1
+  (while empty?
+      (set-flag more-captures false)
+      (king-captured-find $1)
+      (king-captured-find $2)
+      (king-captured-find $3)
+      (king-captured-find $4)
+      (king-captured-find $5)
+      mark
+      (while empty? 
+          (opposite $1)
+      ) 
+      (if (flag? more-captures)
+          (markit)
+      )
+      back
+      (if (flag? more-captures)
+          (add-partial continuetype)
+       else
+          mark
+          (opposite $1)
+          (while empty?
+             (opposite $1)
+          )
+          (if enemy?
+              capture
+          )
+          back
+          (capture-all)
+          (add-partial notype)
+      )
+      $1
+  )
+))
+
+(define long-king-continue (
+  (verify (not captured?))    
+  (while (or (empty? $1) captured?)
+      $1
+      (verify not-last-from?)
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (not captured?))    
+  (verify (empty? $1))
+  $1
+  (while empty?
+      (set-flag more-captures false)
+      (king-captured-find $1)
+      (king-captured-find $2)
+      (king-captured-find $3)
+      (king-captured-find $4)
+      (king-captured-find $5)
+      mark
+      (while empty? 
+          (opposite $1)
+      ) 
+      (if (flag? more-captures)
+          (markit)
+      )
+      back
+      (if (flag? more-captures)
+          (add-partial continuetype)
+       else
+          mark
+          (opposite $1)
+          (while empty?
+             (opposite $1)
+          )
+          (if enemy?
+              capture
+          )
+          back
+          (capture-all)
+          (add-partial notype)
+      )
+      $1
+  )
+))
+
+(game
+  (title "Shafran's Checkers")
+
+  (option "animate captures" false)
+
+  (players White Black)
+  (turn-order White Black)
+  (move-priorities jumptype normaltype)
+
+  (board
+     (image "images/hmini.bmp")
+     (grid
+         (start-rectangle -332 26 -290 68)
+         (dimensions
+           ("a/b/c/d/e" (142 0)) ; files
+           ("9/8/7/6/5/4/3/2/1" (71 40)) ; ranks
+         )         
+         (directions (nw 0 -1) (ne 1 -1) (n 1 -2) (se 0 1) (sw -1 1) (s -1 2) (next 0 -1))
+     )
+     (dummy a0)
+     (links next (a0 a1) (a4 b2) (b6 c3) (c7 d4) (d4 e6))
+     (symmetry Black (nw se) (se nw) (ne sw) (sw ne) (n s) (s n))
+     (kill-positions a9 b9 c9 d9 a8 b8 c8 a7 b7 a6 b1 c1 d1 c2 d2 d3 e4 a5 e5 e3 e2)
+     (zone (name promotion) (players White)
+           (positions e9)
+     )
+     (zone (name promotion) (players Black)
+           (positions a1)
+     )
+  )
+
+  (piece
+     (name Man)
+     (image White "images/wman.bmp"
+            Black "images/bman.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (international-checker-jump n nw sw ne se)
+           (international-checker-jump s nw sw ne se)
+           (international-checker-jump nw sw s n ne)
+           (international-checker-jump ne n nw se s)
+           (international-checker-jump sw s se nw n)
+           (international-checker-jump se ne n s sw)
+
+        (move-type normaltype)
+           (checker-shift nw)
+           (checker-shift ne)
+           (checker-shift n)
+
+        (move-type notype)
+     )
+  )
+  (piece
+     (name King)
+     (image White "images/wking.bmp"
+            Black "images/bking.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (long-king-jump n nw sw ne se)
+           (long-king-jump s nw sw ne se)
+           (long-king-jump nw sw s n ne)
+           (long-king-jump ne n nw se s)
+           (long-king-jump sw s se nw n)
+           (long-king-jump se ne n s sw)
+
+        (move-type continuetype)
+           (long-king-continue n nw sw ne se)
+           (long-king-continue s nw sw ne se)
+           (long-king-continue nw sw s n ne)
+           (long-king-continue ne n nw se s)
+           (long-king-continue sw s se nw n)
+           (long-king-continue se ne n s sw)
+
+        (move-type normaltype)
+           (king-shift ne)
+           (king-shift nw)
+           (king-shift se)
+           (king-shift sw)
+           (king-shift n)
+           (king-shift s)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Man a4 a3 a2 a1 b2 c3 d4 b3))
+    (Black (Man b6 c7 d8 e9 e8 e7 e6 d7))
+  )
+
+  (loss-condition (White Black) (pieces-remaining 0) )
+  (loss-condition (White Black) stalemated )
+)
+
+(variant
+  (title "Shafran's Checkers (variant)")
+
+  (board
+     (image "images/vmini.bmp")
+     (grid
+         (start-rectangle -94 24 -52 66)
+         (dimensions
+           ("a/b/c/d/e" (80 0)) ; files
+           ("7/6/5/4/3/2/1" (40 71)) ; ranks
+         )         
+         (directions (nw 0 -1) (ne 1 -1) (se 0 1) (sw -1 1) (w -1 0) (e 1 0) (next 1 0))
+     )
+     (dummy a0)
+     (links next (a0 d7) (e7 c6) (e6 b5) (e5 a4) (e4 a3) (d3 a2) (c2 a1))
+     (kill-positions a7 b7 c7 a6 b6 a5 e3 d2 e2 c1 d1 e1)
+     (symmetry Black (nw se) (se nw) (ne sw) (sw ne) (e w) (w e))
+     (zone (name promotion) (players White)
+           (positions d7 e7)
+     )
+     (zone (name promotion) (players Black)
+           (positions a1 b1)
+     )
+  )
+
+  (piece
+     (name Man)
+     (image White "images/wman.bmp"
+            Black "images/bman.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (international-checker-jump nw w sw ne e)
+           (international-checker-jump ne nw w e se)
+           (international-checker-jump w nw ne sw se)
+           (international-checker-jump e nw ne sw se)
+           (international-checker-jump sw se e w nw)
+           (international-checker-jump se ne e w sw)
+
+        (move-type normaltype)
+           (checker-shift nw)
+           (checker-shift ne)
+
+        (move-type notype)
+     )
+  )
+  (piece
+     (name King)
+     (image White "images/wking.bmp"
+            Black "images/bking.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (long-king-jump nw w sw ne e)
+           (long-king-jump ne nw w e se)
+           (long-king-jump w nw ne sw se)
+           (long-king-jump e nw ne sw se)
+           (long-king-jump sw se e w nw)
+           (long-king-jump se ne e w sw)
+
+        (move-type continuetype)
+           (long-king-continue nw w sw ne e)
+           (long-king-continue ne nw w e se)
+           (long-king-continue w nw ne sw se)
+           (long-king-continue e nw ne sw se)
+           (long-king-continue sw se e w nw)
+           (long-king-continue se ne e w sw)
+
+        (move-type normaltype)
+           (king-shift ne)
+           (king-shift nw)
+           (king-shift se)
+           (king-shift sw)
+           (king-shift e)
+           (king-shift w)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Man a1 b1 a2 b2 c2 a3 b3 c3 d3))
+    (Black (Man b5 c5 d5 e5 c6 d6 e6 d7 e7))
+  )
+)

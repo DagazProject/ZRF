@@ -1,0 +1,55 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=Dobutsu.zrf
+VariantName=Dobutsu Shogi (original)
+1. Za b2 x b3 Za b3 - g1 = Green = Za on g1
+1. Sang c4 x b3 Za b3 - r4 = Red = Za on r4
+2. King b1 - b2
+2. Jang a4 - a3
+3. King b2 - b1
+3. King b4 - a4
+4. Sang a1 - b2
+4. Sang b3 - a2
+5. King b1 - a1
+5. Sang a2 - b3
+6. Sang b2 - c3
+6. Jang a3 - a2
+7. King a1 - b1
+7. King a4 - a3
+8. Za g1 - b2
+8. Za r4 - c4
+9. Za b2 x b3 Sang b3 - g1 = Green
+9. Za c4 x c3 Sang c3 - r4 = Red
+10. Jang c1 - c2
+10. Za c3 x c2 Jang c2 - r3 = Red
+11. King b1 x c2 Za c2 - g2 = Green = Za on g2
+11. Sang r4 - b2
+12. Sang g1 - b4
+12. King a3 - a4
+13. Za g2 - a3
+13. Jang a2 x a3 Za a3 - r4 = Red = Za on r4
+14. Sang b4 - c3
+14. Jang a3 x b3 Za b3 - r2 = Red = Za on r2
+15. Sang c3 x b2 Sang b2 - g1 = Green
+15. King a4 - b4
+16. Sang g1 - a2
+16. Jang b3 x b2 Sang b2 - r1 = Red
+17. King c2 x b2 Jang b2 - g1 = Green
+17. Sang r1 - a3
+18. King b2 - b1
+18. Jang r3 - b2
+19. King b1 - a1
+19. King b4 - a4
+20. Sang a2 - b1
+20. King a4 - b3
+21. Jang g1 - a2
+21. Za r4 - a4
+22. Jang a2 x a3 Sang a3 - g1 = Green
+22. Za a4 x a3 Jang a3 - r4 = Red
+23. Sang g1 - c4
+23. King b3 - c3
+24. Sang c4 - b3
+24. King c3 x b3 Sang b3 - r3 = Red
+25. Sang b1 - a2
+25. Za a3 x a2 Sang a2 - r1 = Red
+26. King a1 x b2 Jang b2 - g1 = Green
+26. King b3 x b2

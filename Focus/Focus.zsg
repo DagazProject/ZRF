@@ -1,0 +1,83 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=Focus.zrf
+VariantName=Focus (no restrictions)
+1. w b6 x b5 = wb
+1. b c7 x c6 = bw
+2. w c4 x d4 = wb
+2. b e4 x d4 = bwb
+3. w d5 x d4 = wbwb
+3. b g7 x g6 = bw
+4. wbwb d4 x d2 White wb d4 = wbb on d2
+4. bw g6 x g4 = bww
+5. wb d4 x d6 = wbb
+5. b e6 x d6 = bwbb
+6. w f6 x f5 = wb
+6. bwbb d6 x d3 Black b d6 = bwbw on d3
+7. wb f5 x f7 = wbb
+7. b b3 x b2 = bw
+8. w f4 x g4 = wbww
+8. b g3 x g4 = bwbww
+9. w e3 x d3 = wbwbw
+9. bw b2 x d2 = bwwbb
+10. wbwbw d3 x f3 White wbw d3 = wbb on f3
+10. bwwbb d2 x g2 Black bb d2 = bwww on g2
+11. wb b5 x b7 = wbb
+11. bb d2 x d3 Black b d2 = bwbw on d3
+12. wbb f3 x d3 Black b f3 White w z8 = wbbwb on d3
+12. b c3 x d3 Black b x8 = bwbbw on d3
+13. w z8 x g4 White w z7 = wbwbw on g4
+13. b g5 x g4 = bwbwb
+14. w f2 x e2 = wb
+14. b d2 x e2 = bwb
+15. w z7 x g4 = wbwbw
+15. b x8 x g4 = bwbwb
+16. w c2 - c3
+16. bwbbw d3 - d1 Black bbw d3 = bw on d1
+17. w c3 x d3 = wbbw
+17. bw d1 x d3 = bwwbb
+18. w e5 - d5
+18. b d6 x d5 = bw
+19. w d7 - c7
+19. bwbwb g4 - c4 Black b g4 = bwbw on c4
+20. w e7 x f7 = wwbb
+20. bwb e2 - e4 Black b e2 = bw on e4
+21. wbb b7 - e7
+21. bwwbb d3 - d6 Black bb d3 = bww on d6
+22. wwbb f7 - f6 White wbb f7 = w on f6
+22. bb d3 - e3 Black b d3 = b on e3
+23. w c7 - b7
+23. bw e4 x c4 = bwbwb
+24. wbb f7 - c7
+24. bwbwb c4 - h4
+25. w f6 - f7
+25. bwbwb h4 - d4 Black b h4 = bwbw on d4
+26. w b4 - b3
+26. bwbw d4 - f4 Black bw d4 = bw on f4
+27. w b3 - a3
+27. bwww g2 - c2
+28. w b7 - b6
+28. bww d6 x b6 White w d6 = bww on b6
+29. w d6 x d5 = wbw
+29. b c5 x d5 = bwbw
+30. w f7 - g7
+30. bwbw d5 - f5 Black bw d5 = bw on f5
+31. w a3 - a4
+31. bwww c2 x c6 = bwwwb
+32. wbb c7 - c4
+32. bwwwb c6 - h6
+33. w g7 - g6
+33. bwwwb h6 - d6 Black b h6 = bwww on d6
+34. w g6 - g7
+34. b d3 x d4 = bbw
+35. w a4 - b4
+35. bbw d4 x c4 Black bw d4 = bwbb on c4
+36. w b4 x c4 = wbwbb
+36. bw d4 x c4 White w d4 Black b x8 = bwbwb on c4
+37. w d4 x c4 = wbwbw
+37. b x8 x c4 = bwbwb
+38. wbb e7 - b7
+38. bwbwb c4 x h4 Black b x8 = bwbwb on h4
+39. wbb b7 - e7
+39. b x8 x e7 = bwbb
+40. w g7 - g6
+40. b h6 x g6 = bw

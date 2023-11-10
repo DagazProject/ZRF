@@ -1,0 +1,1211 @@
+(define set-engaged
+   (if (flag? is-light-engaged?)
+       (set-flag is-heavy-engaged? true)
+    else
+       (set-flag is-light-engaged? true)
+   )
+)
+
+(define check-escape
+   (if (or enemy? (piece? Mount))
+       (set-flag is-escaped? true)
+   )
+)
+
+(define no-tower?
+   (or (flag? is-tower?)
+       (and 
+           (or (not-on-board? nw) (not-enemy? nw) (not-piece? Tower nw))
+           (or (not-on-board? sw) (not-enemy? sw) (not-piece? Tower sw))
+           (or (not-on-board? ne) (not-enemy? ne) (not-piece? Tower ne))
+           (or (not-on-board? se) (not-enemy? se) (not-piece? Tower se))
+           (or (not-on-board? w)  (not-enemy? w)  (not-piece? Tower w))
+           (or (not-on-board? e)  (not-enemy? e)  (not-piece? Tower e))
+       )
+   )
+)
+
+(define check-other
+   mark
+   (set-flag is-escaped? false)
+   (set-flag is-tower? (piece? Tower))
+   (if (on-board? $1)
+       $1 (check-escape)
+       (if (and friend? (no-tower?) (not-in-zone? water) (or (piece? Rabble) (piece? LightHorse) (piece? HeavyHorse) (piece? Elephant) (piece? Crossbow) (piece? Dragon) (piece? Tower) (piece? King)))
+           (set-engaged)
+           (if (or (piece? HeavyHorse) (piece? Elephant) (piece? Dragon) (piece? Tower))
+               (set-flag is-heavy-engaged? true)
+           )
+       )
+   )
+   (set-flag is-tower? false)
+   (if (and (on-board? $1) (not-flag? is-escaped?))
+       $1 (check-escape)
+       (if (and friend? (no-tower?) (not-in-zone? water) (or (piece? Elephant) (piece? Crossbow) (piece? Trebuchet) (piece? Dragon)))
+           (set-engaged)
+           (if (or (piece? Elephant) (piece? Dragon))
+               (set-flag is-heavy-engaged? true)
+           )
+       )
+   )
+   (if (and (on-board? $1) (not-flag? is-escaped?))
+       $1 (check-escape)
+       (if (and friend? (no-tower?) (not-in-zone? water) (or (piece? Crossbow) (piece? Trebuchet)))
+           (set-engaged)
+       )
+   )
+   (if (and (on-board? $1) (not-flag? is-escaped?))
+       $1 (check-escape)
+       (if (and friend? (no-tower?) (not-in-zone? water) (piece? Trebuchet))
+           (set-engaged)
+       )
+   )
+   back
+)
+
+(define check-spears
+   (if (on-board? $1)
+       (if (and (friend? $1) (not-in-zone? water $1) (piece? Spears $1) (no-tower?))
+           (set-engaged)
+       )
+   )
+)
+
+(define check-engaged
+   (verify (not-piece? Mount))
+   (set-flag is-light-engaged? false)
+   (set-flag is-heavy-engaged? true)
+   (if (or (piece? Crossbow) (piece? Trebuchet))
+       (set-flag is-light-engaged? true)
+   )
+   (if (or (piece? HeavyHorse) (piece? Elephant) (piece? Dragon) (piece? Tower))
+       (set-flag is-heavy-engaged? false)
+   )
+   (check-spears sw) (check-spears se)
+   (check-other w) (check-other e) (check-other nw) (check-other ne) (check-other sw) (check-other se)
+   (verify (and (flag? is-light-engaged?) (flag? is-heavy-engaged?)))
+)
+
+(define check-pass
+  (verify (empty? a8))
+)
+
+(define move-1 (
+  (check-pass)
+  $1 (verify (or empty? (piece? Point))) add
+))
+
+(define check-target
+  (if (position-flag? is-target?)
+      (set-flag is-succeed? true)
+  )
+)
+
+(define check-target-dir
+  (if (and (on-board? $1)(position-flag? is-target? $1))
+      (set-flag is-succeed? true)
+  )
+)
+
+(define not-speared?
+  (and (or (not-on-board? nw) (not-enemy? nw) (not-piece? Spears nw))
+       (or (not-on-board? ne) (not-enemy? ne) (not-piece? Spears ne)))
+)
+
+(define check-dir-2
+  (if (on-board? $1)
+     $1 
+     (if (not (or enemy? (piece? Mount)))
+         (check-target)
+     )
+     (opposite $1)
+  )
+)
+
+(define check-dir-3
+  (if (on-board? $1)
+     $1 
+     (if (not (or enemy? (piece? Mount)))
+         (check-target)
+         (if (not-speared?)
+             (check-target-dir $2)
+             (check-target-dir $3)
+             (check-target-dir $4)
+         )
+     )
+     (opposite $1)
+  )
+)
+
+(define check-target-dir-4
+  (if (on-board? $1)
+     $1 
+     (check-target)
+     (check-target-dir w)
+     (check-target-dir e)
+     (check-target-dir nw)
+     (check-target-dir ne)
+     (check-target-dir sw)
+     (check-target-dir se)
+     (opposite $1)
+  )
+)
+
+(define check-dir-4
+  (if (on-board? $1)
+     $1 
+     (check-target)
+     (check-target-dir-4 $2)
+     (check-target-dir-4 $3)
+     (check-target-dir-4 $4)
+     (opposite $1)
+  )
+)
+
+(define check-branch-2
+  mark
+  (if (on-board? $1)
+     $1 
+     (if (not (or enemy? (piece? Mount)))
+         (check-target)
+         (if (not-speared?)
+             (check-dir-2 $1)
+             (check-dir-2 $2)
+             (check-dir-2 $3)
+         )
+     )
+  )
+  back
+)
+
+(define check-branch-3
+  mark
+  (if (on-board? $1)
+     $1 
+     (if (not (or enemy? (piece? Mount)))
+         (check-target)
+         (if (not-speared?)
+             (check-dir-3 $1 $1 $2 $3)
+             (check-dir-3 $2 $1 $2 $4)
+             (check-dir-3 $3 $1 $2 $5)
+         )
+     )
+  )
+  back
+)
+
+(define check-branch-4
+  mark
+  (if (on-board? $1)
+     $1 
+     (check-target)
+     (check-dir-4 $1 $1 $2 $3)
+     (check-dir-4 $2 $1 $2 $3)
+     (check-dir-4 $3 $1 $2 $3)
+  )
+  back
+)
+
+(define move-2 (
+  (check-pass)
+  (set-position-flag is-target? true)
+  START
+  (while (on-board? next)
+     next
+     (set-flag is-succeed? false)
+     (if (or empty? (piece? Point))
+         (check-branch-2 w sw nw)
+         (check-branch-2 nw w ne)
+         (check-branch-2 ne nw e)
+         (check-branch-2 e ne se)
+         (check-branch-2 se e sw)
+         (check-branch-2 sw se w)
+         (if (flag? is-succeed?) add)
+     )
+  )
+))
+
+(define move-3 (
+  (check-pass)
+  (set-position-flag is-target? true)
+  START
+  (while (on-board? next)
+     next
+     (set-flag is-succeed? false)
+     (if (or empty? (piece? Point))
+         (check-branch-3 w sw nw se ne)
+         (check-branch-3 nw w ne se e)
+         (check-branch-3 ne nw e w se)
+         (check-branch-3 e ne se nw sw)
+         (check-branch-3 se e sw ne w)
+         (check-branch-3 sw se w e nw)
+         (if (flag? is-succeed?) add)
+     )
+  )
+))
+
+(define move-4 (
+  (check-pass)
+  (set-position-flag is-target? true)
+  START
+  (while (on-board? next)
+     next
+     (set-flag is-succeed? false)
+     (check-branch-4 w sw nw)
+     (check-branch-4 nw w ne)
+     (check-branch-4 ne nw e)
+     (check-branch-4 e ne se)
+     (check-branch-4 se e sw)
+     (check-branch-4 sw se w)
+     (if (and (flag? is-succeed?) (or empty? (piece? Point))) add)
+  )
+))
+
+(define common-1 (
+  (check-pass)
+  $1 (verify enemy?)
+  (check-engaged)
+  add
+))
+
+(define horse-2 (
+  (check-pass)
+  (set-flag is-captured? false)
+  $1 (verify (not-piece? Mount))
+  (verify (not-speared?))
+  (if enemy?
+     (set-flag is-captured? true)
+     (check-engaged)
+     capture
+  )
+  $1 (verify not-friend?)
+  (if enemy?
+     (verify (not-flag? is-captured?))
+     (check-engaged)
+  )
+  add
+))
+
+(define horse-3 (
+  (check-pass)
+  (set-flag is-captured? false)
+  $1 (verify (not-piece? Mount))
+  (verify (not-speared?))
+  (if enemy?
+     (set-flag is-captured? true)
+     (check-engaged)
+     capture
+  )
+  $1 (verify (not-piece? Mount))
+  (verify (not-speared?))
+  (if enemy?
+     (verify (not-flag? is-captured?))
+     (set-flag is-captured? true)
+     (check-engaged)
+     capture
+  )
+  $1 (verify not-friend?)
+  (if enemy?
+     (verify (not-flag? is-captured?))
+     (check-engaged)
+  )
+  add
+))
+
+(define dragon-2 (
+  (check-pass)
+  $1 $1 (verify enemy?)
+  (verify (not-piece? Mount))
+  (check-engaged)
+  add
+))
+
+(define dragon-3 (
+  (check-pass)
+  $1 $1 $1 (verify enemy?)
+  (check-engaged)
+  add
+))
+
+(define dragon-4 (
+  (check-pass)
+  $1 $1 $1 $1 (verify enemy?)
+  (check-engaged)
+  add
+))
+
+(define elephant-2 (
+  (check-pass)
+  $1 (verify empty?)
+  (verify (not-speared?))
+  $1 (verify enemy?)
+  (check-engaged)
+  add
+))
+
+(define king-2 (
+  (check-pass)
+  $1 (verify (and friend? (piece? Tower)))
+  $1 (verify not-friend?)
+  (verify (not-piece? Mount))
+  (if enemy?
+     (check-engaged)
+  )
+  add
+))
+
+(define trebuchet (
+  (check-pass)
+  $1 (verify empty?) to
+  (opposite $1) (opposite $1) 
+  (verify not-enemy?)
+; (verify (not-piece? Mount))
+  (opposite $1) 
+  (if enemy?
+     (check-engaged)
+     capture
+   else
+;    (verify (not-piece? Mount))
+     (opposite $1)
+     (if enemy?
+        (check-engaged)
+        capture
+      else
+;       (verify (not-piece? Mount))
+        (opposite $1)
+        (verify enemy?)
+        (check-engaged)
+        capture
+     )
+  )
+  add
+))
+
+(define rabble-1 (
+  (set-position-flag from-pos? true)
+  (verify (not-enemy? a8))
+  (verify (not is-moved?))
+  $1 (verify (or empty? (piece? Point)))
+  (set-flag other-rabble? false)
+  mark START
+  (while (on-board? next)
+     next
+     (if (not-position-flag? from-pos?)
+         (if (and friend? (piece? Rabble)
+             (or (and (on-board? w)  (empty? w)) 
+                 (and (on-board? e)  (empty? e))
+                 (and (on-board? nw) (empty? nw))
+                 (and (on-board? sw) (empty? sw))
+                 (and (on-board? ne) (empty? ne))
+                 (and (on-board? se) (empty? se))))
+             (set-flag other-rabble? true)
+         )
+     )
+  )
+  back
+  (if (flag? other-rabble?)
+      (if (empty? a8)
+          (create Point a8)
+          (set-attribute is-moved? true)
+      )
+  )
+  (if (not-empty? a8)
+      (capture a8)
+      mark START
+      (while (on-board? next)
+          next
+          (if is-moved?
+              (set-attribute is-moved? false)
+          )
+      )
+      back
+  )
+  add
+))
+
+(define drop-mount (
+   (verify (in-zone? home))
+   (verify empty?)
+   (verify (not-in-zone? water))
+   add
+))
+
+(define clear-king
+   (if (friend? $1)
+       (capture $1)
+   )
+)
+
+(define drop-king (
+   (verify (in-zone? trone))
+   (verify empty?)
+   (clear-king a9)
+   (clear-king a8)
+   add
+))
+
+(define drop-other (
+   (verify (in-zone? home))
+   (verify empty?)
+   add
+))
+
+(define drop-point (
+   (verify (in-zone? goal))
+   add
+))
+
+(define board-def
+   (image "images/Cyvasse/$1.bmp")
+   (grid
+     (start-rectangle 110 9 160 59)
+     (dimensions
+         ("a/b/c/d/e/f/g/h/i/j/k/l" (50 0))
+         ("1/2/3/4/5/6/7/8/9" (-25 50))
+     )
+     (directions (se 1 1) (w -1 0) (sw 0 1)
+                 (nw -1 -1) (e 1 0) (ne 0 -1)
+                 (next 1 0)
+     )
+   )
+   (dummy START)
+   (links next
+      (START e9) (l9 d8) (l8 c7) (l7 b6) (l6 a5) 
+      (l5 a4) (k4 a3) (j3 a2) (i2 a1)
+   )
+   (symmetry Black (nw sw) (sw nw) (ne se) (se ne))
+   (kill-positions
+      c9 d9 b8 c8 a7 b7 a6 i1 j1
+      k1 l1 j2 k2 l2 k3 l3 l4 b9
+   )
+   (zone (name home) (players White)
+         (positions 
+             b6 c6 d6 e6 f6 g6 h6 i6 j6 k6 l6
+             c7 d7 e7 f7 g7 h7 i7 j7 k7 l7
+             d8 e8 f8 g8 h8 i8 j8 k8 l8
+             e9 f9 g9 h9 i9 j9 k9 l9
+         )
+   )
+   (zone (name home) (players Black)
+         (positions 
+             a4 b4 c4 d4 e4 f4 g4 h4 i4 j4 k4
+             a3 b3 c3 d3 e3 f3 g3 h3 i3 j3
+             a2 b2 c2 d2 e2 f2 g2 h2 i2
+             a1 b1 c1 d1 e1 f1 g1 h1
+         )
+   )
+   (zone (name trone) (players White)
+         (positions f8 h8 j8)
+   )
+   (zone (name trone) (players Black)
+         (positions c2 e2 g2)
+   )
+)
+
+(game
+   (title "Nine-Tile Cyvasse")
+   (description "Every piece has an armor class and an engagement range, both determined by its type.\
+A piece is considered to be engaged by an opposing piece if there is a straight path between \
+them whose distance is equal to or less than the opposing piece's engagement range, and \
+if the path does not pass through a mountain square or a square occupied by a piece \
+of the same color as the engaged piece.\\
+A piece's armor class determines how many opposing pieces must be engaging that piece \
+for it to be captured: pieces with heavy armor must be engaged by at least two pieces, \
+pieces with light armor at least one, and unarmored pieces can be captured without being \
+engaged at all. Note that a capture can be made using a piece that is not engaging the captured piece.\\
+Squares marked with an 'X' are mountains. Mountain squares cannot be entered by any piece except a Dragon, \
+and any two pieces with a mountain between them cannot engage one another. Squares that are shaded gray \
+are water. If a piece is on a water square, it cannot engage other pieces.\\
+If one player captures the other's King, that player wins.")
+   (history "Cyvasse is a fictional, chess-like board game played in A Song of Ice and Fire, \
+a series of novels by George R. R. Martin. Nine-Tile Cyvasse is a creative interpretation \
+of this game which was invented by Zane Fisher in 2014. \\
+The rules and components are intended to be completely consistent with the text through \
+A Dance with Dragons, the latest in the series at the time of writing.")
+
+   (option "pass turn" forced)
+;  (option "prevent flipping" true)
+   (animate-captures false)
+   (animate-drops false)
+
+   (move-sound "Audio\Pickup.wav")
+   (release-sound "Audio\Pickup.wav")
+   (capture-sound "")
+   (drop-sound "")
+
+   (players White Black)
+   (turn-order 
+      (White mount-setup) (White mount-setup) (White mount-setup) (White mount-setup)
+      (White king-setup) 
+      (White tower-setup) (White tower-setup)
+      (White other-setup) (White other-setup) (White other-setup) (White other-setup) (White other-setup) 
+      (White other-setup) (White other-setup) (White other-setup) (White other-setup) (White other-setup) 
+      (White other-setup) (White other-setup) (White other-setup) (White other-setup) (White other-setup) 
+      (White other-setup) (White other-setup) (White other-setup) (White other-setup) (White other-setup) 
+      (Black mount-setup) (Black mount-setup) (Black mount-setup) (Black mount-setup)
+      (Black king-setup)
+      (Black tower-setup) (Black tower-setup)
+      (Black other-setup) (Black other-setup) (Black other-setup) (Black other-setup) (Black other-setup) 
+      (Black other-setup) (Black other-setup) (Black other-setup) (Black other-setup) (Black other-setup) 
+      (Black other-setup) (Black other-setup) (Black other-setup) (Black other-setup) (Black other-setup) 
+      (Black other-setup) (Black other-setup) (Black other-setup) (Black other-setup) (Black other-setup) 
+      repeat White Black)
+
+   (board
+      (board-def board)
+      (zone (name water) (players White Black)
+            (positions START)
+      )
+   )
+
+   (piece
+      (name Mount)
+      (image White "images/Cyvasse/mount.bmp"
+             Black "images/Cyvasse/mount.bmp")
+      (drops
+         (move-type mount-setup)
+         (drop-mount)
+      )
+   )
+
+   (piece
+      (name King)
+      (help "King: light armor, Movement Allowance 1, Engagement Range 1")
+      (description "King: light armor, Movement Allowance 1, Engagement Range 1\\
+When performing a move from a square adjacent to a Tower of the same color, \
+a King can be moved two squares, into the square on the opposite side of the tower, \
+as long as the move is an otherwise valid normal move or capture.")
+      (image White "images/Cyvasse/wking.bmp"
+             Black "images/Cyvasse/bking.bmp")
+      (moves
+         (move-1 nw) (move-1 ne) (move-1 sw) (move-1 se) (move-1 w) (move-1 e)
+         (common-1 w) (common-1 e) (common-1 nw) (common-1 ne) (common-1 sw) (common-1 se)
+         (king-2 w) (king-2 e) (king-2 nw) (king-2 ne) (king-2 sw) (king-2 se)
+      )
+      (drops
+         (move-type king-setup)
+         (drop-king)
+      )
+   )
+   (piece
+      (name Rabble)
+      (help "Rabble: light armor, movement allowance 1, engagement range 1")
+      (description "Rabble: light armor, movement allowance 1, engagement range 1\\
+If a player performs a normal move with a Rabble, she may perform \
+a second normal move with a different Rabble on the same turn.")
+      (image White "images/Cyvasse/wrabble.bmp"
+             Black "images/Cyvasse/brabble.bmp")
+      (attribute is-moved? false)
+      (moves
+         (rabble-1 nw) (rabble-1 ne) (rabble-1 sw) (rabble-1 se) (rabble-1 w) (rabble-1 e)
+         (common-1 w) (common-1 e) (common-1 nw) (common-1 ne) (common-1 sw) (common-1 se)
+      )
+      (drops
+         (move-type other-setup)
+         (drop-other)
+      )
+   )
+   (piece
+      (name Spears)
+      (help "Spears: light Armor, Movement Allowance 1, Engagement Range 1")
+      (description "Spears: light Armor, Movement Allowance 1, Engagement Range 1\\
+A Spears can only engage or capture a piece in the two spaces directly \
+in front of it (as if the Spears is facing away from the player it belongs to). \
+Opposing pieces cannot move through either the two spaces in front of a Spears \
+in one movement (though they can move either into or out of these spaces).")
+      (image White "images/Cyvasse/wspears.bmp"
+             Black "images/Cyvasse/bspears.bmp" "images/Cyvasse/bspearsi.bmp")
+      (moves
+         (move-1 nw) (move-1 ne)
+         (common-1 nw) (common-1 ne)
+      )
+      (drops
+         (move-type other-setup)
+         (drop-other)
+      )
+   )
+   (piece
+      (name LightHorse)
+      (help "Light Horse: light Armor, Movement Allowance 3, Engagement Range 1")
+      (description "Light Horse: light Armor, Movement Allowance 3, Engagement Range 1\\
+When capturing, a Light Horse can move beyond the square containing the captured piece, \
+continuing in a straight line. Note that the total distance moved must still be less than \
+or equal to 3, and that mountains and opposing pieces still block movement.")
+      (image White "images/Cyvasse/wlighth.bmp"
+             Black "images/Cyvasse/blighth.bmp")
+      (moves
+         (move-3)
+         (common-1 w) (common-1 e) (common-1 nw) (common-1 ne) (common-1 sw) (common-1 se)
+         (horse-2 w) (horse-2 e) (horse-2 nw) (horse-2 ne) (horse-2 sw) (horse-2 se)
+         (horse-3 w) (horse-3 e) (horse-3 nw) (horse-3 ne) (horse-3 sw) (horse-3 se)
+      )
+      (drops
+         (move-type other-setup)
+         (drop-other)
+      )
+   )
+   (piece
+      (name HeavyHorse)
+      (help "Heavy Horse: heavy armor, Movement Allowance 2, Engagement Range 1")
+      (description "Heavy Horse: heavy armor, Movement Allowance 2, Engagement Range 1\\
+When capturing, a Heavy Horse can move beyond the square containing the captured piece, \
+continuing in a straight line. Note that the total distance moved must still be less than \
+or equal to 2, and that mountains and opposing pieces still block movement.")
+      (image White "images/Cyvasse/wheavyh.bmp"
+             Black "images/Cyvasse/bheavyh.bmp")
+      (moves
+         (move-2)
+         (common-1 w) (common-1 e) (common-1 nw) (common-1 ne) (common-1 sw) (common-1 se)
+         (horse-2 w) (horse-2 e) (horse-2 nw) (horse-2 ne) (horse-2 sw) (horse-2 se)
+      )
+      (drops
+         (move-type other-setup)
+         (drop-other)
+      )
+   )
+   (piece
+      (name Elephant)
+      (help "Elephant: heavy armor, Movement Allowance 1, Engagement Range 2")
+      (description "Elephant: heavy armor, Movement Allowance 1, Engagement Range 2\\
+An Elephant has a movement allowance of 2 when used to perform a Capture, \
+but cannot move through other pieces.")
+      (image White "images/Cyvasse/weleph.bmp"
+             Black "images/Cyvasse/beleph.bmp")
+      (moves
+         (move-1 nw) (move-1 ne) (move-1 sw) (move-1 se) (move-1 w) (move-1 e)
+         (common-1 w) (common-1 e) (common-1 nw) (common-1 ne) (common-1 sw) (common-1 se)
+         (elephant-2 w) (elephant-2 e) (elephant-2 nw) (elephant-2 ne) (elephant-2 sw) (elephant-2 se)
+      )
+      (drops
+         (move-type other-setup)
+         (drop-other)
+      )
+   )
+   (piece
+      (name Crossbow)
+      (help "Crossbow: unarmored, Movement Allowance 2, Engagement Range 3")
+      (description "Crossbow: unarmored, Movement Allowance 2, Engagement Range 3\\
+Crossbows cannot capture.")
+      (image White "images/Cyvasse/wcrossb.bmp"
+             Black "images/Cyvasse/bcrossb.bmp")
+      (moves
+         (move-2)
+      )
+      (drops
+         (move-type other-setup)
+         (drop-other)
+      )
+   )
+   (piece
+      (name Trebuchet)
+      (help "Trebuchet: unarmored, Movement Allowance 1, Engagement Range 4 (min. 2)")
+      (description "Trebuchet: unarmored, Movement Allowance 1, Engagement Range 4 (min. 2)\\
+A Trebuchet cannot engage a piece adjacent to it. To perform a capture with a Trebuchet, \
+follow these steps:\\
+1. Choose as the captured piece any opposing piece that is both sufficiently engaged, and engaged by the Trebuchet itself.\\
+2. Move the Trebuchet one square in the direction opposite the captured piece, and remove the captured piece. If the Trebuchet \
+cannot move as described, the capture cannot be performed.")
+      (image White "images/Cyvasse/wtrebuch.bmp"
+             Black "images/Cyvasse/btrebuch.bmp")
+      (moves
+         (move-1 nw) (move-1 ne) (move-1 sw) (move-1 se) (move-1 w) (move-1 e)
+         (trebuchet nw) (trebuchet ne) (trebuchet sw) (trebuchet se) (trebuchet w) (trebuchet e)
+      )
+      (drops
+         (move-type other-setup)
+         (drop-other)
+      )
+   )
+   (piece
+      (name Dragon)
+      (help "Dragon: heavy armor, Movement Allowance 4, Engagement Range 2")
+      (description "Dragon: heavy armor, Movement Allowance 4, Engagement Range 2\\
+A Dragon can move through mountain squares and squares containing opposing pieces, \
+but cannot end its movement on such squares (unless performing a capture).")
+      (image White "images/Cyvasse/wdragon.bmp"
+             Black "images/Cyvasse/bdragon.bmp")
+      (moves
+         (move-4)
+         (common-1 w) (common-1 e) (common-1 nw) (common-1 ne) (common-1 sw) (common-1 se)
+         (dragon-2 w) (dragon-2 e) (dragon-2 nw) (dragon-2 ne) (dragon-2 sw) (dragon-2 se)
+         (dragon-3 w) (dragon-3 e) (dragon-3 nw) (dragon-3 ne) (dragon-3 sw) (dragon-3 se)
+         (dragon-4 w) (dragon-4 e) (dragon-4 nw) (dragon-4 ne) (dragon-4 sw) (dragon-4 se)
+      )
+      (drops
+         (move-type other-setup)
+         (drop-other)
+      )
+   )
+   (piece
+      (name Tower)
+      (help "Tower: heavy armor, Movement Allowance 0, Engagement Range 1")
+      (description "Tower: heavy armor, Movement Allowance 0, Engagement Range 1\\
+Towers cannot be moved. A piece that is adjacent to one or more opposing Towers \
+cannot engage any pieces except the adjacent Tower(s).")
+      (image White "images/Cyvasse/wtower.bmp"
+             Black "images/Cyvasse/btower.bmp")
+      (drops
+         (move-type tower-setup)
+         (drop-other)
+      )
+   )
+   (piece
+      (name Point)
+      (image White "images/Cyvasse/invisible.bmp"
+             Black "images/Cyvasse/invisible.bmp")
+   )
+
+   (board-setup
+      (White
+         (Mount off 4)
+         (King a9 off 1)
+         (Tower off 2)
+         (Rabble off 6)
+         (Spears off 3)
+         (LightHorse off 3)
+         (HeavyHorse off 2)
+         (Elephant off 2)
+         (Crossbow off 2)
+         (Trebuchet off 1)
+         (Dragon off 1)
+      )
+      (Black
+         (Mount off 4)
+         (King a8 off 1)
+         (Tower off 2)
+         (Rabble off 6)
+         (Spears off 3)
+         (LightHorse off 3)
+         (HeavyHorse off 2)
+         (Elephant off 2)
+         (Crossbow off 2)
+         (Trebuchet off 1)
+         (Dragon off 1)
+      )
+   )
+
+   (loss-condition (White Black) (pieces-remaining 0 King))
+)
+
+(variant
+   (title "Nine-Tile Cyvasse (Map 1)")
+   (board
+      (board-def map-1)
+      (zone (name water) (players White Black)
+            (positions b1 c1 d3 d6 e6 i7)
+      )
+   )
+)
+
+(variant
+   (title "Nine-Tile Cyvasse (Map 2)")
+   (board
+      (board-def map-2)
+      (zone (name water) (players White Black)
+            (positions f2 g2 c3 i6 f8 g8)
+      )
+   )
+)
+
+(variant
+   (title "Nine-Tile Cyvasse (Map 3)")
+   (board
+      (board-def map-3)
+      (zone (name water) (players White Black)
+            (positions c2 g1 h3 i3 e6 j7 e8)
+      )
+   )
+)
+
+(variant
+   (title "Nine-Tile Cyvasse (Map 4)")
+   (board
+      (board-def map-4)
+      (zone (name water) (players White Black)
+            (positions f2 g2 d4 f8 g8 j8)
+      )
+   )
+)
+
+(variant
+   (title "-")
+)
+
+(variant
+   (title "Lesson 1")
+   (description "3 moves")
+;  (default)
+
+   (turn-order White White White (Black goal-type))
+
+   (board
+      (board-def board)
+      (zone (name water) (players White Black)
+            (positions START)
+      )
+      (zone (name goal) (players Black)
+            (positions a9)
+      )
+   )
+
+   (piece
+      (name Point)
+      (image White "images/Cyvasse/point.bmp"
+             Black "images/Cyvasse/point.bmp")
+      (drops
+         (move-type goal-type)
+         (drop-point)
+      )
+   )
+
+   (board-setup
+      (White
+         (Rabble f6)
+         (Point g4)
+      )
+      (Black
+         (Point off 1)
+      )
+   )
+
+   (win-condition (White) (pieces-remaining 0 Point))
+   (win-condition (Black) (pieces-remaining 1 Point))
+)
+
+(variant
+   (title "Lesson 2")
+   (description "3 moves")
+
+   (turn-order White White White (Black goal-type))
+
+   (board
+      (board-def board)
+      (zone (name water) (players White Black)
+            (positions START)
+      )
+      (zone (name goal) (players Black)
+            (positions a9)
+      )
+   )
+
+   (piece
+      (name Point)
+      (image White "images/Cyvasse/point.bmp"
+             Black "images/Cyvasse/point.bmp")
+      (drops
+         (move-type goal-type)
+         (drop-point)
+      )
+   )
+
+   (board-setup
+      (White
+         (LightHorse f7)
+         (Tower f2 i4 i6 k7)
+         (Mount g6 d7 h7 j7 l7 f9 h9 j9 l9)
+         (Point j3)
+      )
+      (Black
+         (Tower h2 g4 k5)
+         (Mount b1 d1 f1 h1 b3 d3 f3 h3 b5 d5 f5 h5 j5 l5)
+         (Point off 1)
+      )
+   )
+
+   (win-condition (White) (pieces-remaining 0 Point))
+   (win-condition (Black) (pieces-remaining 1 Point))
+)
+
+(variant
+   (title "Lesson 3")
+   (description "8 moves")
+
+   (turn-order White White White White White White White White (Black goal-type))
+
+   (board
+      (board-def board)
+      (zone (name water) (players White Black)
+            (positions START)
+      )
+      (zone (name goal) (players Black)
+            (positions a9)
+      )
+   )
+
+   (piece
+      (name Point)
+      (image White "images/Cyvasse/point.bmp"
+             Black "images/Cyvasse/point.bmp")
+      (drops
+         (move-type goal-type)
+         (drop-point)
+      )
+   )
+
+   (board-setup
+      (White
+         (Dragon g5)
+      )
+      (Black
+         (Crossbow h2 e2 h4 f8 f6 i8)
+         (Point off 1)
+      )
+   )
+
+   (loss-condition (Black) (pieces-remaining 0))
+   (win-condition (Black) (pieces-remaining 1 Point))
+)
+
+(variant
+   (title "Lesson 4")
+   (description "4 moves")
+
+   (turn-order White White White White (Black goal-type))
+
+   (board
+      (board-def board)
+      (zone (name water) (players White Black)
+            (positions START)
+      )
+      (zone (name goal) (players Black)
+            (positions a9)
+      )
+   )
+
+   (piece
+      (name Point)
+      (image White "images/Cyvasse/point.bmp"
+             Black "images/Cyvasse/point.bmp")
+      (drops
+         (move-type goal-type)
+         (drop-point)
+      )
+   )
+
+   (board-setup
+      (White
+         (LightHorse e6)
+      )
+      (Black
+         (Rabble f6 i6 h5 e3)
+         (Point off 1)
+      )
+   )
+
+   (loss-condition (Black) (pieces-remaining 0))
+   (win-condition (Black) (pieces-remaining 1 Point))
+)
+
+(variant
+   (title "Lesson 5")
+   (description "4 moves")
+
+   (turn-order White White White White (Black goal-type))
+
+   (board
+      (board-def board)
+      (zone (name water) (players White Black)
+            (positions START)
+      )
+      (zone (name goal) (players Black)
+            (positions a9)
+      )
+   )
+
+   (piece
+      (name Point)
+      (image White "images/Cyvasse/point.bmp"
+             Black "images/Cyvasse/point.bmp")
+      (drops
+         (move-type goal-type)
+         (drop-point)
+      )
+   )
+
+   (board-setup
+      (White
+         (LightHorse h8)
+         (Crossbow i6)
+      )
+      (Black
+         (Rabble h6 h4 e4)
+         (Point off 1)
+      )
+   )
+
+   (loss-condition (Black) (pieces-remaining 0))
+   (win-condition (Black) (pieces-remaining 1 Point))
+)
+
+(variant
+   (title "Lesson 6")
+   (description "3 moves")
+
+   (turn-order White White White (Black goal-type))
+
+   (board
+      (board-def lesson-6)
+      (zone (name water) (players White Black)
+            (positions e3 f3 e4 f4 e5)
+      )
+      (zone (name goal) (players Black)
+            (positions a9)
+      )
+   )
+
+   (piece
+      (name Point)
+      (image White "images/Cyvasse/point.bmp"
+             Black "images/Cyvasse/point.bmp")
+      (drops
+         (move-type goal-type)
+         (drop-point)
+      )
+   )
+
+   (board-setup
+      (White
+         (LightHorse h6)
+         (Crossbow e6 h4)
+      )
+      (Black
+         (Tower g5 e3)
+         (Point off 1)
+      )
+   )
+
+   (loss-condition (Black) (pieces-remaining 0))
+   (win-condition (Black) (pieces-remaining 1 Point))
+)
+
+(variant
+   (title "Lesson 7")
+   (description "5 moves")
+
+   (turn-order White White White White White (Black goal-type))
+
+   (board
+      (board-def lesson-7)
+      (zone (name water) (players White Black)
+            (positions e6)
+      )
+      (zone (name goal) (players Black)
+            (positions a9)
+      )
+   )
+
+   (piece
+      (name Point)
+      (image White "images/Cyvasse/point.bmp"
+             Black "images/Cyvasse/point.bmp")
+      (drops
+         (move-type goal-type)
+         (drop-point)
+      )
+   )
+
+   (board-setup
+      (White
+         (Rabble f7)
+         (Crossbow f3 h6)
+      )
+      (Black
+         (Tower e6 f6 e5 f5)
+         (Mount e4 f4)
+         (Point off 1)
+      )
+   )
+
+   (loss-condition (Black) (pieces-remaining 0 Tower))
+   (win-condition (Black) (pieces-remaining 1 Point))
+)
+
+(variant
+   (title "Lesson 8")
+   (description "6 moves")
+
+   (turn-order White White White White White White (Black goal-type))
+
+   (board
+      (board-def board)
+      (zone (name water) (players White Black)
+            (positions START)
+      )
+      (zone (name goal) (players Black)
+            (positions a9)
+      )
+   )
+
+   (piece
+      (name Point)
+      (image White "images/Cyvasse/point.bmp"
+             Black "images/Cyvasse/point.bmp")
+      (drops
+         (move-type goal-type)
+         (drop-point)
+      )
+   )
+
+   (board-setup
+      (White
+         (Spears h4 g6)
+         (LightHorse f5)
+         (Crossbow d6)
+      )
+      (Black
+         (Spears d3 f3 g3 h5)
+         (Point off 1)
+      )
+   )
+
+   (loss-condition (Black) (pieces-remaining 0))
+   (win-condition (Black) (pieces-remaining 1 Point))
+)
+
+(variant
+   (title "Lesson 9")
+   (description "7 moves")
+
+   (turn-order White White White White White White White (Black goal-type))
+
+   (board
+      (board-def lesson-9)
+      (zone (name water) (players White Black)
+            (positions g5)
+      )
+      (zone (name goal) (players Black)
+            (positions a9)
+      )
+   )
+
+   (piece
+      (name Point)
+      (image White "images/Cyvasse/point.bmp"
+             Black "images/Cyvasse/point.bmp")
+      (drops
+         (move-type goal-type)
+         (drop-point)
+      )
+   )
+
+   (board-setup
+      (White
+         (LightHorse e7)
+         (Elephant h7)
+         (Trebuchet h6)
+         (Tower g7)
+         (King g6)
+      )
+      (Black
+         (Rabble e5 f5 h5)
+         (Spears e3 f3)
+         (Tower d3 g3)
+         (King e2)
+         (Mount d1 e1)
+         (Point off 1)
+      )
+   )
+
+   (loss-condition (Black) (pieces-remaining 0 King))
+   (win-condition (Black) (pieces-remaining 1 Point))
+)

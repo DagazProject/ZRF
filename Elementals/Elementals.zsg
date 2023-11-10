@@ -1,0 +1,94 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=Elementals.zrf
+VariantName=Elementals (setup)
+1. GYB d1 x c2 GA c2 - b3
+1. GA e9 - f8 = GB
+2. GA e2 - f3 = GD
+2. GA f9 x f8 GB f8 - f7
+3. GA f2 x f3 GD f3 - f4
+3. RD e10 - e9 = RA
+4. GA f3 x f4 GD f4 - f5
+4. RB f10 - f9 = RA
+5. GA g2 - f3 = GB
+5. RA e9 - e6
+6. GA f4 - e5 = GB
+6. GA f8 x f7 GB f7 - f6
+7. GB e5 - d6
+7. RA e6 - e7
+8. GA h2 - g3 = GB
+8. RGD g10 - f10 = RGC
+9. BYB f1 - b5
+9. GBB h10 - g10 = GBC
+10. BYB b5 - d5 = BYC
+10. RA e7 - e8
+11. BGB c1 - d1 = BGC
+11. GRB d10 - g7
+12. GB f3 - f4 = GA
+12. GRB g7 - g6 = GRA
+13. GB g3 - g4 = GA
+13. GA f7 x f6 GB f6 x f5 GD f5 x f4 GA f4 - f3
+14. YBD e1 - i5
+14. RA f9 - f7
+15. GA f3 x f4 GD f4 x f5 GB f5 x f6 GA f6 x f7 RA f7 - f8
+15. RA f8 - e7 x d6 = RD on e7
+16. GA f4 x f5 GD f5 x f6 GB f6 x f7 GA f7 - f8
+16. RD e7 - d7 = RC
+17. GD f6 x g6 = GC
+17. RA e8 - e3
+18. YBD i5 - f2
+18. RA e3 - d4 = RB
+19. GA d2 - e3 = GD
+19. RB d4 - b6
+20. YBD f2 - g3
+20. RB b6 - d4 x e3
+21. BYC d5 x f7 = BYD
+21. RB d4 - f2 x g1
+22. partial 1 YBD g3 x f2
+22. RC d7 - e6 x f5 x g4 = RB on e6
+23. BYD f7 x e6
+23. GC i10 - h10
+24. BYD e6 - e7 = YBA
+24. GA f8 - g7 = GB
+25. GC g6 - f6
+25. GB g7 - f7 = GC
+26. YBA e7 x c9 = YBB
+26. GC b10 x c10 BGD c10 - d10
+27. YBB c9 - e7 @ f7 3 1
+27. GA g9 - f8 = GD
+28. YBB e7 - e9 = YBA
+28. GD f8 - e8 = GC
+29. GYB c2 - d2 = GYC
+29. GBC g10 - f9 = GBD
+30. GYC d2 - f4 = GYD
+30. GBD f9 x e9 = GBC
+31. GYD f4 x f7 = YGA
+31. GC c10 x d10 BGD d10 - e10
+32. YGA f7 x e8 = YGB
+32. GBC e9 x d9 GA d9 - c9
+33. YGB e8 - e7 = YGA
+33. GD b9 - c10
+34. YGA e7 - d6 = GYD
+34. GBC d9 x c9 GA c9 - b9
+35. GBD h1 - g1 = GBC
+35. GC h10 - g10
+36. GYD d6 - d7 = YGA
+36. BGD e10 - b7
+37. GA b3 - c4 = GD
+37. BGD b7 - b8 = GBA
+38. GD c4 - d5
+38. GA b9 x b8 GBA b8 - b7
+39. YBD f2 - h4
+39. GA b8 - c7 = GB
+40. YGA d7 - e6 = YGB
+40. GC d10 - e9 = GB
+41. YBD h4 - f4 = YBC
+41. GB c7 - b8
+42. YBC f4 - e5 = YBB
+42. GBA b7 - a8 = GBB
+43. GD d5 - d6 = GA
+43. GB b8 - b7 = GA
+44. YBB e5 - f4
+44. GA b7 - c6 = GB
+45. GA d6 - e5 = GB
+45. GB c6 - d5
+46. YBB f4 - f5 = YBA

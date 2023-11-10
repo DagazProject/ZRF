@@ -1,0 +1,1399 @@
+(define clear-mark
+   mark a0
+   (while (on-board? next) 
+      next
+      (if (and enemy? (piece? Mark))
+          capture
+      )
+   )
+   back
+)
+
+(define my-empty?
+   (or empty? (and enemy? (piece? Mark)))
+)
+
+(define my-not-empty?
+   (and not-empty? (not-piece? Mark))
+)
+
+(define init-flag
+   (set-flag is-flag?   false)
+   (if (or (piece? Flag)
+           (piece? OpenedFlag)
+           (piece? FieldMarshalFlag)
+           (piece? GeneralFlag)
+           (piece? MajorGeneralFlag)
+           (piece? BrigadierGeneralFlag)
+           (piece? ColonelFlag)
+           (piece? MajorFlag)
+           (piece? CaptainFlag)
+           (piece? LieutenantFlag)
+           (piece? EngineerFlag))
+       (set-flag is-flag? true)
+   )
+)
+
+(define init-rank
+   (set-flag rank-1 (or (piece? FieldMarshal) (piece? FieldMarshalFlag)))
+   (set-flag rank-2 (or (piece? General) (piece? GeneralFlag)))
+   (set-flag rank-3 (or (piece? MajorGeneral) (piece? MajorGeneralFlag)))
+   (set-flag rank-4 (or (piece? BrigadierGeneral) (piece? BrigadierGeneralFlag)))
+   (set-flag rank-5 (or (piece? Colonel) (piece? ColonelFlag)))
+   (set-flag rank-6 (or (piece? Major) (piece? MajorFlag)))
+   (set-flag rank-7 (or (piece? Captain) (piece? CaptainFlag)))
+   (set-flag rank-8 (or (piece? Lieutenant) (piece? LieutenantFlag)))
+   (set-flag rank-9 (or (piece? Engineer) (piece? EngineerFlag)))
+   (set-flag is-killed? false)
+   (set-flag is-equal?  false)
+   (init-flag)
+)
+
+(define create-piece
+   (if (piece? $1)
+       (if (in-zone? ami a1)
+           (if (flag? is-flag?)
+               (create North $1Flag)
+            else
+               (create North $1)
+           )
+        else
+           (if (flag? is-flag?)
+               (create South $1Flag)
+            else
+               (create South $1)
+           )
+       )
+   )
+)
+
+(define friend-flag
+   ths
+   (if (piece? Flag)
+       (create OpenedFlag)
+   )
+)
+
+(define enemy-flag
+   thn
+   (if (piece? Flag)
+       (if (in-zone? ami a1)
+           (create North OpenedFlag)
+        else
+           (create South OpenedFlag)
+       )
+   )
+)
+
+(define pre-check
+   (if (in-zone? safe)
+       (verify empty?)
+   )
+   (verify not-friend?)
+)
+
+(define common-check
+   (pre-check)
+   (if (or (piece? Lieutenant) (piece? LieutenantFlag))
+       (set-flag is-killed? (flag? rank-9))
+       (set-flag is-equal? (flag? rank-8))
+   )
+   (if (or (piece? Captain) (piece? CaptainFlag))
+       (set-flag is-killed? (or (flag? rank-8) (flag? rank-9)))
+       (set-flag is-equal? (flag? rank-7))
+   )
+   (if (or (piece? Major) (piece? MajorFlag))
+       (set-flag is-killed? (or (flag? rank-7) (flag? rank-8) (flag? rank-9)))
+       (set-flag is-equal? (flag? rank-6))
+   )
+   (if (or (piece? Colonel) (piece? ColonelFlag))
+       (set-flag is-killed? (or (flag? rank-6) (flag? rank-7) (flag? rank-8) (flag? rank-9)))
+       (set-flag is-equal? (flag? rank-5))
+   )
+   (if (or (piece? BrigadierGeneral) (piece? BrigadierGeneralFlag))
+       (set-flag is-killed? (or (flag? rank-5) (flag? rank-6) (flag? rank-7) (flag? rank-8) (flag? rank-9)))
+       (set-flag is-equal? (flag? rank-4))
+   )
+   (if (or (piece? MajorGeneral) (piece? MajorGeneralFlag))
+       (set-flag is-killed? (or (flag? rank-4) (flag? rank-5) (flag? rank-6) (flag? rank-7) (flag? rank-8) (flag? rank-9)))
+       (set-flag is-equal? (flag? rank-3))
+   )
+   (if (or (piece? General) (piece? GeneralFlag))
+       (set-flag is-killed? (or (flag? rank-3) (flag? rank-4) (flag? rank-5) (flag? rank-6) (flag? rank-7) (flag? rank-8) (flag? rank-9)))
+       (set-flag is-equal? (flag? rank-2))
+   )
+   (if (or (piece? FieldMarshal) (piece? FieldMarshalFlag))
+       (set-flag is-killed? (or (flag? rank-2) (flag? rank-3) (flag? rank-4) (flag? rank-5) (flag? rank-6) (flag? rank-7) (flag? rank-8) (flag? rank-9)))
+       (set-flag is-equal? (flag? rank-1))
+       (if (flag? rank-1)
+           mark a1
+           (enemy-flag)
+           (enemy-flag)
+           back
+       )
+   )
+   (if (or (piece? FieldMarshal) (piece? FieldMarshalFlag) (piece? Landmine))
+       (if (flag? rank-1)
+           mark a1
+           (friend-flag)
+           (friend-flag)
+           back
+       )
+   )
+   (if (piece? Landmine)
+       (if (in-zone? variants b1)
+           (set-flag is-flag? false)
+           (create-piece Landmine)
+        else
+            capture
+       )
+    else
+       (if (flag? is-killed?)
+           (create-piece FieldMarshal)
+           (create-piece General)
+           (create-piece MajorGeneral)
+           (create-piece BrigadierGeneral)
+           (create-piece Colonel)
+           (create-piece Major)
+           (create-piece Captain)
+           (create-piece Lieutenant)
+        else
+           (if (flag? is-equal?)
+               capture
+            else
+               (if (and not-empty? (in-zone? hqe) (not-piece? Flag) (not-piece? OpenedFlag))
+                   (set-attribute not-locked? false)
+               )
+               (if (or (piece? Flag)
+                       (piece? OpenedFlag)
+                       (piece? FieldMarshalFlag)
+                       (piece? GeneralFlag)
+                       (piece? MajorGeneralFlag)
+                       (piece? BrigadierGeneralFlag)
+                       (piece? ColonelFlag)
+                       (piece? MajorFlag)
+                       (piece? CaptainFlag)
+                       (piece? LieutenantFlag)
+                       (piece? EngineerFlag))
+                   (if (flag? rank-1)
+                       (create FieldMarshalFlag)
+                   )
+                   (if (flag? rank-2)
+                       (create GeneralFlag)
+                   )
+                   (if (flag? rank-3)
+                       (create MajorGeneralFlag)
+                   )
+                   (if (flag? rank-4)
+                       (create BrigadierGeneralFlag)
+                   )
+                   (if (flag? rank-5)
+                       (create ColonelFlag)
+                   )
+                   (if (flag? rank-6)
+                       (create MajorFlag)
+                   )
+                   (if (flag? rank-7)
+                       (create CaptainFlag)
+                   )
+                   (if (flag? rank-8)
+                       (create LieutenantFlag)
+                   )
+               )
+           )
+       )
+   )
+)
+
+(define engineer-check
+   (pre-check)
+   (if (piece? Engineer)
+       capture
+    else
+       (if (and (not-piece? Landmine) (not-piece? Bomb))
+           (create-piece FieldMarshal)
+           (create-piece General)
+           (create-piece MajorGeneral)
+           (create-piece BrigadierGeneral)
+           (create-piece Colonel)
+           (create-piece Major)
+           (create-piece Captain)
+           (create-piece Lieutenant)
+           (if (or (piece? Flag) (piece? OpenedFlag))
+               (create EngineerFlag)
+           )
+        else
+           (if (and not-empty? (in-zone? hqe) (not-piece? Flag) (not-piece? OpenedFlag))
+               (set-attribute not-locked? false)
+           )
+       )
+   )
+)
+
+(define bomb-check
+   (pre-check)
+   (if (piece? FieldMarshal)
+       mark a1
+       (enemy-flag)
+       (enemy-flag)
+       back
+   )
+   capture
+)
+
+(define common-step (
+   (verify not-locked?)
+   (clear-mark)
+   (init-rank) 
+   $1
+   (if (my-not-empty?)
+       (common-check)
+   )
+   (verify not-friend?)
+   add
+))
+
+(define common-slide (
+   (clear-mark)
+   (init-rank) 
+   $1 (while (my-empty?) add $1)
+   (common-check)
+   (verify not-friend?)
+   add
+))
+
+(define engineer-step (
+   (clear-mark)
+   (init-flag)
+   (verify not-locked?)
+   $1
+   (if (my-not-empty?)
+       (engineer-check)
+   )
+   (verify not-friend?)
+   add
+))
+
+(define engineer-move-1 (
+  (clear-mark)
+  (create Mark)
+  $1 (verify (not-piece? Mark))
+  (verify not-friend?)
+  (if (and empty? (in-zone? cross))
+      (add-partial $2-type) 
+   else
+       (if (my-not-empty?)
+           (engineer-check)
+       )
+       add
+  )
+))
+
+(define engineer-move-2 (
+  (clear-mark)
+  (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (not-piece? Mark))
+  (verify not-friend?)
+  (if (and empty? (in-zone? cross))
+      (add-partial $2-type) 
+   else
+       (if (my-not-empty?)
+           (engineer-check)
+       )
+       add
+  )
+))
+
+(define engineer-move-3 (
+  (clear-mark)
+  (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (not-piece? Mark))
+  (verify not-friend?)
+  (if (and empty? (in-zone? cross))
+      (add-partial $2-type) 
+   else
+       (if (my-not-empty?)
+           (engineer-check)
+       )
+       add
+  )
+))
+
+(define engineer-move-4 (
+  (clear-mark)
+  (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (not-piece? Mark))
+  (verify not-friend?)
+  (if (and empty? (in-zone? cross))
+      (add-partial $2-type) 
+   else
+       (if (my-not-empty?)
+           (engineer-check)
+       )
+       add
+  )
+))
+
+(define engineer-move-5 (
+  (clear-mark)
+  (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (not-piece? Mark))
+  (verify not-friend?)
+  (if (and empty? (in-zone? cross))
+      (add-partial $2-type) 
+   else
+       (if (my-not-empty?)
+           (engineer-check)
+       )
+       add
+  )
+))
+
+(define engineer-move-6 (
+  (clear-mark)
+  (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (not-piece? Mark))
+  (verify not-friend?)
+  (if (and empty? (in-zone? cross))
+      (add-partial $2-type) 
+   else
+       (if (my-not-empty?)
+           (engineer-check)
+       )
+       add
+  )
+))
+
+(define engineer-move-7 (
+  (clear-mark)
+  (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (not-piece? Mark))
+  (verify not-friend?)
+  (if (and empty? (in-zone? cross))
+      (add-partial $2-type) 
+   else
+       (if (my-not-empty?)
+           (engineer-check)
+       )
+       add
+  )
+))
+
+(define engineer-move-8 (
+  (clear-mark)
+  (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (not-piece? Mark))
+  (verify not-friend?)
+  (if (and empty? (in-zone? cross))
+      (add-partial $2-type) 
+   else
+       (if (my-not-empty?)
+           (engineer-check)
+       )
+       add
+  )
+))
+
+(define engineer-move-9 (
+  (clear-mark)
+  (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (not-piece? Mark))
+  (verify not-friend?)
+  (if (and empty? (in-zone? cross))
+      (add-partial $2-type) 
+   else
+       (if (my-not-empty?)
+           (engineer-check)
+       )
+       add
+  )
+))
+
+(define engineer-move-A (
+  (clear-mark)
+  (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (my-empty?)) (create Mark)
+  $1 (verify (not-piece? Mark))
+  (verify not-friend?)
+  (if (and empty? (in-zone? cross))
+      (add-partial $2-type) 
+   else
+       (if (my-not-empty?)
+           (engineer-check)
+       )
+       add
+  )
+))
+
+(define bomb-step (
+   (clear-mark)
+   $1 
+   (if (my-not-empty?)
+       (bomb-check)
+   )
+   (verify not-friend?)
+   add
+))
+
+(define bomb-slide (
+   (clear-mark)
+   $1 (while (my-empty?) add $1)
+   (bomb-check)
+   (verify not-friend?)
+   add
+))
+
+(define drop-other (
+   (verify (in-zone? home))
+   (verify empty?)
+   (if (in-zone? hqf)
+       (verify (not-empty? ths))
+   )
+   add
+))
+
+(define drop-flag (
+   (verify (in-zone? hqf))
+   (verify empty?)
+   mark a1 tss capture back
+   add
+))
+
+(define drop-Bomb (
+   (verify (in-zone? front))
+   (verify empty?)
+   add
+))
+
+(define drop-Landmine (
+   (verify (in-zone? rear))
+   (verify empty?)
+   (if (in-zone? hqf)
+       (verify (not-empty? ths))
+   )
+   add
+))
+
+(define drop-start (
+   (verify empty?)
+   capture
+   add
+))
+
+(define def-board
+   (board
+      (image "images/Luzhanqi/board.bmp")
+      (positions
+             (sp  -90   7   1  50)
+             (np  -90  50   1  93)
+
+             (a13   0   7  91  50)
+             (a12   0  50  91  93)
+             (a11   0  93  91 136)
+             (a10   0 136  91 179)
+             (a9    0 179  91 222)
+             (a8    0 222  91 265)
+             (b13  86   7 177  50)
+             (b12  86  50 177  93)
+             (b11  86  93 177 136)
+             (b10  86 136 177 179)
+             (b9   86 179 177 222)
+             (b8   86 222 177 265)
+             (c13 182   7 273  50)
+             (c12 182  50 273  93)
+             (c11 182  93 273 136)
+             (c10 182 136 273 179)
+             (c9  182 179 273 222)
+             (c8  182 222 273 265)
+             (d13 277   7 368  50)
+             (d12 277  50 368  93)
+             (d11 277  93 368 136)
+             (d10 277 136 368 179)
+             (d9  277 179 368 222)
+             (d8  277 222 368 265)
+             (e13 362   7 453  50)
+             (e12 362  50 453  93)
+             (e11 362  93 453 136)
+             (e10 362 136 453 179)
+             (e9  362 179 453 222)
+             (e8  362 222 453 265)
+
+             (a7   0 284  91 327)
+             (c7 182 284 273 327)
+             (e7 362 284 453 327)
+
+             (a6   0 347  91 390)
+             (a5   0 390  91 433)
+             (a4   0 433  91 476)
+             (a3   0 476  91 519)
+             (a2   0 519  91 562)
+             (a1   0 561  91 604)
+             (b6  86 347 177 390)
+             (b5  86 390 177 433)
+             (b4  86 433 177 476)
+             (b3  86 476 177 519)
+             (b2  86 519 177 562)
+             (b1  86 561 177 604)
+             (c6 182 347 273 390)
+             (c5 182 390 273 433)
+             (c4 182 433 273 476)
+             (c3 182 476 273 519)
+             (c2 182 519 273 562)
+             (c1 182 561 273 604)
+             (d6 276 347 367 390)
+             (d5 276 390 367 433)
+             (d4 276 433 367 476)
+             (d3 276 476 367 519)
+             (d2 276 519 367 562)
+             (d1 276 561 367 604)
+             (e6 362 347 453 390)
+             (e5 362 390 453 433)
+             (e4 362 433 453 476)
+             (e3 362 476 453 519)
+             (e2 362 519 453 562)
+             (e1 362 561 453 604)
+      )     
+      (dummy a0)
+      (links next
+         (a2   a3) (a3   a4) (a4   a5) (a5   a6) (a6   a7) (a7   a8) (a8   a9)
+         (a9  a10) (a10 a11) (a11 a12) (e2   e3) (e3   e4) (e4   e5) (e5   e6) 
+         (e6   e7) (e7   e8) (e8   e9) (e9  e10) (e10 e11) (e11 e12) (c6   c7)
+         (a1   a2) (a12 a13) (b1   b2) (b2   b3) (b3   b4) (b4   b5) (b5   b6)
+         (c1   c2) (c2   c3) (c3   c4) (c4   c5) (c5   c6) (d1   d2) (d2   d3) 
+         (d3   d4) (d4   d5) (d5   d6) (e1   e2) (e12 e13) (b8   b9) (b9  b10) 
+         (b10 b11) (b11 b12) (b12 b13) (c8   c9) (c9  c10) (c10 c11) (c11 c12) 
+         (c12 c13) (d8   d9) (d9  d10) (d10 d11) (d11 d12) (d12 d13) (a0   a1)
+         (a13  b1) (b13  c1) (c13  d1) (d13  e1) (c7  c8)  (b6   b8) (d6   d8)
+      )
+      (links N
+         (a2  a3) (a3   a4) (a4   a5) (a5  a6) (a6   a7) (a7   a8) (a8 a9)
+         (a9 a10) (a10 a11) (a11 a12) (e2  e3) (e3   e4) (e4   e5) (e5 e6) 
+         (e6  e7) (e7   e8) (e8   e9) (e9 e10) (e10 e11) (e11 e12) (c6 c7)
+         (c7  c8)
+      )
+      (links S
+         (a3  a2) (a4   a3) (a5   a4) (a6  a5) (a7   a6) (a8   a7) (a9 a8)
+         (a10 a9) (a11 a10) (a12 a11) (e3  e2) (e4   e3) (e5   e4) (e6 e5) 
+         (e7  e6) (e8   e7) (e9   e8) (e10 e9) (e11 e10) (e12 e11) (c7 c6)
+         (c8  c7)
+      )
+      (links E
+         (a2  b2)  (b2   c2) (c2   d2) (d2  e2) (a6   b6) (b6   c6) 
+         (c6  d6)  (d6   e6) (a8   b8) (b8  c8) (c8   d8) (d8   e8)
+         (a12 b12) (b12 c12) (c12 d12) (d12 e12)
+      )
+      (links W
+         (b2   a2) (c2   b2) (d2   c2) (e2   d2) (b6  a6) (c6  b6) 
+         (d6   c6) (e6   d6) (b8   a8) (c8   b8) (d8  c8) (e8  d8)
+         (b12 a12) (c12 b12) (d12 c12) (e12 d12)
+      )
+      (links n
+         (a1   a2) (a12 a13) (b1   b2) (b2   b3) (b3   b4) (b4   b5) (b5   b6)
+         (c1   c2) (c2   c3) (c3   c4) (c4   c5) (c5   c6) (d1   d2) (d2   d3) 
+         (d3   d4) (d4   d5) (d5   d6) (e1   e2) (e12 e13) (b8   b9) (b9  b10) 
+         (b10 b11) (b11 b12) (b12 b13) (c8   c9) (c9  c10) (c10 c11) (c11 c12) 
+         (c12 c13) (d8   d9) (d9  d10) (d10 d11) (d11 d12) (d12 d13)
+      )
+      (links s
+         (a2   a1) (a13 a12) (b2   b1) (b3   b2) (b4   b3) (b5   b4) (b6   b5)
+         (c2   c1) (c3   c2) (c4   c3) (c5   c4) (c6   c5) (d2   d1) (d3   d2) 
+         (d4   d3) (d5   d4) (d6   d5) (e2   e1) (e13 e12) (b9   b8) (b10  b9) 
+         (b11 b10) (b12 b11) (b13 b12) (c9   c8) (c10  c9) (c11 c10) (c12 c11) 
+         (c13 c12) (d9   d8) (d10  d9) (d11 d10) (d12 d11) (d13 d12)
+      )
+      (links e
+         (a1   b1) (b1   c1) (c1   d1) (d1   e1) (a3   b3) (b3   c3) 
+         (c3   d3) (d3   e3) (a4   b4) (b4   c4) (c4   d4) (d4   e4)
+         (a5   b5) (b5   c5) (c5   d5) (d5   e5) (a9   b9) (b9   c9) 
+         (c9   d9) (d9   e9) (a10 b10) (b10 c10) (c10 d10) (d10 e10)
+         (a11 b11) (b11 c11) (c11 d11) (d11 e11) (a13 b13) (b13 c13) 
+         (c13 d13) (d13 e13)
+      )
+      (links w
+         (b1   a1) (c1   b1) (d1   c1) (e1   d1) (b3   a3) (c3   b3) 
+         (d3   c3) (e3   d3) (b4   a4) (c4   b4) (d4   c4) (e4   d4)
+         (b5   a5) (c5   b5) (d5   c5) (e5   d5) (b9   a9) (c9   b9) 
+         (d9   c9) (e9   d9) (b10 a10) (c10 b10) (d10 c10) (e10 d10)
+         (b11 a11) (c11 b11) (d11 c11) (e11 d11) (b13 a13) (c13 b13) 
+         (d13 c13) (e13 d13)
+      )
+      (links nw
+         (b3   a4) (b5   a6) (b9  a10) (b11 a12) (c4   b5) (c10 b11)
+         (d3   c4) (d5   c6) (d9  c10) (d11 c12) (c2   b3) (c8   b9)
+         (e2   d3) (e4   d5) (e8   d9) (e10 d11)
+      )
+      (links se
+         (a4   b3) (a6   b5) (a10  b9) (a12 b11) (b5   c4) (b11 c10)
+         (c4   d3) (c6   d5) (c10  d9) (c12 d11) (b3   c2) (b9   c8)
+         (d3   e2) (d5   e4) (d9   e8) (d11 e10)
+      )
+      (links ne
+         (a2   b3) (a4   b5) (a8   b9) (a10 b11) (b3   c4) (b5   c6)
+         (b9  c10) (b11 c12) (c2   d3) (c4   d5) (c8   d9) (c10 d11)
+         (d3   e4) (d5   e6) (d9  e10) (d11 e12)
+      )
+      (links sw
+         (b3   a2) (b5   a4) (b9   a8) (b11 a10) (c4   b3) (c6   b5)
+         (c10  b9) (c12 b11) (d3   c2) (d5   c4) (d9   c8) (d11 c10)
+         (e4   d3) (e6   d5) (e10  d9) (e12 d11)
+      )
+      (links ths (a1 b1) (b1 d1) (d1 b1))
+      (links thn (a1 b13) (b13 d13) (d13 b13))
+      (links tss (a1 sp))
+      (links tsn (a1 np))
+      (symmetry North (ths thn) (thn ths) (tss tsn) (tsn tss))
+      (zone
+         (name safe)
+         (players South North)
+         (positions b3 b5 b9 b11 c4 c10 d3 d5 d9 d11)
+      )
+      (zone
+         (name cross)
+         (players South North)
+         (positions a2 a6 a8 a12 c6 c8 e2 e6 e8 e12)
+      )
+      (zone
+         (name hqf)
+         (players South)
+         (positions b1 d1)
+      )
+      (zone
+         (name hqf)
+         (players North)
+         (positions b13 d13)
+      )
+      (zone
+         (name hqe)
+         (players South)
+         (positions b13 d13)
+      )
+      (zone
+         (name hqe)
+         (players North)
+         (positions b1 d1)
+      )
+      (zone
+         (name home)
+         (players South)
+         (positions a1 a2 a3 a4 a5 a6 b1 b2 b4 b6
+                    c1 c2 c3 c5 c6 d1 d2 d4 d6 e1 
+                    e2 e3 e4 e5 e6)
+      )
+      (zone
+         (name home)
+         (players North)
+         (positions a8 a9  a10 a11 a12 a13 b8 b10 b12 b13
+                    c8 c9  c11 c12 c13 d8 d10 d12 d13 e8 
+                    e9 e10 e11 e12 e13)
+      )
+      (zone
+         (name front)
+         (players South)
+         (positions a2 b2 c2 d2 e2 a3 c3 e3 a4 b4 d4 e4
+                    a5 c5 e5 a6 b6 c6 d6 e6)
+      )
+      (zone
+         (name front)
+         (players North)
+         (positions a12 b12 c12 d12 e12 a11 c11 e11 a10 b10 d10 e10
+                    a9  c9  e9  a8 b8 c8 d8 e8)
+      )
+      (zone
+         (name rear)
+         (players South)
+         (positions a1 b1 c1 d1 e1 a2 b2 c2 d2 e2)
+      )
+      (zone
+         (name rear)
+         (players North)
+         (positions a13 b13 c13 d13 e13 a12 b12 c12 d12 e12)
+      )
+      (zone
+         (name ami)
+         (players South)
+         (positions a1)
+      )
+      (zone
+         (name ami)
+         (players North)
+         (positions b1)
+      )
+      (zone
+         (name variants)
+         (players South North)
+         (positions $1)
+      )
+  )
+)
+
+(define def-pieces-1
+  (piece
+      (name FieldMarshal)
+      (image South "images/Luzhanqi/p1bb.bmp"
+             North "images/Luzhanqi/pbh.bmp" "images/Luzhanqi/p1br.bmp")
+      (help " ")
+      (attribute not-locked? true)
+      (drops
+         (move-type droptype)
+         (drop-other)
+      )
+      (moves
+         (move-type normaltype)
+         (common-step  n) (common-step  s) (common-step  w) (common-step  e)
+         (common-step nw) (common-step sw) (common-step ne) (common-step se)
+         (common-slide N) (common-slide S) (common-slide W) (common-slide E)
+      )
+  )
+  (piece
+      (name General)
+      (image South "images/Luzhanqi/p2bb.bmp"
+             North "images/Luzhanqi/pbh.bmp" "images/Luzhanqi/p2br.bmp")
+      (help " ")
+      (attribute not-locked? true)
+      (drops
+         (move-type droptype)
+         (drop-other)
+      )
+      (moves
+         (move-type normaltype)
+         (common-step  n) (common-step  s) (common-step  w) (common-step  e)
+         (common-step nw) (common-step sw) (common-step ne) (common-step se)
+         (common-slide N) (common-slide S) (common-slide W) (common-slide E)
+      )
+  )
+)
+
+(define def-pieces-2
+  (piece
+      (name MajorGeneral)
+      (image South "images/Luzhanqi/p3bb.bmp"
+             North "images/Luzhanqi/pbh.bmp" "images/Luzhanqi/p3br.bmp")
+      (help " ")
+      (attribute not-locked? true)
+      (drops
+         (move-type droptype)
+         (drop-other)
+      )
+      (moves
+         (move-type normaltype)
+         (common-step  n) (common-step  s) (common-step  w) (common-step  e)
+         (common-step nw) (common-step sw) (common-step ne) (common-step se)
+         (common-slide N) (common-slide S) (common-slide W) (common-slide E)
+      )
+  )
+  (piece
+      (name BrigadierGeneral)
+      (image South "images/Luzhanqi/p4bb.bmp"
+             North "images/Luzhanqi/pbh.bmp" "images/Luzhanqi/p4br.bmp")
+      (help " ")
+      (attribute not-locked? true)
+      (drops
+         (move-type droptype)
+         (drop-other)
+      )
+      (moves
+         (move-type normaltype)
+         (common-step  n) (common-step  s) (common-step  w) (common-step  e)
+         (common-step nw) (common-step sw) (common-step ne) (common-step se)
+         (common-slide N) (common-slide S) (common-slide W) (common-slide E)
+      )
+  )
+)
+
+(define def-pieces-3
+  (piece
+      (name Colonel)
+      (image South "images/Luzhanqi/p5bb.bmp"
+             North "images/Luzhanqi/pbh.bmp" "images/Luzhanqi/p5br.bmp")
+      (help " ")
+      (attribute not-locked? true)
+      (drops
+         (move-type droptype)
+         (drop-other)
+      )
+      (moves
+         (move-type normaltype)
+         (common-step  n) (common-step  s) (common-step  w) (common-step  e)
+         (common-step nw) (common-step sw) (common-step ne) (common-step se)
+         (common-slide N) (common-slide S) (common-slide W) (common-slide E)
+      )
+  )
+  (piece
+      (name Major)
+      (image South "images/Luzhanqi/p6bb.bmp"
+             North "images/Luzhanqi/pbh.bmp" "images/Luzhanqi/p6br.bmp")
+      (help " ")
+      (attribute not-locked? true)
+      (drops
+         (move-type droptype)
+         (drop-other)
+      )
+      (moves
+         (move-type normaltype)
+         (common-step  n) (common-step  s) (common-step  w) (common-step  e)
+         (common-step nw) (common-step sw) (common-step ne) (common-step se)
+         (common-slide N) (common-slide S) (common-slide W) (common-slide E)
+      )
+  )
+)
+
+(define def-pieces-4
+  (piece
+      (name Captain)
+      (image South "images/Luzhanqi/p7bb.bmp"
+             North "images/Luzhanqi/pbh.bmp" "images/Luzhanqi/p7br.bmp")
+      (help " ")
+      (attribute not-locked? true)
+      (drops
+         (move-type droptype)
+         (drop-other)
+      )
+      (moves
+         (move-type normaltype)
+         (common-step  n) (common-step  s) (common-step  w) (common-step  e)
+         (common-step nw) (common-step sw) (common-step ne) (common-step se)
+         (common-slide N) (common-slide S) (common-slide W) (common-slide E)
+      )
+  )
+  (piece
+      (name Lieutenant)
+      (image South "images/Luzhanqi/p8bb.bmp"
+             North "images/Luzhanqi/pbh.bmp" "images/Luzhanqi/p8br.bmp")
+      (help " ")
+      (attribute not-locked? true)
+      (drops
+         (move-type droptype)
+         (drop-other)
+      )
+      (moves
+         (move-type normaltype)
+         (common-step  n) (common-step  s) (common-step  w) (common-step  e)
+         (common-step nw) (common-step sw) (common-step ne) (common-step se)
+         (common-slide N) (common-slide S) (common-slide W) (common-slide E)
+      )
+  )
+)
+
+(define def-pieces-5
+  (piece
+      (name Engineer)
+      (image South "images/Luzhanqi/p9bb.bmp"
+             North "images/Luzhanqi/pbh.bmp" "images/Luzhanqi/p9br.bmp")
+      (help " ")
+      (drops
+         (move-type droptype)
+         (drop-other)
+      )
+      (attribute not-locked? true)
+      (moves
+         (move-type normaltype)
+         (engineer-step   n) (engineer-step   s) (engineer-step   w) (engineer-step   e)
+         (engineer-step  nw) (engineer-step  sw) (engineer-step  ne) (engineer-step  se)
+         (engineer-move-1 N 1) (engineer-move-1 S 1) (engineer-move-1 W 1) (engineer-move-1 E 1)
+         (engineer-move-2 N 1) (engineer-move-2 S 1) (engineer-move-2 W 1) (engineer-move-2 E 1)
+         (engineer-move-3 N 1) (engineer-move-3 S 1) (engineer-move-3 W 1) (engineer-move-3 E 1)
+         (engineer-move-4 N 1) (engineer-move-4 S 1) (engineer-move-4 W 1) (engineer-move-4 E 1)
+         (engineer-move-5 N 1) (engineer-move-5 S 1) (engineer-move-5 W 1) (engineer-move-5 E 1)
+         (engineer-move-6 N 1) (engineer-move-6 S 1) (engineer-move-6 W 1) (engineer-move-6 E 1)
+         (engineer-move-7 N 1) (engineer-move-7 S 1) (engineer-move-7 W 1) (engineer-move-7 E 1)
+         (engineer-move-8 N 1) (engineer-move-8 S 1) (engineer-move-8 W 1) (engineer-move-8 E 1)
+         (engineer-move-9 N 1) (engineer-move-9 S 1) (engineer-move-9 W 1) (engineer-move-9 E 1)
+         (engineer-move-A N 1) (engineer-move-A S 1) (engineer-move-A W 1) (engineer-move-A E 1)
+         (move-type 1-type)
+         (engineer-move-1 N 1) (engineer-move-1 S 1) (engineer-move-1 W 1) (engineer-move-1 E 1)
+         (engineer-move-2 N 1) (engineer-move-2 S 1) (engineer-move-2 W 1) (engineer-move-2 E 1)
+         (engineer-move-3 N 1) (engineer-move-3 S 1) (engineer-move-3 W 1) (engineer-move-3 E 1)
+         (engineer-move-4 N 1) (engineer-move-4 S 1) (engineer-move-4 W 1) (engineer-move-4 E 1)
+         (engineer-move-5 N 1) (engineer-move-5 S 1) (engineer-move-5 W 1) (engineer-move-5 E 1)
+         (engineer-move-6 N 1) (engineer-move-6 S 1) (engineer-move-6 W 1) (engineer-move-6 E 1)
+         (engineer-move-7 N 1) (engineer-move-7 S 1) (engineer-move-7 W 1) (engineer-move-7 E 1)
+         (engineer-move-8 N 1) (engineer-move-8 S 1) (engineer-move-8 W 1) (engineer-move-8 E 1)
+         (engineer-move-9 N 1) (engineer-move-9 S 1) (engineer-move-9 W 1) (engineer-move-9 E 1)
+         (engineer-move-A N 1) (engineer-move-A S 1) (engineer-move-A W 1) (engineer-move-A E 1)
+      )
+  )
+  (piece
+      (name Bomb)
+      (image South "images/Luzhanqi/pgbb.bmp"
+             North "images/Luzhanqi/pbh.bmp" "images/Luzhanqi/pgbr.bmp")
+      (help " ")
+      (drops
+         (move-type bombtype)
+         (drop-Bomb)
+      )
+      (moves
+         (move-type normaltype)
+         (bomb-step  n) (bomb-step  s) (bomb-step  w) (bomb-step  e)
+         (bomb-step nw) (bomb-step sw) (bomb-step ne) (bomb-step se)
+         (bomb-slide N) (bomb-slide S) (bomb-slide W) (bomb-slide E)
+      )
+  )
+)
+
+(define def-pieces-6
+  (piece
+      (name Landmine)
+      (image South "images/Luzhanqi/pmbb.bmp"
+             North "images/Luzhanqi/pbh.bmp" "images/Luzhanqi/pmbr.bmp")
+      (help " ")
+      (drops
+         (move-type bombtype)
+         (drop-Landmine)
+      )
+  )
+  (piece
+      (name Flag)
+      (image South "images/Luzhanqi/pfbb.bmp"
+             North "images/Luzhanqi/pbh.bmp" "images/Luzhanqi/pfbr.bmp")
+      (help " ")
+      (drops
+         (move-type bombtype)
+         (drop-flag)
+      )
+  )
+)
+
+(define def-pieces-7
+  (piece
+      (name OpenedFlag)
+      (image South "images/Luzhanqi/pfbb.bmp"
+             North "images/Luzhanqi/pfbr.bmp")
+      (help " ")
+      (drops
+         (move-type bombtype)
+         (drop-flag)
+      )
+  )
+  (piece
+      (name Start)
+      (image South "images/Luzhanqi/pbh.bmp"
+             North "images/Luzhanqi/pbh.bmp")
+      (drops
+         (move-type starttype)
+         (drop-start)
+      )
+  )
+)
+
+(define def-pieces-8
+  (piece
+      (name FieldMarshalFlag)
+      (image South "images/Luzhanqi/pfbb.bmp"
+             North "images/Luzhanqi/pfbr.bmp")
+      (help " ")
+      (attribute not-locked? true)
+      (moves
+         (move-type normaltype)
+         (common-step  n) (common-step  s) (common-step  w) (common-step  e)
+         (common-step nw) (common-step sw) (common-step ne) (common-step se)
+         (common-slide N) (common-slide S) (common-slide W) (common-slide E)
+      )
+  )
+  (piece
+      (name GeneralFlag)
+      (image South "images/Luzhanqi/pfbb.bmp"
+             North "images/Luzhanqi/pfbr.bmp")
+      (help " ")
+      (attribute not-locked? true)
+      (moves
+         (move-type normaltype)
+         (common-step  n) (common-step  s) (common-step  w) (common-step  e)
+         (common-step nw) (common-step sw) (common-step ne) (common-step se)
+         (common-slide N) (common-slide S) (common-slide W) (common-slide E)
+      )
+  )
+)
+
+(define def-pieces-9
+  (piece
+      (name MajorGeneralFlag)
+      (image South "images/Luzhanqi/pfbb.bmp"
+             North "images/Luzhanqi/pfbr.bmp")
+      (help " ")
+      (attribute not-locked? true)
+      (moves
+         (move-type normaltype)
+         (common-step  n) (common-step  s) (common-step  w) (common-step  e)
+         (common-step nw) (common-step sw) (common-step ne) (common-step se)
+         (common-slide N) (common-slide S) (common-slide W) (common-slide E)
+      )
+  )
+  (piece
+      (name BrigadierGeneralFlag)
+      (image South "images/Luzhanqi/pfbb.bmp"
+             North "images/Luzhanqi/pfbr.bmp")
+      (help " ")
+      (attribute not-locked? true)
+      (moves
+         (move-type normaltype)
+         (common-step  n) (common-step  s) (common-step  w) (common-step  e)
+         (common-step nw) (common-step sw) (common-step ne) (common-step se)
+         (common-slide N) (common-slide S) (common-slide W) (common-slide E)
+      )
+  )
+)
+
+(define def-pieces-10
+  (piece
+      (name ColonelFlag)
+      (image South "images/Luzhanqi/pfbb.bmp"
+             North "images/Luzhanqi/pfbr.bmp")
+      (help " ")
+      (attribute not-locked? true)
+      (moves
+         (move-type normaltype)
+         (common-step  n) (common-step  s) (common-step  w) (common-step  e)
+         (common-step nw) (common-step sw) (common-step ne) (common-step se)
+         (common-slide N) (common-slide S) (common-slide W) (common-slide E)
+      )
+  )
+  (piece
+      (name MajorFlag)
+      (image South "images/Luzhanqi/pfbb.bmp"
+             North "images/Luzhanqi/pfbr.bmp")
+      (help " ")
+      (attribute not-locked? true)
+      (moves
+         (move-type normaltype)
+         (common-step  n) (common-step  s) (common-step  w) (common-step  e)
+         (common-step nw) (common-step sw) (common-step ne) (common-step se)
+         (common-slide N) (common-slide S) (common-slide W) (common-slide E)
+      )
+  )
+)
+
+(define def-pieces-11
+  (piece
+      (name CaptainFlag)
+      (image South "images/Luzhanqi/pfbb.bmp"
+             North "images/Luzhanqi/pfbr.bmp")
+      (help " ")
+      (attribute not-locked? true)
+      (moves
+         (move-type normaltype)
+         (common-step  n) (common-step  s) (common-step  w) (common-step  e)
+         (common-step nw) (common-step sw) (common-step ne) (common-step se)
+         (common-slide N) (common-slide S) (common-slide W) (common-slide E)
+      )
+  )
+  (piece
+      (name LieutenantFlag)
+      (image South "images/Luzhanqi/pfbb.bmp"
+             North "images/Luzhanqi/pfbr.bmp")
+      (help " ")
+      (attribute not-locked? true)
+      (moves
+         (move-type normaltype)
+         (common-step  n) (common-step  s) (common-step  w) (common-step  e)
+         (common-step nw) (common-step sw) (common-step ne) (common-step se)
+         (common-slide N) (common-slide S) (common-slide W) (common-slide E)
+      )
+  )
+)
+
+(define def-pieces-12
+  (piece
+      (name EngineerFlag)
+      (image South "images/Luzhanqi/pfbb.bmp"
+             North "images/Luzhanqi/pfbr.bmp")
+      (help " ")
+      (attribute not-locked? true)
+      (moves
+         (move-type normaltype)
+         (engineer-step   n) (engineer-step   s) (engineer-step   w) (engineer-step   e)
+         (engineer-step  nw) (engineer-step  sw) (engineer-step  ne) (engineer-step  se)
+         (engineer-move-1 N 1) (engineer-move-1 S 1) (engineer-move-1 W 1) (engineer-move-1 E 1)
+         (engineer-move-2 N 1) (engineer-move-2 S 1) (engineer-move-2 W 1) (engineer-move-2 E 1)
+         (engineer-move-3 N 1) (engineer-move-3 S 1) (engineer-move-3 W 1) (engineer-move-3 E 1)
+         (engineer-move-4 N 1) (engineer-move-4 S 1) (engineer-move-4 W 1) (engineer-move-4 E 1)
+         (engineer-move-5 N 1) (engineer-move-5 S 1) (engineer-move-5 W 1) (engineer-move-5 E 1)
+         (engineer-move-6 N 1) (engineer-move-6 S 1) (engineer-move-6 W 1) (engineer-move-6 E 1)
+         (engineer-move-7 N 1) (engineer-move-7 S 1) (engineer-move-7 W 1) (engineer-move-7 E 1)
+         (engineer-move-8 N 1) (engineer-move-8 S 1) (engineer-move-8 W 1) (engineer-move-8 E 1)
+         (engineer-move-9 N 1) (engineer-move-9 S 1) (engineer-move-9 W 1) (engineer-move-9 E 1)
+         (engineer-move-A N 1) (engineer-move-A S 1) (engineer-move-A W 1) (engineer-move-A E 1)
+         (move-type 1-type)
+         (engineer-move-1 N 1) (engineer-move-1 S 1) (engineer-move-1 W 1) (engineer-move-1 E 1)
+         (engineer-move-2 N 1) (engineer-move-2 S 1) (engineer-move-2 W 1) (engineer-move-2 E 1)
+         (engineer-move-3 N 1) (engineer-move-3 S 1) (engineer-move-3 W 1) (engineer-move-3 E 1)
+         (engineer-move-4 N 1) (engineer-move-4 S 1) (engineer-move-4 W 1) (engineer-move-4 E 1)
+         (engineer-move-5 N 1) (engineer-move-5 S 1) (engineer-move-5 W 1) (engineer-move-5 E 1)
+         (engineer-move-6 N 1) (engineer-move-6 S 1) (engineer-move-6 W 1) (engineer-move-6 E 1)
+         (engineer-move-7 N 1) (engineer-move-7 S 1) (engineer-move-7 W 1) (engineer-move-7 E 1)
+         (engineer-move-8 N 1) (engineer-move-8 S 1) (engineer-move-8 W 1) (engineer-move-8 E 1)
+         (engineer-move-9 N 1) (engineer-move-9 S 1) (engineer-move-9 W 1) (engineer-move-9 E 1)
+         (engineer-move-A N 1) (engineer-move-A S 1) (engineer-move-A W 1) (engineer-move-A E 1)
+      )
+  )
+  (piece
+      (name LandmineFlag)
+      (image South "images/Luzhanqi/pmbb.bmp"
+             North "images/Luzhanqi/pbh.bmp" "images/Luzhanqi/pmbr.bmp")
+      (help " ")
+      (drops
+         (move-type bombtype)
+         (drop-Landmine)
+      )
+  )
+  (piece
+      (name Mark)
+      (image South "images/Luzhanqi/i.bmp"
+             North "images/Luzhanqi/i.bmp")
+      (help " ")
+  )
+)
+
+(define def-setup
+  (board-setup
+      (North
+         (FieldMarshal off 1)
+         (General off 1)
+         (MajorGeneral off 2)
+         (BrigadierGeneral off 2)
+         (Colonel off 2)
+         (Major off 2)
+         (Captain off 3)
+         (Lieutenant off 3)
+         (Engineer off 3)
+         (Bomb off 2)
+         (Landmine off 3)
+         (Flag off 1)
+         (Start np)
+      )
+      (South
+         (FieldMarshal off 1)
+         (General off 1)
+         (MajorGeneral off 2)
+         (BrigadierGeneral off 2)
+         (Colonel off 2)
+         (Major off 2)
+         (Captain off 3)
+         (Lieutenant off 3)
+         (Engineer off 3)
+         (Bomb off 2)
+         (Landmine off 3)
+         (Flag off 1)
+         (Start sp off 1)
+      )
+  )
+)
+
+(define def-goals
+  (win-condition (South) (absolute-config FieldMarshalFlag b1))
+  (win-condition (South) (absolute-config FieldMarshalFlag d1))
+  (win-condition (South) (absolute-config GeneralFlag b1))
+  (win-condition (South) (absolute-config GeneralFlag d1))
+  (win-condition (South) (absolute-config MajorGeneralFlag b1))
+  (win-condition (South) (absolute-config MajorGeneralFlag d1))
+  (win-condition (South) (absolute-config BrigadierGeneralFlag b1))
+  (win-condition (South) (absolute-config BrigadierGeneralFlag d1))
+  (win-condition (South) (absolute-config ColonelFlag b1))
+  (win-condition (South) (absolute-config ColonelFlag d1))
+  (win-condition (South) (absolute-config MajorFlag b1))
+  (win-condition (South) (absolute-config MajorFlag d1))
+  (win-condition (South) (absolute-config CaptainFlag b1))
+  (win-condition (South) (absolute-config CaptainFlag d1))
+  (win-condition (South) (absolute-config LieutenantFlag b1))
+  (win-condition (South) (absolute-config LieutenantFlag d1))
+  (win-condition (South) (absolute-config EngineerFlag b1))
+  (win-condition (South) (absolute-config EngineerFlag d1))
+  (win-condition (North) (absolute-config FieldMarshalFlag b13))
+  (win-condition (North) (absolute-config FieldMarshalFlag d13))
+  (win-condition (North) (absolute-config GeneralFlag b13))
+  (win-condition (North) (absolute-config GeneralFlag d13))
+  (win-condition (North) (absolute-config MajorGeneralFlag b13))
+  (win-condition (North) (absolute-config MajorGeneralFlag d13))
+  (win-condition (North) (absolute-config BrigadierGeneralFlag b13))
+  (win-condition (North) (absolute-config BrigadierGeneralFlag d13))
+  (win-condition (North) (absolute-config ColonelFlag b13))
+  (win-condition (North) (absolute-config ColonelFlag d13))
+  (win-condition (North) (absolute-config MajorFlag b13))
+  (win-condition (North) (absolute-config MajorFlag d13))
+  (win-condition (North) (absolute-config CaptainFlag b13))
+  (win-condition (North) (absolute-config CaptainFlag d13))
+  (win-condition (North) (absolute-config LieutenantFlag b13))
+  (win-condition (North) (absolute-config LieutenantFlag d13))
+  (win-condition (North) (absolute-config EngineerFlag b13))
+  (win-condition (North) (absolute-config EngineerFlag d13))
+)
+
+(define def-common
+  (move-sound "Audio/Pickup.wav")
+  (release-sound "Audio/Pickup.wav")
+  (drop-sound "Audio/Pickup.wav")
+  (capture-sound "")
+
+  (option "animate captures" false)
+  (option "animate drops"    false)
+  (option "pass partial"     true)
+  (option "show moves list"  false)
+
+  (players South North)
+  (turn-order 
+      (South starttype)
+      North North North North North
+      North North North North North
+      North North North North North
+      North North North North North
+      North North North North North
+      South South South South South 
+      South South South South South 
+      South South South South South 
+      South South South South South 
+      South South South South South 
+      repeat South North)
+
+  (move-priorities bombtype droptype normaltype)
+)
+
+(define def-description
+  (description "Luzhanqi is a two-player Chinese board game. It is a non-perfect abstract strategy game of partial information, since each player has only limited knowledge concerning the disposition of the opposing pieces.\
+The aim of the game is to capture the opponent's flag through penetrating his defenses, while trying to prevent him from capturing the player's own flag. The Luzhanqi board has a number of features \
+which affect how pieces move.\\
+- Post - also Soldier Station: a normal space, marked as a rectangle on the board. Pieces can move on or off these spaces at will, and can be attacked and captured on them.\
+- Roads - usually marked as thin lines on the board. A piece can only travel one space across a road at any time.\
+- Railroads - usually marked as thick lines on the board, a piece can travel any number of spaces along a railroad in a straight line, as long as its path is not obstructed by another piece.\
+- Campsite - marked as a circle on the board, with 5 in each player's territory. A piece on a campsite cannot be attacked.\
+- Mountains - pieces cannot move over these two spaces.\
+- Frontlines - these three spaces are the only points at which a piece can enter the opponent's territory. Pieces do not land on these spaces, they pass over them.\
+- Headquarters - positioned at two sides of the central axis at the sixth rank of the player's territory, the Flag must be placed on one of these two spaces. \
+  It, together with the other piece placed on the other headquarters, must not move after the game starts.\\
+Each player has 25 pieces, which are identical except for markings on one side. They are listed here in order of order, where any piece of a higher order may capture one of lower order \
+(if the enemy is of the same order, both pieces will be removed from the board). Each player has:\\
+- one Field Marshal, order 9\
+- one General or Army Commander, order 8\
+- two Major Generals or Division Commanders, order 7\
+- two Brigadier Generals or Brigade Commanders, order 6\
+- two Colonels or Regiment Commanders, order 5\
+- two Majors or Battalion Commanders, order 4\
+- three Captains or Company Commanders, order 3\
+- three Lieutenants or Platoon Commanders, order 2\
+- three Engineers or Sappers, order 1\
+- two Bombs\
+- three Landmines\
+- one Flag\\
+Some of these pieces have special features and abilities:\\
+- The Engineers are the only pieces which can turn corners when travelling along the Railroad. Engineers can also capture Landmines without being removed from the board.\
+- Bombs, when in contact with any opponent piece, destroy both itself and the piece. They may capture the opponent's flag. Bombs cannot be placed on the front line (the first rank) \
+  during the initial set-up.\
+- Landmines are immune to any attack, and cause the destruction of attacking pieces (except when attacked by an Engineer or destroyed by a bomb). Depending on the ruleset used, \
+  Landmines may or may not be removed from play following a capture. Landmines may only be placed on the fifth and sixth ranks during set-up. The Landmine cannot move from its original position.\
+- The Flag must be placed on one of the two Headquarters spaces on the sixth rank. It cannot move. Its capture brings the victory of the attacker and ends the game. Also, when Field Marshal is \
+  destroyed, the Flag must be revealed to the opposing player.")
+)
+
+(game
+  (title "Luzhanqi")
+  (def-description)
+  (def-common)
+  (def-board a1)
+  (def-pieces-1)
+  (def-pieces-2)
+  (def-pieces-3)
+  (def-pieces-4)
+  (def-pieces-5)
+  (def-pieces-6)
+  (def-pieces-7)
+  (def-pieces-8)
+  (def-pieces-9)
+  (def-pieces-10)
+  (def-pieces-11)
+  (def-pieces-12)
+  (def-setup)
+  (loss-condition (North South) (and (pieces-remaining 0 Flag) (pieces-remaining 0 OpenedFlag) (pieces-remaining 0 Start)))
+)
+
+(variant
+  (title "Luzhanqi RM (Reusable Landmines)")
+  (def-board b1)
+)
+
+(variant
+  (title "-")
+)
+
+(game
+  (title "Luzhanqi DF (Deliver the Flag)")
+  (def-description)
+  (def-common)
+  (def-board a1)
+  (def-pieces-1)
+  (def-pieces-2)
+  (def-pieces-3)
+  (def-pieces-4)
+  (def-pieces-5)
+  (def-pieces-6)
+  (def-pieces-7)
+  (def-pieces-8)
+  (def-pieces-9)
+  (def-pieces-10)
+  (def-pieces-11)
+  (def-pieces-12)
+  (def-setup)
+  (def-goals)
+)
+
+(game
+  (title "Luzhanqi DF + RM")
+  (def-description)
+  (def-common)
+  (def-board b1)
+  (def-pieces-1)
+  (def-pieces-2)
+  (def-pieces-3)
+  (def-pieces-4)
+  (def-pieces-5)
+  (def-pieces-6)
+  (def-pieces-7)
+  (def-pieces-8)
+  (def-pieces-9)
+  (def-pieces-10)
+  (def-pieces-11)
+  (def-pieces-12)
+  (def-setup)
+  (def-goals)
+)

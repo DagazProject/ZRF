@@ -1,0 +1,9 @@
+Duke
+----
+4 variants
+
+The Duke is a two-player abstract strategy board game played on a square-tiled 
+gameboard, with 36 squares arranged in a 6x6 grid. This game invented by
+Jeremy Holcomb & Stephen McLaughlin and published by Catalyst Game Labs in 2013.
+
+See Also: http://www.catalystgamelabs.com/casual-games/the-duke

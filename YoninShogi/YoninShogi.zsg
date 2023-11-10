@@ -1,0 +1,52 @@
+Zillions Save Game File Version 0.02 HCCC
+RulesFile=YoninShogi.zrf
+VariantName=Yonin Shogi 0.0.6 fifteen men
+1. Lance 9i x 9h Knight 9h - 9z @ 5i 3 1 @ 5i 2 0 @ 5i 1 0 @ 5i 0 0 = South on 9z @ 9z 3 1 @ 9z 2 0 @ 9z 1 0 @ 9z 0 0
+1. Silver 9g x 8h Bishop 8h - Ia @ 9e 3 0 @ 9e 2 1 @ 9e 1 0 @ 9e 0 0 = West on Ia @ Ia 3 0 @ Ia 2 1 @ Ia 1 0 @ Ia 0 0
+1. Silver 7a x 8b Bishop 8b - 1m @ 5a 3 0 @ 5a 2 0 @ 5a 1 1 @ 5a 0 0 = North on 1m @ 1m 3 0 @ 1m 2 0 @ 1m 1 1 @ 1m 0 0
+1. Silver 1c x 2b Bishop 2b - IVi @ 1e 3 0 @ 1e 2 0 @ 1e 1 0 @ 1e 0 1 = East on IVi @ IVi 3 0 @ IVi 2 0 @ IVi 1 0 @ IVi 0 1
+2. Gold 6i x 7h Pawn 7h - 9y = South @ 9y 3 1 @ 9y 2 0 @ 9y 1 0 @ 9y 0 0
+2. Silver 8h x 7h Gold 7h - IIa = West @ IIa 3 0 @ IIa 2 1 @ IIa 1 0 @ IIa 0 0
+2. Silver 3a x 2b Silver 2b - 1n = North @ 1n 3 0 @ 1n 2 0 @ 1n 1 1 @ 1n 0 0
+2. Knight 1h x 3i Silver 3i - IIIi = East @ IIIi 3 0 @ IIIi 2 0 @ IIIi 1 0 @ IIIi 0 1
+3. Silver 7i x 7h Silver 7h - 8z = South @ 8z 3 1 @ 8z 2 0 @ 8z 1 0 @ 8z 0 0
+3. Silver 9c x 8b Silver 8b - Ib = West @ Ib 3 0 @ Ib 2 1 @ Ib 1 0 @ Ib 0 0
+3. Silver 2b x 2c Rook 2c - 2m = North @ 2m 3 0 @ 2m 2 0 @ 2m 1 1 @ 2m 0 0
+3. Gold 1d x 2c Silver 2c - IVh = East @ IVh 3 0 @ IVh 2 0 @ IVh 1 0 @ IVh 0 1
+4. Silver 7h x 8g Rook 8g - 8y = South @ 8y 3 1 @ 8y 2 0 @ 8y 1 0 @ 8y 0 0
+4. Silver 8b x 7b Rook 7b - IIb = West @ IIb 3 0 @ IIb 2 1 @ IIb 1 0 @ IIb 0 0
+4. Lance 1a x 1b Knight 1b - 2n = North @ 2n 3 0 @ 2n 2 0 @ 2n 1 1 @ 2n 0 0
+4. King 1e - 2e
+5. Lance 9h x 9f Gold 9f - 7z = South @ 7z 3 1 @ 7z 2 0 @ 7z 1 0 @ 7z 0 0
+5. Bishop Ia - 5e
+5. Gold 6a x 7b Silver 7b - 3m = North @ 3m 3 0 @ 3m 2 0 @ 3m 1 1 @ 3m 0 0
+5. Pawn 3c x 4c Pawn 4c - IIIh = East @ IIIh 3 0 @ IIIh 2 0 @ IIIh 1 0 @ IIIh 0 1
+6. Lance 9f x 9e King 9e - 7y = South @ 7y 3 1 @ 7y 2 0 @ 7y 1 0 @ 7y 0 0 = South on IIa @ IIa 3 1 @ IIa 2 0 @ IIa 1 0 @ IIa 0 0 = South on Ib @ Ib 3 1 @ Ib 2 0 @ Ib 1 0 @ Ib 0 0 = South on IIb @ IIb 3 1 @ IIb 2 0 @ IIb 1 0 @ IIb 0 0
+6. Pass
+6. Lance 1b x 1f Gold 1f - 3n = North @ 3n 3 0 @ 3n 2 0 @ 3n 1 1 @ 3n 0 0
+6. King 2e x 1f Lance 1f - IVg = East @ IVg 3 0 @ IVg 2 0 @ IVg 1 0 @ IVg 0 1
+7. Rook IIb - 1h
+7. Pass
+7. Pawn 7c x 7d Pawn 7d - 4m = North @ 4m 3 0 @ 4m 2 0 @ 4m 1 1 @ 4m 0 0
+7. Lance 1i x 2i Knight 2i - IIIg = East @ IIIg 3 0 @ IIIg 2 0 @ IIIg 1 0 @ IIIg 0 1
+8. Gold 7z - 2f
+8. Pass
+8. Pawn 7d x 7e Pawn 7e - 4n = North @ 4n 3 0 @ 4n 2 0 @ 4n 1 1 @ 4n 0 0
+8. Bishop IVi - 7c
+9. Gold 2f x 1f King 1f - 7z = South @ 7z 3 1 @ 7z 2 0 @ 7z 1 0 @ 7z 0 0 = South on IIIi @ IIIi 3 1 @ IIIi 2 0 @ IIIi 1 0 @ IIIi 0 0 = South on IVh @ IVh 3 1 @ IVh 2 0 @ IVh 1 0 @ IVh 0 0 = South on IIIh @ IIIh 3 1 @ IIIh 2 0 @ IIIh 1 0 @ IIIh 0 0 = South on IVg @ IVg 3 1 @ IVg 2 0 @ IVg 1 0 @ IVg 0 0 = South on IIIg @ IIIg 3 1 @ IIIg 2 0 @ IIIg 1 0 @ IIIg 0 0
+9. Pass
+9. Knight 8a x 7c Bishop 7c - 5m = North @ 5m 3 0 @ 5m 2 0 @ 5m 1 1 @ 5m 0 0
+9. Pass
+10. Knight 9z - 4d
+10. Pass
+10. Pawn 7e x 7f Pawn 7f - 5n = North @ 5n 3 0 @ 5n 2 0 @ 5n 1 1 @ 5n 0 0
+10. Pass
+11. Rook 8y - 3a
+11. Pass
+11. Gold 4a x 3a Rook 3a - 6m = North @ 6m 3 0 @ 6m 2 0 @ 6m 1 1 @ 6m 0 0
+11. Pass
+12. Gold IIa - 5b
+12. Pass
+12. King 5a x 5b Gold 5b - 6n = North @ 6n 3 0 @ 6n 2 0 @ 6n 1 1 @ 6n 0 0
+12. Pass
+13. Knight 4d x 5b King 5b - 9z = KnightP on 5b = South on 9z @ 9z 3 1 @ 9z 2 0 @ 9z 1 0 @ 9z 0 0 = South on 1m @ 1m 3 1 @ 1m 2 0 @ 1m 1 0 @ 1m 0 0 = South on 1n @ 1n 3 1 @ 1n 2 0 @ 1n 1 0 @ 1n 0 0 = South on 2m @ 2m 3 1 @ 2m 2 0 @ 2m 1 0 @ 2m 0 0 = South on 2n @ 2n 3 1 @ 2n 2 0 @ 2n 1 0 @ 2n 0 0 = South on 3m @ 3m 3 1 @ 3m 2 0 @ 3m 1 0 @ 3m 0 0 = South on 3n @ 3n 3 1 @ 3n 2 0 @ 3n 1 0 @ 3n 0 0 = South on 4m @ 4m 3 1 @ 4m 2 0 @ 4m 1 0 @ 4m 0 0 = South on 4n @ 4n 3 1 @ 4n 2 0 @ 4n 1 0 @ 4n 0 0 = South on 5m @ 5m 3 1 @ 5m 2 0 @ 5m 1 0 @ 5m 0 0 = South on 5n @ 5n 3 1 @ 5n 2 0 @ 5n 1 0 @ 5n 0 0 = South on 6m @ 6m 3 1 @ 6m 2 0 @ 6m 1 0 @ 6m 0 0 = South on 6n @ 6n 3 1 @ 6n 2 0 @ 6n 1 0 @ 6n 0 0

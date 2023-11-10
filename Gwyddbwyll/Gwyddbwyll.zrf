@@ -1,0 +1,142 @@
+(version "2.0")
+
+(game
+   (title "Gwyddbwyll")
+   (description "Object: Kill all enemy Kings\\
+Moves:\\
+Pieces can moving vertically or horizontally on some squares:
+
+  * Squire or King to 1 step
+
+  * Knight to 1-2 steps
+
+  * Champion to 1-3 steps
+
+Vertically and horizontally movements may be interleaved
+
+When moving pieces can not jump over other pieces
+
+Number of points dropped on the dice determines which piece can move:
+
+  * 1 or 2 - Never piece can move
+
+  * 3 - Squire can move
+
+  * 4 - Knight or Squire can move
+
+  * 5 - Black King, Champion, Knight or Squire can move
+
+  * 6 - Any piece can move
+
+If no pieces can move then player pass turn\\
+Capturing:\\
+Each piece has its own power:
+
+  * Squire - 1 point
+
+  * Knight - 2 points
+
+  * Black King or Champion - 3 points
+
+  * White King (Pendragon) - 4 points
+
+The piece may be captured if it's surrounded by enemy pieces total power which exceeds its own
+
+Capturing performs as in Chess by any piece which can move")
+
+   (engine "Axiom/Gwyddbwyll/axiom.dll")
+
+   (players White Black ?Dice)
+   (turn-order ?Dice White ?Dice Black)
+
+   (option "pass turn" true)
+   (option "animate drops" false)
+   (option "animate captures" false)
+
+   (release-sound "Audio/Gwyddbwyll/Move.wav")
+   (capture-sound "Audio/Gwyddbwyll/Nosound.wav")
+   (move-sound "Audio/Gwyddbwyll/Move.wav")
+   (drop-sound "Audio/Gwyddbwyll/Dice_cup.wav")
+
+   (board
+      (image "images/Gwyddbwyll/board.bmp")
+      (grid
+         (start-rectangle 5 3 39 37)
+         (dimensions
+             ("a/b/c/d/e/f/g/h" (34 0)) ; files
+             ("8/7/6/5/4/3/2/1" (0 34)) ; ranks
+         )
+      )
+      (positions  
+             (Z1 289 11 328 50)  
+      )
+   )
+
+   (board-setup
+      (White
+         (Pendragon d5)
+         (Champion e4)
+         (Knight d4 e5)
+         (Squire c3 c4 c5 c6 d3 d6 e3 e6 f3 f4 f5 f6)
+      )
+      (Black
+         (King d1 a5 e8 h4)
+         (Knight e1 a4 d8 h5)
+         (Squire c1 f1 a3 a6 c8 f8 h3 h6)
+      )
+   )
+
+   (piece
+      (name Squire)
+      (image White "images/Gwyddbwyll/wp.bmp"
+             Black "images/Gwyddbwyll/bp.bmp")
+   )
+   (piece
+      (name Knight)
+      (image White "images/Gwyddbwyll/wn.bmp"
+             Black "images/Gwyddbwyll/bn.bmp")
+   )
+   (piece
+      (name King)
+      (image White "images/Gwyddbwyll/wk.bmp"
+             Black "images/Gwyddbwyll/bk.bmp")
+   )
+   (piece
+      (name Champion)
+      (image White "images/Gwyddbwyll/wq.bmp")
+   )
+   (piece
+      (name Pendragon)
+      (image White "images/Gwyddbwyll/wk.bmp"
+             Black "images/Gwyddbwyll/bk.bmp")
+   )
+   (piece
+      (name One)
+      (image ?Dice "images/Gwyddbwyll/One.bmp")
+   )
+   (piece
+      (name Two)
+      (image ?Dice "images/Gwyddbwyll/Two.bmp")
+   )
+   (piece
+      (name Three)
+      (image ?Dice "images/Gwyddbwyll/Three.bmp")
+   )
+   (piece
+      (name Four)
+      (image ?Dice "images/Gwyddbwyll/Four.bmp")
+   )
+   (piece
+      (name Five)
+      (image ?Dice "images/Gwyddbwyll/Five.bmp")
+   )
+   (piece
+      (name Six)
+      (image ?Dice "images/Gwyddbwyll/Six.bmp")
+   )
+
+   ; The following dummy piece is required in order to placate the Zillions engine.
+   ; It appears as though Zillions must find at least one "moves" keyword somewhere
+   ; in the zrf in order for it to be happy and thus allow "moves" to work correctly.
+   (piece (name Dummy) (dummy) (moves (from)))
+)

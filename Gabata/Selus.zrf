@@ -1,0 +1,140 @@
+(define p
+  (piece
+     (name  p$1)
+     (image First  "Images/Gabata/p$1.bmp"
+            Second "Images/Gabata/p$1.bmp")
+  )
+)
+
+(define q
+  (piece
+     (name  q$1)
+     (image First  "Images/Gabata/q$1.bmp"
+            Second "Images/Gabata/q$1.bmp")
+  )
+)
+
+(define t
+  (piece
+     (name  t$1)
+     (image First  "Images/Gabata/f$1.bmp"
+            Second "Images/Gabata/s$1.bmp")
+  )
+)
+
+(game
+  (title "Selus")
+  (description "Each move starts with a player emptying the contents of one of his holes that \
+is not a wegue (''wound''). Then, the seeds are dropped one by one into the following holes. \\
+If the last seed falls into an occupied hole other than a wegue, the player takes up its contents \
+and distributes these seeds in a new lap. The move ends if the last seed is dropped into an empty \
+hole. This is called kwah, an onomatopoetic word that imitates the sound of the stone alighting \
+on the board. \\
+It is not permitted to pass a move unless a player has no legal move left. \\
+Wegues are created when the last seed distributed falls into a hole of three, thus making \
+four seeds. The creator is called the owner of the wound who marks it in a distinctive way. \
+Creating a wegue ends the move. A wegue can be created on either side of the board. \\
+If the last seed of a move is dropped into a wegue, the player captures this seed and, \
+unless the wound was empty, one of the seeds it contained. Capturing is permitted from any wegue, \
+irrespective of the owner. The player must move again (beginning with any hole of his side which \
+is not a wegue) if he captured from a wegue he owns, but must stop moving, if he captured from \
+a wegue owned by his opponent. \\
+Exception: \\
+The two left-hand holes in a player's back row are called ayemi (''eye''). A player is not permitted \
+to capture from an eye on his side, only from the opponent's side. In that case, he must move again, \
+even if he has captured from an opponent's wegue. If the last seed fell into a wegue in your own ayemi, \
+the move ends. \\
+The creation of a wound is only permitted after the original set-up has been destroyed, i.e. after \
+the first move of a game. If, in the first move, the last seed makes four seeds, they are distributed \
+in another lap. \\
+The game ends when both players have no move left. Each player scores a point for each captured seed \
+and a point for each seed in a wegue owned by him. The player with most points wins.")
+  (history "Selus is a generic name given to mancala games which are played on three-row boards. Apparently, \
+the word derived from Geez selus which means ''three''.")
+  (strategy "Capturing wegue is crucial. A wegue in your own ayemi is bad for you unless the game has almost ended. \
+Avoid making a wegue in your opponent's holes. Players therefore always attempt to create a wegue in their own holes.")
+
+  (engine "Axiom/Gabata/axiom.dll")
+
+  (move-sound    "Audio/Pickup.wav")
+  (release-sound "Audio/Pickup.wav")
+  (drop-sound    "Audio/Pickup.wav")
+  (capture-sound "")
+
+  (option "pass turn" forced)
+  (option "prevent flipping" 2)
+  (option "animate captures" false)
+  (option "animate drops" false)
+
+  (players First Second)
+  (turn-order First Second)
+
+  (board 
+    (image "Images/Gabata/board.bmp")
+    (grid
+      (start-rectangle 6 4 73 89)
+      (dimensions
+        ("a/b/c/d/e/f/g/h" (67 0)) ; files
+        ("3/2/1" (0 85)) ; ranks
+      )
+    )
+  )
+
+  (board-setup
+    (First (p3 b1 c1 d1 e1 f1 g1 e2 f2 g2) )
+    (Second (p3 b3 c3 d3 e3 f3 g3 b2 c2 d2) (m h3) )
+  )
+
+  (q 54) (q 53) (q 52) (q 51)
+  (q 50) (q 49) (q 48) (q 47) (q 46) (q 45) (q 44) (q 43) (q 42) (q 41)
+  (q 40) (q 39) (q 38) (q 37) (q 36) (q 35) (q 34) (q 33) (q 32) (q 31)
+  (q 30) (q 29) (q 28) (q 27) (q 26) (q 25) (q 24) (q 23) (q 22) (q 21)
+  (q 20) (q 19) (q 18) (q 17) (q 16) (q 15) (q 14) (q 13) (q 12) (q 11)
+  (q 10) (q 9)  (q 8)  (q 7)  (q 6)  (q 5)  (q 4)  (q 3)  (q 2)  (q 1)
+
+  (piece 
+     (name m)
+     (image First  "Images/Gabata/invisible.bmp"
+            Second "Images/Gabata/invisible.bmp")
+  )
+
+  (p 1)  (p 2)  (p 3)  (p 4)  (p 5)  (p 6)  (p 7)  (p 8)  (p 9)  (p 10)
+  (p 11) (p 12) (p 13) (p 14) (p 15) (p 16) (p 17) (p 18) (p 19) (p 20)    
+  (p 21) (p 22) (p 23) (p 24) (p 25) (p 26) (p 27) (p 28) (p 29) (p 30)    
+  (p 31) (p 32) (p 33) (p 34) (p 35) (p 36) (p 37) (p 38) (p 39) (p 40)    
+  (p 41) (p 42) (p 43) (p 44) (p 45) (p 46) (p 47) (p 48) (p 49) (p 50)    
+  (p 51) (p 52) (p 53) (p 54)
+
+  (t 0)
+  (t 1)  (t 2)  (t 3)  (t 4)  (t 5)  (t 6)  (t 7)  (t 8)  (t 9)  (t 10)
+  (t 11) (t 12) (t 13) (t 14) (t 15) (t 16) (t 17) (t 18) (t 19) (t 20)    
+  (t 21) (t 22) (t 23) (t 24) (t 25) (t 26) (t 27) (t 28) (t 29) (t 30)    
+  (t 31) (t 32) (t 33) (t 34) (t 35) (t 36) (t 37) (t 38) (t 39) (t 40)    
+  (t 41) (t 42) (t 43) (t 44) (t 45) (t 46) (t 47) (t 48) (t 49) (t 50)    
+  (t 51) (t 52) (t 53) (t 54)
+
+  ; The following dummy piece is required in order to placate the Zillions engine.
+  ; It appears as though Zillions must find at least one "moves" keyword somewhere
+  ; in the zrf in order for it to be happy and thus allow "moves" to work correctly.
+  (piece 
+     (name Dummy)
+     (dummy) (moves (from))
+  )
+)
+
+(variant
+  (title "Selus (with weak traps)")
+)
+
+(variant
+  (title "-")
+)
+
+(variant
+  (title "Selus Problem")
+  (solution "Selus-Problem.zsg")
+  (board-setup
+    (First (p1 b1 f1 f2) (p2 e2) (t1 f3) )
+    (Second (p1 d2 g3) (t0 c1) )
+  )
+)

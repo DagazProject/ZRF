@@ -1,0 +1,1903 @@
+(version "1.3")
+; *** Tenjiku (Exotic) Shogi  - Version 1.1 (August 2017)
+; *** By Unlimited & Valentin Chelnokov
+; *** (updated by Howard McCay: automated Water-Buffalo promotion)
+; ***
+; This is a rules file for the Windows program Zillions of Games.
+; When opened by Zillions of Games, you can play this game against
+; the computer or over the Internet.  For more information visit
+; the website <www.zillions-of-games.com> or email
+; info@zillions-of-games.com
+;
+; This file may be freely distributed as long as these notices are
+; kept intact.
+
+
+(define FMCFO (  ;First Move Come From Oustide (the promotion zone)
+	or 
+(last-from? 1f)
+(last-from? 2f)
+(last-from? 3f)
+(last-from? 4f)
+(last-from? 5f)
+(last-from? 6f)
+(last-from? 7f)
+(last-from? 8f)
+(last-from? 9f)
+(last-from? 10f)
+(last-from? 11f)
+(last-from? 12f)
+(last-from? 13f)
+(last-from? 14f)
+(last-from? 15f)
+(last-from? 16f)
+
+(last-from? 1k)
+(last-from? 2k)
+(last-from? 3k)
+(last-from? 4k)
+(last-from? 5k)
+(last-from? 6k)
+(last-from? 7k)
+(last-from? 8k)
+(last-from? 9k)
+(last-from? 10k)
+(last-from? 11k)
+(last-from? 12k)
+(last-from? 13k)
+(last-from? 14k)
+(last-from? 15k)
+(last-from? 16k)	
+))   
+ 
+
+(define slide2 (
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $1 (while empty? (check-fire) add $1) 
+  (verify not-friend?) 
+  (check-fire)
+  add
+))
+
+
+(define tetrarch-igui (
+  $1 (verify enemy?) 
+  capture add-copy
+)) 
+
+(define tetrarch-shift (
+  $1 $1 (verify not-friend?) (check-fire) add
+  (verify empty?) $1 (verify not-friend?) 
+  (check-fire) 
+  add
+))
+
+(define tetrarch-slide (
+  $1 $1 (while empty? (check-fire) add $1) 
+  (verify not-friend?) 
+  (check-fire) 
+  add
+))
+
+(define no-move (
+   (check-fire)
+   (add $1)
+))
+
+
+(define no-move-1 (
+   (change-type $1)
+   (verify (or (empty? $2)))
+   (add $1)
+))
+
+(define no-move-2 (
+   (change-type $1)
+   (verify (or (empty? $2) (empty? $3)))
+   (add $1)
+))
+
+(define no-move-4 (
+   (change-type $1)
+   (verify (or (empty? $2) (empty? $3) (empty? $4) (empty? $5)))
+   (add $1)
+))
+
+(define no-move-all (
+   (change-type $1)
+   (verify (or 
+       (empty? n) (empty? s) (empty? w) (empty? e)
+       (empty? nw) (empty? sw) (empty? ne) (empty? se)
+   ))
+   (add $1)
+))
+
+
+(define demon-no-move (
+   (change-type $1)
+   (burn-all)
+   (add $1)
+))
+
+(define general-slide-promote (
+  (set-flag came-from-zone (in-zone? promotion-zone)) mark
+  $1 (while empty?  (check-fire) ; empty slides (no capture)
+      (if (and (not-flag? fired) (or (in-zone? promotion-zone)(flag? came-from-zone)))
+          (if (not-flag? came-from-zone)(add $2 $3) else  ; no capture here
+               to back 
+              (if promote-rule? (go to)(add $2 $3) else (go to) add))   ; no capture here         
+       else 
+            add  ; no capture here
+      )
+      $1
+  )
+  (if (and enemy?
+           (or (piece? King)
+               (piece? Prince) 
+           )
+      )
+      (check-fire)
+      (if (and (not-flag? fired) (or (in-zone? promotion-zone)(flag? came-from-zone)))
+          (if (not-flag? came-from-zone)(add $2 $3) else 
+               to back 
+               (if promote-rule? 
+                   (go to)(add $2 $3) 
+                else 
+                   (go to) (if enemy? (add $2 $3) else add)
+               )
+          )           
+       else 
+               add ; capture enemy King/Prince with simple slide
+      )
+   else
+  (while (not-piece? King)
+     (if (and enemy?
+              (not-piece? King)
+              (not-piece? Prince)
+;             (not-piece? Great-General)
+;             (not-piece? Vice-General)
+         )
+         (check-fire)
+         (if (and (not-flag? fired) (or (in-zone? promotion-zone)(flag? came-from-zone)))
+             (if (not-flag? came-from-zone) (add $2 $3) else 
+                  to back 
+                  (if promote-rule? 
+                     (go to) 
+                     (add $2 $3) 
+                   else (go to)                     
+                     (if enemy? (add $2 $3) else add)
+                  )
+             )           
+          else 
+                 add 
+         )
+     )
+     (verify (not-piece? King))
+     (verify (not-piece? Prince))
+     (verify (not-piece? Great-General))
+     (verify (not-piece? Vice-General))
+     (verify (not-piece? Rook-General))
+     (verify (not-piece? Rook-General!))
+     (verify (not-piece? Bishop-General))
+     (verify (not-piece? Bishop-General!))
+     $1
+  ))
+))
+
+(define general-slide (
+  $1 (while empty? (check-fire) add $1) ; empty slides (no capture)
+  (if (and enemy?
+           (or (piece? King)
+               (piece? Prince) 
+           )
+      )
+      (check-fire)
+      add   ;capture enemy King/Prince with simple slide
+  else
+  (while (not-piece? King)
+     (if (and enemy?
+              (not-piece? King)
+              (not-piece? Prince)
+;             (not-piece? Great-General)
+;             (not-piece? Vice-General)
+         )
+         (check-fire)
+          add   ;Ranging-jump & normal captures!
+     )
+     (verify (not-piece? King))
+     (verify (not-piece? Prince))
+     (verify (not-piece? Great-General))
+     (verify (not-piece? Vice-General))
+     (verify (not-piece? Rook-General))
+     (verify (not-piece? Rook-General!))
+     (verify (not-piece? Bishop-General))
+     (verify (not-piece? Bishop-General!))
+     $1
+  ))
+))
+
+(define vg_step
+  $1 
+  (if not-empty? 
+      (set-flag no-piece false)
+  )
+  (if (and enemy?
+           (or (piece? King)
+               (piece? Prince) 
+               (piece? Great-General) 
+           )
+      )
+      (check-fire)
+      add
+  )
+  (verify (not-piece? King))
+  (verify (not-piece? Prince))
+  (verify (not-piece? Great-General))
+)
+
+(define vg-slide (
+  (set-flag no-piece true)
+  (vg_step $1) (vg_step $1)
+  (if (flag? no-piece)
+      $1 (while empty? (check-fire) add $1) ; empty slide (no capture)
+  )
+  (if (and enemy?
+           (or (piece? King)
+               (piece? Prince) 
+           )
+      )
+      (check-fire)
+      add  ; capture enemy King/prince with simple slide
+  else
+  (while (not-piece? King)
+     (if (and enemy?
+              (not-piece? King)
+              (not-piece? Prince)
+;             (not-piece? Great-General)
+         )
+         (check-fire)
+   		  add ; range-jump & normal captures 
+     )
+     (verify (not-piece? King))
+     (verify (not-piece? Prince))
+     (verify (not-piece? Great-General))
+     (verify (not-piece? Vice-General))
+      $1
+  ))
+))
+
+(define gg-slide (
+  $1 (while empty? (check-fire) add $1)
+  (if (and enemy?
+           (or (piece? King)
+               (piece? Prince) 
+           )
+      )
+      (check-fire)
+      add  ; take enemy King/Prince on a simple slide
+  else
+  (while (not-piece? King)
+     (if (and enemy?
+              (not-piece? King)
+              (not-piece? Prince)
+         )
+         (check-fire)
+          add
+     )
+     (verify (not-piece? King))
+     (verify (not-piece? Prince))
+     (verify (not-piece? Great-General))
+     $1
+  ))
+))
+
+(define general-jump (
+  $1 (verify empty?) $2 (verify empty?) $3 (verify not-friend?)
+  (check-fire)
+  add
+))
+
+(define general-leap (
+  $1 (verify empty?) $2 (verify not-friend?)
+  ;(check-fire)
+  (if enemy?
+       add
+   else
+      (add-partial $3)
+  )
+))
+
+(define general-stop-2 (
+  $1 (verify empty?) $2 (verify not-friend?)
+  (check-fire)
+  add
+))
+
+(define general-step (
+  $1 (verify not-friend?)
+ ; (check-fire)
+  (if enemy?
+      add
+   else
+     (add-partial $2)
+  )
+))
+
+
+(define general-stop-1 (
+  $1 (verify not-friend?)
+  (check-fire)
+  add
+))
+
+(define common-nomove ( 
+  (verify (or (empty? n)
+              (empty? s)
+              (empty? w)
+              (empty? e)
+              (empty? nw)
+              (empty? ne)
+              (empty? sw)
+              (empty? se)
+          )
+  )
+  (add-copy $1) 
+)) 
+
+(define demon-jump (
+  $1 (verify empty?) $2 (verify empty?) $3 (verify not-friend?)
+  (burn-all)
+  add
+))
+
+(define demon-leap (
+  $1 (verify empty?) $2 (verify not-friend?)
+  (if enemy?
+      (burn-all)
+       add
+   else
+     ; (check-fire)
+      (add-partial $3)
+  )
+))
+
+(define demon-stop-2 (
+  $1 (verify empty?) $2 (verify not-friend?)
+  (burn-all)
+  add
+))
+
+(define demon-step (
+  $1 (verify not-friend?)
+  (if enemy?
+     (burn-all)
+      add
+   else
+     ;(check-fire)
+     (add-partial $2)
+  )
+))
+
+(define demon-step2 (
+  $1 (verify not-friend?)
+  (if enemy?
+     (burn-all)
+      add
+   else
+    ; (check-fire)
+     (add-partial $2)
+  )
+))
+
+(define demon-stop-1 (
+  $1 (verify not-friend?)
+  (burn-all)
+  add
+))
+
+(define burn
+  (if (and (enemy? $1) (not-piece? Fire-Demon $1))
+      (capture $1)
+  )
+)
+
+(define burn-all
+  (check-fire)
+  (if (or (not-in-zone? var 1a) (not-flag? fired))
+     (burn n) (burn s) (burn nw) (burn ne)
+     (burn e) (burn w) (burn sw) (burn se)
+  )
+)
+
+(define fire
+  (if (and (enemy? $1) (piece? Fire-Demon $1))
+      (set-flag fired true)
+  )
+)
+
+(define check-fire
+  (set-flag fired false)
+  (fire n) (fire s) (fire nw) (fire ne)
+  (fire e) (fire w) (fire sw) (fire se)
+  (if (flag? fired) capture)
+)
+
+(define demon-slide (
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $1 (while empty? (burn-all) add $1) 
+  (verify not-friend?) 
+  (burn-all) add
+))
+
+(define leap           ($1 $1 (verify not-friend?) (check-fire) add))
+(define shift2         ($1 (verify empty?) $1 (verify not-friend?) (check-fire) add))
+(define shift          ($1 (verify not-friend?) (check-fire) add))
+(define slide          ($1 (while empty? (check-fire) add $1) (verify not-friend?) (check-fire) add))
+(define lion-type-move ($1 (verify not-friend?) (add-partial $2)))
+(define pawn-move      ($1 (verify not-friend?) (check-fire) (pawn-add)))
+(define knight-move  (n $1 (verify not-friend?) (check-fire) (knight-add)))
+(define lance-move     ($1 (while empty? (check-fire) (lance-add) $1) (verify not-friend?) (check-fire) (lance-add)))
+(define iron-move      ($1 (verify not-friend?) (check-fire) (iron-add)))  
+
+
+(define lion-leap2    ($1 $2 (verify not-friend?) (check-fire) add))
+
+(define leap2P (
+   (set-flag came-from-zone (in-zone? promotion-zone))
+   $1 $2 (verify not-friend?) (check-fire) 
+   (if (and (not-flag? fired) (or (in-zone? promotion-zone)(flag? came-from-zone)))
+         (if (not-flag? came-from-zone)(add $3 $4) else
+             (if (or (promote-rule? (opposite $1)) (and enemy? (in-zone? promotion-zone))) (add $3 $4) else 
+                  add)) 
+    else 
+        add)
+))
+
+
+
+(define lion-type-moveP3 (
+  ;(set-flag came-from-zone (in-zone? promotion-zone))  					;detect if the move begins inside the promotion zone or not.
+  												 							;detect if the move begins inside the promotion zone or not.
+   $1 (verify not-friend?) 													;verify on the next square if "empty or enemy",
+   (if (and (in-zone? promotion-zone) enemy?) 								;if it captures an enemy inside the zone... 		
+       (set-attribute must-promote? true) (add-partial $2)
+   else 
+		(add-partial $2))													;there will be a normal partial move! 
+))
+
+(define shiftP (
+   (set-flag came-from-zone (in-zone? promotion-zone))
+   $1 (verify not-friend?)  (check-fire)
+   (if (and (not-flag? fired) (or (in-zone? promotion-zone)(flag? came-from-zone)))
+         (if (not-flag? came-from-zone)(add $2 $3) else
+             (if (or (promote-rule? (opposite $1)) enemy?)(add $2 $3) else 
+                  add)) 
+    else 
+        add)
+))
+
+(define shiftP2 ( 
+	 $1 (check-fire) (opposite $1) 							;Checking burn on $1 and returns with the info
+   (if (and must-promote? (not-flag? fired))				;Testing the attribute where the move originates! (doesn't work otherwise!)
+     $1 (verify not-friend?)  
+     (set-attribute must-promote? false) (add $2 $3)		;Doesn't matter here to reset the attribute, the next move will do it! but...done! lol
+    else
+     $1 (verify not-friend?) (check-fire) 
+     (if (and (not-flag? fired) (or 
+       			(and (FMCFO)(in-zone? promotion-zone))          ;If the piece originates just outside the zone & is in the promotion zone...
+       			(and enemy? (in-zone? promotion-zone))   		;Or if the piece captures an enemy in the zone...
+       		))
+           (add $2 $3) 											;It promotes!
+        else 
+           (add $2)
+       ))
+))
+
+(define no-moveP2 (
+   (check-fire)
+   (if (and must-promote? (not-flag? fired))
+       (set-attribute must-promote? false)
+       (add $1 $2) 
+    else 
+       (if (and (FMCFO)(not-flag? fired)
+                (in-zone? promotion-zone)) 
+           (add $1 $2) 
+        else 
+           (add $1)
+       )
+   )
+))
+
+
+(define shift2P (
+   (set-flag came-from-zone (in-zone? promotion-zone))
+   $1 (verify empty?) $1 (verify not-friend?) (check-fire)
+   (if (and (not-flag? fired) (or (in-zone? promotion-zone)(flag? came-from-zone)))
+         (if (not-flag? came-from-zone)(add $2 $3) else
+             (if (or (promote-rule? (opposite $1)) enemy?)(add $2 $3) else 
+                  add)) 
+    else 
+        add)))
+              
+
+(define leapP (
+   (set-flag came-from-zone (in-zone? promotion-zone)) mark
+   $1 $1 (verify not-friend?) (check-fire)
+   (if (and (not-flag? fired) (or (in-zone? promotion-zone) (flag? came-from-zone)))
+         (if (not-flag? came-from-zone)(add $2 $3) else
+               to back
+               (if promote-rule? (add $2 $3) else  
+                  $1 $1 
+                  (if enemy? (add $2 $3) else add))) 
+    else 
+        add)))
+
+(define slideP (
+   (set-flag came-from-zone (in-zone? promotion-zone)) mark
+   $1 
+   (while empty?  
+       (check-fire)
+       (if (and (not-flag? fired) (or (in-zone? promotion-zone)(flag? came-from-zone)))
+          (if (not-flag? came-from-zone)(add $2 $3) else 
+               to back 
+              (if promote-rule? (go to)(add $2 $3) else (go to) add))           
+       else 
+             add )
+   $1)
+   to (verify not-friend?) (check-fire)
+   (if (and (not-flag? fired) (or (in-zone? promotion-zone) (flag? came-from-zone)))
+          (if (not-flag? came-from-zone) (add $2 $3) else 
+                to back
+                (if promote-rule? (go to)(add $2 $3) else (go to)
+                   (if enemy? (add $2 $3) else add)))           
+    else 
+        add)))
+              
+
+(define knight-add 
+   (if (and (not-flag? fired) (in-zone? last-two-ranks))
+       (add Side-Soldier!) 
+    else 
+       (if (and (not-flag? fired) (in-zone? promotion-zone))
+           (add Knight Side-Soldier!) 
+        else 
+            add
+       )
+   )
+)
+
+(define pawn-add
+   (if (and (not-flag? fired) (in-zone? last-rank)) (add Gold-General!) else
+     (if (and (not-flag? fired) (in-zone? promotion-zone)) (add Gold-General! Pawn) else add)))
+     
+(define iron-add
+   (if (and (not-flag? fired) (in-zone? last-rank)) (add Vertical-Soldier!) else
+     (if (and (not-flag? fired) (in-zone? promotion-zone)) (add Vertical-Soldier! Iron-General) else add)))
+
+(define lance-add
+   (if (and (not-flag? fired) (in-zone? last-rank)) (add White-Horse) else
+     (if (and (not-flag? fired) (in-zone? promotion-zone)) (add White-Horse Lance) else add)))
+
+     
+     
+(define def-board
+   (board 
+   (image "Images/board1.bmp" "Images/board2.bmp" "Images/board3.bmp")
+    (grid
+     (start-rectangle 5 5 54 54)
+     (dimensions
+         ("16/15/14/13/12/11/10/9/8/7/6/5/4/3/2/1" (36 0)) ; files
+         ("a/b/c/d/e/f/g/h/i/j/k/l/m/n/o/p" (0 36))		   ; ranks
+     )
+     (directions (n 0 -1) (e 1 0) (s 0 1) (w -1 0)
+		     (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)
+     )
+  )
+  (symmetry White (n s)(s n) (nw sw)(sw nw) (ne se)(se ne))
+  
+  
+  (zone
+     (name promotion-zone)				
+     (players White)
+     (positions 1l 2l 3l 4l 5l 6l 7l 8l 9l 10l 11l 12l 13l 14l 15l 16l
+				1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 11m 12m 13m 14m 15m 16m
+				1n 2n 3n 4n 5n 6n 7n 8n 9n 10n 11n 12n 13n 14n 15n 16n
+				1o 2o 3o 4o 5o 6o 7o 8o 9o 10o 11o 12o 13o 14o 15o 16o
+				1p 2p 3p 4p 5p 6p 7p 8p 9p 10p 11p 12p 13p 14p 15p 16p)
+  )
+  (zone
+     (name promotion-zone)				
+     (players Black)
+     (positions 1a 2a 3a 4a 5a 6a 7a 8a 9a 10a 11a 12a 13a 14a 15a 16a
+				1b 2b 3b 4b 5b 6b 7b 8b 9b 10b 11b 12b 13b 14b 15b 16b
+				1c 2c 3c 4c 5c 6c 7c 8c 9c 10c 11c 12c 13c 14c 15c 16c
+				1d 2d 3d 4d 5d 6d 7d 8d 9d 10d 11d 12d 13d 14d 15d 16d
+				1e 2e 3e 4e 5e 6e 7e 8e 9e 10e 11e 12e 13e 14e 15e 16e)
+  )
+  (zone
+     (name var)
+     (players White Black)
+     (positions $1)
+  )
+  									
+  (zone 
+     (name last-two-ranks)  ; for knights' forced promotion!
+     (players White)
+     (positions 1o 2o 3o 4o 5o 6o 7o 8o 9o 10o 11o 12o 13o 14o 15o 16o
+				1p 2p 3p 4p 5p 6p 7p 8p 9p 10p 11p 12p 13p 14p 15p 16p)
+  )
+  (zone 
+     (name last-two-ranks)
+     (players Black)
+     (positions 1a 2a 3a 4a 5a 6a 7a 8a 9a 10a 11a 12a 13a 14a 15a 16a
+				1b 2b 3b 4b 5b 6b 7b 8b 9b 10b 11b 12b 13b 14b 15b 16b)
+  )														
+  (zone								
+     (name last-rank)		; for pawns' forced promotion! 
+     (players White)
+     (positions 1p 2p 3p 4p 5p 6p 7p 8p 9p 10p 11p 12p 13p 14p 15p 16p)
+  )
+  (zone
+     (name last-rank)
+     (players Black)
+     (positions 1a 2a 3a 4a 5a 6a 7a 8a 9a 10a 11a 12a 13a 14a 15a 16a)
+  )
+
+ )
+)     
+     
+
+
+
+(game
+   (title "Tenjiku (Exotic) Shogi")
+   (description "Tenjiku Shogi
+   \
+   \Tenjiku shogi ('exotic chess') is a large-board variant of shogi (japanese chess). It is played on a board of 16 x 16 squares and each player has 78 pieces from 36 different kinds.
+   \\The objective of the game is to capture the opponent's King and, if present, the Prince, which counts as a second king. Unlike standard shogi, captured pieces can not be dropped back into play. Note that there is no concept of 'check' for the royal pieces in Tenjiku-Shogi! (see the description of the King piece for that)
+   \\To learn the movement of a piece, you can hover the mouse on it to show the line of explanation/help at the bottom of ZOG window; For a more in depth description, right-click on the piece and select 'properties' to read it.
+   \\For a modern gameplay on ZOG, the promotion rules are as follows:
+   \\When a piece than can promote (all except King, Lion-Hawk, Free-Eagle, Great-General, Vice-General and Fire-Demon) ends its move within the promotion zone of the enemy (ranks 12 to 16), it may promote. 
+   \\If a promotion is skipped, the piece must leave and enter again the promotion zone (unless making a capture into it) in order to gain it again. \An exception exists for the Soaring-Eagle, Horned-Falcon and Lion which can be just outside the zone... make a capture into the zone with their partial-move, then step outside of it on the same turn and be promoted nonetheless! 
+   \\Pieces which can not go backwards and sideways (Pawn, Lance, Iron-General and Knight) are forced to promote on the spot when they haven't further legal moves on the board.
+   \\Note that the Water-Buffalo when promoting, becomes a newborn Fire-Demon (in grey colour) and doesn't burn on the spot all enemy pieces around him until its next turn. On the very next turn, the newborn Fire-Demon activates its normal passive burn, and becomes a full-grown Fire-Demon.
+   ")
+
+   (history "Some form of Shogi was probably being played in Japan before 1027 when it was first mentioned. From there the game evolved into many larger forms of Shogi and these games had pieces with ever more exotic moves.\\
+	Chu Shogi was first mentioned in a text dating around 1350 and was the most popular form of Shogi then and popular with noblemen and high-ranking monks.\\
+	During the 16th century a small variant played on a 9x9 board (Sho Shogi) introduced the drop rule, giving us the modern game of Shogi. Although Shogi with drops became very popular most variants, being too large, were played without drops.\\
+	Tenjiku Shogi, often called 'Exotic Shogi', was derived from Chu Shogi and was possibly invented by Buddhist monks in the 16th century.\\
+	More than mere evolution, a lot of effort seems to have gone into the game play and design. Once played it becomes clear that the major pieces are all set up in just the right place for attack and defence, it is a well thought out game.\\
+	At the end of the 16th century it was recorded that Minase Kanenari and his sons produced sets for Sho Shogi, Chu, Dai, Dai-Dai, Maka-Dai-Dai and even four for Tai Shogi. But there was no mention of any Tenjiku Shogi sets, was the game unknown then.\\
+	The rules of Tenjiku Shogi were first given in a book called 'Shogi Zushiki', published in 1634.\\
+	(Tenjiku was the Japanese name for India which was considered an 'exotic' land in the 16th century)
+	")
+
+   (strategy "Unlike in most other Shogi variants, tactics in Tenjiku are critical right from the first move of the game. Despite the large board, the power of the pieces can mean that careless play is rewarded with a lost game in only a few moves.\\
+   Fire-Demons are the central pieces of the game; Beware of their attacks and your rank's weaknesses to their burning ability! Your proper Fire-Demons are the best defense against them. (see the description for the Fire-Demon piece for more on this subject). They are pretty vulnerable against range-jumping generals ('star pieces') and numerous sliding pieces; so be sure to restrict their movements as the game goes on. Lion pieces together are good to protect your King from 'crashing attacks' (from the enemy Fire-Demons) so be sure to use them adequately.
+   ")
+  
+   (players Black White ?a)
+   
+   (turn-order 
+      (   Black normal)
+      (?a White burning)
+      (   White normal)
+      (?a Black burning)
+   )
+ 
+   (pass-turn forced)		;"forced" needed to pass-turn automatically when there is no FDnb on the board
+   (allow-flipping false)
+   (animate-captures false)
+   (def-board 1a)
+  
+  
+  
+    (board-setup
+     (White
+     		(Dog 5f 12f)
+        	(Pawn 1e 2e 3e 4e 5e 6e 7e 8e 9e 10e 11e 12e 13e 14e 15e 16e)
+	       	(Lance 16a 1a)
+			(Knight 15a 2a)
+			(Ferocious-Leopard 14a 3a)
+			(Iron-General 13a 4a)
+	        (Copper-General 12a 5a)
+			(Silver-General 11a 6a)
+			(Gold-General 10a 7a)
+			(King 8a)
+			(Drunk-Elephant 9a)	
+			(Reverse-Chariot 16b 1b)
+			(Chariot-Soldier 3b 4b 13b 14b)
+			(Blind-Tiger 6b 11b)
+			(Phoenix 10b)
+			(Queen 9b)
+			(Lion 8b)
+			(Kylin 7b)
+			(Side-Mover 16d 1d)
+			(Vertical-Mover 15d 2d)
+			(Rook 14d 3d)
+			(Horned-Falcon 13d 4d)
+    		(Soaring-Eagle 12d 5d)
+    		(Bishop-General 11d 6d)
+    		(Rook-General 10d 7d)
+    		(Vice-General 9d)
+    		(Great-General 8d)
+    		(Side-Soldier 1c 16c)
+    		(Vertical-Soldier 2c 15c)
+    		(Bishop 14c 3c)
+    		(Dragon-Horse 13c 4c)
+    		(Dragon-King 12c 5c)
+    		(Water-Buffalo 11c 6c)
+    		(Fire-Demon 10c 7c)
+    		(Free-Eagle 9c)
+    		(Lion-Hawk 8c)
+			    
+     )
+     (Black
+     		(Dog 5k 12k)
+			(Pawn 1l 2l 3l 4l 5l 6l 7l 8l 9l 10l 11l 12l 13l 14l 15l 16l)
+			(Lance 16p 1p)
+			(Knight 15p 2p)
+			(Ferocious-Leopard 14p 3p)
+			(Iron-General 13p 4p)
+			(Copper-General 12p 5p)
+			(Silver-General 11p 6p)
+			(Gold-General 10p 7p)
+			(King 9p)
+			(Drunk-Elephant 8p)
+			(Reverse-Chariot 16o 1o)
+			(Chariot-Soldier 3o 4o 13o 14o)
+			(Blind-Tiger 6o 11o)
+			(Phoenix 7o)
+			(Queen 8o)
+			(Lion 9o)
+			(Kylin 10o)
+			(Side-Mover 16m 1m)
+			(Vertical-Mover 15m 2m)
+			(Rook 14m 3m)
+			(Horned-Falcon 13m 4m)
+    		(Soaring-Eagle 12m 5m)
+			(Bishop-General 11m 6m)
+			(Rook-General 10m 7m)
+			(Vice-General 8m)
+			(Great-General 9m)
+			(Side-Soldier 1n 16n)
+			(Vertical-Soldier 2n 15n)
+			(Bishop 14n 3n)
+			(Dragon-Horse 13n 4n)
+			(Dragon-King 12n 5n)
+			(Water-Buffalo 11n 6n)
+			(Fire-Demon 10n 7n)
+			(Free-Eagle 8n)
+			(Lion-Hawk 9n)
+
+     )
+  )
+
+  
+
+; ------------------------------------------------  Playable pieces below this!
+	
+   (piece 
+      (name Knight) 
+      (notation "N")
+      (help "Knight: jumps with a Y motion forward. Promotes to Side-Soldier.")
+      (description "Knight\\Jumps a square straight and a square diagonally forward in a single move. Can jump over all pieces like that. \May promote to Side-Soldier upon entering the promotion zone (rank 12 to 16). Will be force-promoted when on the penultimate row!")
+      (image White "Images/Knight_W.bmp" 
+	    	 Black "Images/Knight_B.bmp" )
+      (moves
+       (move-type normal)
+       (knight-move nw)(knight-move ne)
+       )
+	)
+
+    (piece 
+      (name Iron-General) 
+      (notation "I")
+      (help "Iron-General: steps straight or diagonally forward. Promotes to Vertical-Soldier.")
+      (description "Iron-General\\Steps straight or diagonally forward. \May promote to Vertical-Soldier upon reaching the rank 12.\\When reaching the last rank and has no further legal moves, the piece is forced-promoted to Vertical-Soldier!")
+      (image White "Images/Iron_W.bmp" 
+	    	 Black "Images/Iron_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+       (iron-move n)(iron-move nw)(iron-move ne)
+       )
+	)
+
+   (piece
+      (name Pawn) 
+	(notation "P")
+	  (help "Pawn: steps and captures one square forward. Promotes to Gold-General.")
+      (description "Pawn\\A Pawn can move and capture straight ahead one square. \May promote to Gold-General upon reaching the promotion zone (rank 12 to 16). \\When reaching the last rank and has no further legal moves, the piece is forced-promoted to Gold-General!")
+      (image White "Images/Pawn_W.bmp"  
+			 Black "Images/Pawn_B.bmp" )
+      (moves
+       (move-type normal)
+         (pawn-move n)
+      )
+   )
+
+   (piece
+      (name Bishop)	
+	(notation "B")
+	  (help "Bishop: slides diagonally any number of squares. Promotes to Dragon-Horse.")
+      (description "Bishop\\A Bishop slides any number of empty squares on the two diagonals. It can not jump over other pieces. \May promote to Dragon-Horse upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/Bishop_W.bmp"  
+	      	 Black "Images/Bishop_B.bmp" )
+      (moves
+       (move-type normal)
+         (slideP ne Bishop Dragon-Horse!) (slideP nw Bishop Dragon-Horse!) 
+         (slideP se Bishop Dragon-Horse!) (slideP sw Bishop Dragon-Horse!)      		
+      )
+   )
+
+(piece
+      (name Bishop!) 
+	(notation "B!")
+	  (help "Bishop: slides diagonally any number of squares.")
+      (description "Bishop (promoted Ferocious-Leopard)\\A Bishop moves any number of squares on the two diagonals. It can not jump over other pieces.")
+      (image White "Images/PBishop_W.bmp" 
+			 Black "Images/PBishop_B.bmp" )
+      (moves
+       (move-type normal)
+         (slide ne) (slide nw)(slide se) (slide sw)
+      )
+   )
+
+   (piece
+      (name Rook) 
+      (notation "R")
+      (help "Rook: slides orthogonally any number of squares. Promotes to Dragon King.")
+      (description "Rook\\A Rook slides any number of empty squares orthogonally (on a rank or a file). It can not jump over other pieces.\May promote to Dragon-King upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/Rook_W.bmp" 
+			 Black "Images/Rook_B.bmp" )
+      (moves
+       (move-type normal)
+         (slideP n Rook Dragon-King!) (slideP e Rook Dragon-King!)
+         (slideP s Rook Dragon-King!) (slideP w Rook Dragon-King!)
+      )
+   )
+   
+(piece
+      (name Rook!) 
+      (notation "R!")
+      (help "Rook: slides orthogonally any number of squares.")
+      (description "Rook (promoted Gold-General)\\A Rook slides any number of empty squares orthogonally (on a rank or a file). It can not jump over other pieces.")
+      (image White "Images/PRook_W.bmp" 
+			 Black "Images/PRook_B.bmp" )
+      (moves
+       (move-type normal)
+         (slide n)(slide e)(slide s)(slide w)
+      )
+   )
+
+   (piece
+      (name Queen)	
+      (notation "Q")
+      (help "Queen: slides any number of squares in any direction. Promotes to Free-Eagle.")
+      (description "Queen\\A Queen slides any number of empty squares in the eight directions (ie: like a Queen in Western Chess). It can not jump over other pieces.\May promote to Free-Eagle upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/Queen_W.bmp" 
+			 Black "Images/Queen_B.bmp" )
+      (moves
+       (move-type normal)
+         (slideP n Queen Free-Eagle)  (slideP e Queen Free-Eagle)  (slideP s Queen Free-Eagle)  (slideP w Queen Free-Eagle)
+         (slideP nw Queen Free-Eagle) (slideP ne Queen Free-Eagle) (slideP se Queen Free-Eagle) (slideP sw Queen Free-Eagle)
+      ) 
+   )
+
+(piece
+      (name Queen!)	
+      (notation "Q!")
+      (help "Queen: slides any number of empty squares in any direction.")
+      (description "Queen (promoted Phoenix)\\A Queen slides any number of empty squares in the eight directions (ie: like a Queen in Western Chess). It can not jump over other pieces.")
+      (image White "Images/PQueen_W.bmp" 
+			 Black "Images/PQueen_B.bmp" )
+      (moves
+       (move-type normal)
+         (slide n)  (slide e)  (slide s)  (slide w)
+         (slide nw) (slide ne) (slide se) (slide sw)
+      ) 
+   )
+
+(piece
+      (name Flying-Ox)	
+      (notation "FO")
+      (help "Flying Ox: slides any number of squares in any direction except sideways.")
+      (description "Flying Ox (promoted Vertical Mover)\\A Flying Ox slides any number of empty squares in any direction except horizontally. It can not jump over other pieces.")
+      (image White "Images/POx_W.bmp" 
+			 Black "Images/POx_B.bmp" )
+      (moves
+       (move-type normal)
+         (slide n)  (slide s)  (slide nw)
+         (slide ne) (slide se) (slide sw)
+	  )
+   )
+
+(piece
+      (name Free-Boar)	
+      (notation "FB")
+      (help "Free Boar: slides any number of squares in any direction except back and front.")
+      (description "Free Boar (promoted Side Mover)\\A Free Boar slides any number of empty squares in any direction except forwards or backwards. It can not jump over other pieces.")
+      (image White "Images/FBoar_W.bmp" 
+			 Black "Images/FBoar_B.bmp" )
+      (moves
+       (move-type normal)
+         (slide e)  (slide w)  (slide nw)
+         (slide ne) (slide se) (slide sw)
+      )
+   )
+
+(piece
+      (name Horned-Falcon)	
+      (notation "HF")
+      (help "Horned Falcon: slides in any direction except forward; which is a Lion-move. Promotes to Bishop-General.")
+      (description "Horned Falcon\\A Horned Falcon slides any number of empty squares in any direction except straight forwards; In the forwards direction it moves as a Lion. When using its Lion power the Horned Falcon may make two consecutive single step along the forward file during which it may capture up to TWICE or return to its starting square to pass a turn. (NOTE: To pass a turn when the front square is empty, select the piece and then drop it back on its starting square).\\The Horned Falcon can only jump over pieces on its front square: when making a forward Lion-jump-move, it can leap on the second square without capturing the first.\\May promote to Bishop-General upon reaching the promotion zone (rank 12 to 16). The Horned Falcon has a special move to promote when using its Lion-move just from outside the promotion zone: by making a capture into it with its first step, then stepping outside of it with the second (on the same turn so), it may be promoted!")
+      (image White "Images/Falcon_W.bmp" 
+			 Black "Images/Falcon_B.bmp" )
+      (attribute promote-rule? false)
+      (attribute must-promote? false)
+      
+      (moves
+       (move-type normal)
+         (slideP s Horned-Falcon Bishop-General!) (slideP e Horned-Falcon Bishop-General!) 
+         (slideP w Horned-Falcon Bishop-General!) (slideP nw Horned-Falcon Bishop-General!) 
+         (slideP ne Horned-Falcon Bishop-General!)
+         (slideP se Horned-Falcon Bishop-General!) (slideP sw Horned-Falcon Bishop-General!) 
+         (lion-type-moveP3 n left-1-type)
+         (no-move-1 Horned-Falcon n) 
+         (leap2P n n Horned-Falcon Bishop-General!)
+         (move-type left-1-type)
+         (shiftP2 n Horned-Falcon Bishop-General!) (shiftP2 s Horned-Falcon Bishop-General!)
+         (no-moveP2 Horned-Falcon Bishop-General!)
+      )
+   )
+
+(piece
+      (name Horned-Falcon!)	
+      (notation "HF!")
+      (help "Horned Falcon: slides in any direction except forward; which is a Lion-move.")
+      (description "Horned Falcon (promoted Dragon Horse)\\A Horned Falcon slides any number of empty squares in any direction except straight forwards; In the forwards direction it moves as a Lion. When using its Lion power the Horned Falcon may make two consecutive single step along the forward file during which it may capture up to TWICE or return to its starting square to pass a turn. (NOTE: To pass a turn when the front square is empty, select the piece and then drop it back on its starting square).\\The Horned Falcon can only jump over pieces on its front square: when making a forward Lion-jump-move, it can leap on the second square without capturing the first.")
+      (image 	White "Images/PFalcon_W.bmp" 
+				Black "Images/PFalcon_B.bmp" )
+      (moves
+       (move-type normal)
+         (slide s) (slide e) (slide w) (slide nw) (slide ne)
+         (slide se)(slide sw) (lion-type-move n left-1-type) 
+         (no-move-1 Horned-Falcon! n) (lion-leap2 n n)
+         (move-type left-1-type)
+         (shift n) (shift s)
+         (no-move Horned-Falcon!) 
+      )
+   )
+
+   (piece
+      (name Soaring-Eagle)	 
+      (notation "SE")
+      (help "Soaring Eagle: slides in any direction except diagonally forwards; which are Lion-moves. Promotes to Rook-General")
+      (description "Soaring Eagle\\A Soaring Eagle slides any number of empty squares in any direction except left-forward and right-forward; In these forwards directions it moves as a Lion. When using its Lion power the Soaring Eagle may make two consecutive single step along the forward-diagonals during which it may capture up to TWICE or return to its starting square to pass a turn. (NOTE: To pass a turn when at least one of the north-east/north-west squares are empty, select the piece and then drop it back on its starting square).\\The Soaring Eagle can only jump over pieces on its north-east/north-west squares: when making a diagonally forward Lion-jump-move, it can leap on the second square without capturing the first.\\May promote to Rook-General upon reaching the promotion zone (rank 12 to 16). The Soaring Eagle has a special move to promote when using its Lion-move just from outside the promotion zone: by making a capture into it with its first step, then stepping outside of it with the second (on the same turn so), it may be promoted!")
+      (image White "Images/Eagle_W.bmp" 
+			 Black "Images/Eagle_B.bmp" )
+      (attribute promote-rule? false)
+      (attribute must-promote? false)
+      
+      (moves
+       (move-type normal)
+         (slideP s Soaring-Eagle Rook-General!) (slideP e Soaring-Eagle Rook-General!) 
+         (slideP w Soaring-Eagle Rook-General!) (slideP n Soaring-Eagle Rook-General!) 
+         (slideP se Soaring-Eagle Rook-General!) (slideP sw Soaring-Eagle Rook-General!)
+         (lion-type-moveP3 nw left-type)
+         (lion-type-moveP3 ne right-type)
+         (no-move-2 Soaring-Eagle nw ne) 
+         (leap2P nw nw Soaring-Eagle Rook-General!) (leap2P ne ne Soaring-Eagle Rook-General!)
+       (move-type left-type)
+         (shiftP2 nw Soaring-Eagle Rook-General!) (shiftP2 se Soaring-Eagle Rook-General!)
+         (no-moveP2 Soaring-Eagle Rook-General!)
+       (move-type right-type)
+         (shiftP2 ne Soaring-Eagle Rook-General!) (shiftP2 sw Soaring-Eagle Rook-General!)
+         (no-moveP2 Soaring-Eagle Rook-General!)
+      )
+   )
+   (piece
+      (name Soaring-Eagle!)	
+      (notation "SE!")
+      (help "Soaring Eagle: slides in any direction except diagonally forwards; which are Lion-moves.")
+      (description "Soaring Eagle (promoted Dragon King)\\A Soaring Eagle slides any number of empty squares in any direction except left-forward and right-forward; In these forwards directions it moves as a Lion. When using its Lion power the Soaring Eagle may make two consecutive single step along the forward-diagonals during which it may capture up to TWICE or return to its starting square to pass a turn. (NOTE: To pass a turn when at least one of the north-east/north-west squares are empty, select the piece and then drop it back on its starting square).\\The Soaring Eagle can only jump over pieces on its north-east/north-west squares: when making a diagonally forward Lion-jump-move, it can leap on the second square without capturing the first.")
+      (image White "Images/PEagle_W.bmp" 
+			 Black "Images/PEagle_B.bmp" )
+      (moves
+       (move-type normal)
+         (slide s) (slide e) 
+         (slide w) (slide n) 
+         (slide se) (slide sw)
+         (lion-type-move nw left-type) 
+         (lion-type-move ne right-type) 
+         (no-move-2 Soaring-Eagle! nw ne) (lion-leap2 nw nw) (lion-leap2 ne ne)
+       (move-type left-type)
+         (shift nw) (shift se)
+         (no-move Soaring-Eagle!)
+       (move-type right-type)
+         (shift ne) (shift sw)
+         (no-move Soaring-Eagle!)
+      )
+   )
+
+(piece
+      (name Whale)	
+      (notation "W")
+      (help "Whale: slides any number of squares backwards, forwards or diagonally backwards.")
+      (description "Whale (promoted Reverse Chariot)\\A Whale slides any number of empty squares backwards, forwards or diagonally backwards. It can not jump over other pieces.")
+      (image White "Images/Whale_W.bmp" 
+		 	Black "Images/Whale_B.bmp" )
+      (moves
+       (move-type normal)
+         (slide n) (slide s) (slide se) (slide sw) 
+      )
+   )
+
+(piece
+      (name White-Horse)	
+      (notation "WH")
+      (help "White Horse: slides any number of squares backwards, forwards or diagonally forwards.")
+      (description "White Horse (promoted Lance)\\A White Horse slides any number of empty squares forwards, backwards or diagonally forwards. It can not jump over other pieces.")
+      (image White "Images/WHorse_W.bmp" 
+			 Black "Images/WHorse_B.bmp" )
+      (moves
+       (move-type normal)
+         (slide n) (slide s) (slide ne) (slide nw)
+      )
+   )
+
+(piece
+      (name Lion)	
+      (notation "Ln")	 ;LLnn	(for rapid searching)
+      (help "Lion: makes one OR TWO single step/capture or may jump in any direction. Promotes to Lion-Hawk.")
+      (description "Lion\\A Lion has a very complex and powerful move:\it may move as a King (a single step move in any direction), or it may make TWO consecutive King step in any different directions, during which it may capture up to TWICE or return to its starting square to pass a turn. (NOTE: To pass a turn without actually moving, if there is at least one empty square around the Lion, select the piece and then drop it back on its starting square).
+      \\The Lion may also jump directly to any position two squares away (bypassing any friendly/adverse piece on the first square entirely): it can jump in any orthogonal/diagonal directions, but also 'mixed orthogonal-diagonal' ones, as a Knight in Western Chess!
+      \\May promote to Lion-Hawk upon reaching the promotion zone (rank 12 to 16). The Lion has a special move to promote when using its Lion-move just from outside the promotion zone: by making a capture into it with its first step, then stepping outside of it with the second (on the same turn so), it may be promoted! It can also begin its move inside the promotion zone and capture an enemy piece with its first step, and then step outside of it with the second step and be promoted.")
+      (image White "Images/Lion_W.bmp" 
+			 Black "Images/Lion_B.bmp" )
+      (attribute promote-rule? false)
+      (attribute must-promote? false)
+      
+      (moves
+       (move-type normal)
+         (lion-type-moveP3 n left-1-type) (lion-type-moveP3 nw left-1-type)
+         (lion-type-moveP3 s left-1-type) (lion-type-moveP3 sw left-1-type)
+         (lion-type-moveP3 w left-1-type) (lion-type-moveP3 se left-1-type)
+         (lion-type-moveP3 e left-1-type) (lion-type-moveP3 ne left-1-type)
+         (no-move-all Lion)
+         (leap2P n n Lion Lion-Hawk)(leap2P nw nw Lion Lion-Hawk)
+         (leap2P s s Lion Lion-Hawk)(leap2P sw sw Lion Lion-Hawk)
+         (leap2P e e Lion Lion-Hawk)(leap2P se se Lion Lion-Hawk)
+         (leap2P w w Lion Lion-Hawk)(leap2P sw sw Lion Lion-Hawk)
+         (leap2P ne ne Lion Lion-Hawk)(leap2P se se Lion Lion-Hawk)
+         (leap2P n ne Lion Lion-Hawk)(leap2P n nw Lion Lion-Hawk)
+         (leap2P s se Lion Lion-Hawk)(leap2P s sw Lion Lion-Hawk)
+         (leap2P e ne Lion Lion-Hawk)(leap2P e se Lion Lion-Hawk)
+         (leap2P w nw Lion Lion-Hawk)(leap2P w sw Lion Lion-Hawk)
+       (move-type left-1-type)
+         (no-moveP2 Lion Lion-Hawk)
+         (shiftP2 n Lion Lion-Hawk) (shiftP2 nw Lion Lion-Hawk) 
+         (shiftP2 s Lion Lion-Hawk) (shiftP2 sw Lion Lion-Hawk) 
+         (shiftP2 w Lion Lion-Hawk) (shiftP2 ne Lion Lion-Hawk) 
+         (shiftP2 e Lion Lion-Hawk) (shiftP2 se Lion Lion-Hawk)
+      )
+   )
+
+
+(piece
+      (name Lion!)	
+      (notation "Ln!")
+      (help "Lion: makes one OR TWO single step or may jump in any direction. Can capture twice.")
+      (description "Lion (promoted Kylin)\\A Lion has a very complex and powerful move: it may move as a King (a single step move in any direction), or it may make TWO consecutive King step in any different directions, during which it may capture up to TWICE or return to its starting square to pass a turn. (NOTE: To pass a turn without actually moving, if there is at least one empty square around the Lion, select the piece and then drop it back on its starting square).\\The Lion may also jump directly to any position two squares away (it is like a normal slide but bypassing any friendly/adverse piece on the first square entirely): it can jump in any orthogonal/diagonal directions, but also 'mixed orthogonal-diagonal' ones, as a Knight in Western Chess!")
+      (image White "Images/PLion_W.bmp" 
+			 Black "Images/PLion_B.bmp" )
+      (moves
+       (move-type normal)
+         (lion-type-move n left-1-type) (lion-type-move nw left-1-type)
+         (lion-type-move s left-1-type) (lion-type-move sw left-1-type)
+         (lion-type-move w left-1-type) (lion-type-move se left-1-type)
+         (lion-type-move e left-1-type) (lion-type-move ne left-1-type)
+         (no-move-all Lion!)
+         (lion-leap2 n n)(lion-leap2 nw nw)
+         (lion-leap2 s s)(lion-leap2 sw sw)
+         (lion-leap2 e e)(lion-leap2 se se)
+         (lion-leap2 w w)(lion-leap2 sw sw)
+         (lion-leap2 ne ne)(lion-leap2 se se)
+         (lion-leap2 n ne)(lion-leap2 n nw)(lion-leap2 s se)(lion-leap2 s sw)
+         (lion-leap2 e ne)(lion-leap2 e se)(lion-leap2 w nw)(lion-leap2 w sw)
+       (move-type left-1-type)
+         (no-move Lion!)
+         (shift n) (shift nw) 
+         (shift s) (shift sw) 
+         (shift w) (shift ne) 
+         (shift e) (shift se)
+      )
+   )
+
+(piece
+      (name Dragon-King)	 
+      (notation "DK")
+      (help "Dragon King: slides orthogonally or steps one square diagonally. Promotes to Soaring-Eagle.")
+      (description "Dragon King\\A Dragon King slides any number of empty squares orthogonally (on a rank or a file), or steps one square in the four diagonal directions. It can not jump over other pieces. \May promote to Soaring-Eagle upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/Dragon_W.bmp" 
+			 Black "Images/Dragon_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (slideP n Dragon-King Soaring-Eagle!)  (slideP e Dragon-King Soaring-Eagle!)
+         (slideP s Dragon-King Soaring-Eagle!)  (slideP w Dragon-King Soaring-Eagle!)
+         (shiftP nw Dragon-King Soaring-Eagle!) (shiftP ne Dragon-King Soaring-Eagle!) 
+         (shiftP se Dragon-King Soaring-Eagle!) (shiftP sw Dragon-King Soaring-Eagle!)
+      )
+   )
+
+(piece
+      (name Dragon-King!)	 
+      (notation "DK!")
+      (help "Dragon King: slides any number of squares orthogonally, or steps one square diagonally.")
+      (description "Dragon King (promoted Rook)\\A Dragon King slides any number of empty squares orthogonally (on a rank or a file), or steps one square in the four diagonal directions. It can not jump over other pieces.")
+      (image White "Images/PDragon_W.bmp" 
+			 Black "Images/PDragon_B.bmp" )
+      (moves
+       (move-type normal)
+         (slide n)  (slide e)  (slide s)  (slide w)
+         (shift nw) (shift ne) (shift se) (shift sw)
+	   )
+   )
+
+(piece
+      (name Dragon-Horse)	 
+      (notation "DH")
+      (help "Dragon Horse: slides diagonally or steps one square orthogonally. Promotes to Horned-Falcon.")
+      (description "Dragon Horse\\A Dragon Horse slides any number of empty squares diagonally, or steps one square in the four orthogonal directions. It can not jump over other pieces. \May promote to Horned-Falcon upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/Horse_W.bmp" 
+		 Black "Images/Horse_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (shiftP n Dragon-Horse Horned-Falcon!)  (shiftP e Dragon-Horse Horned-Falcon!)
+         (shiftP s Dragon-Horse Horned-Falcon!)  (shiftP w Dragon-Horse Horned-Falcon!)
+         (slideP nw Dragon-Horse Horned-Falcon!) (slideP ne Dragon-Horse Horned-Falcon!)
+         (slideP se Dragon-Horse Horned-Falcon!) (slideP sw Dragon-Horse Horned-Falcon!)
+	   )
+   )
+
+(piece
+      (name Dragon-Horse!)  
+      (notation "DH!")
+      (help "Dragon Horse: slides diagonally any number of squares, or steps one square orthogonally.")
+      (description "Dragon Horse (promoted Bishop)\\A Dragon Horse slides any number of empty squares diagonally, or steps one square in the four orthogonal directions. It can not jump over other pieces.")
+      (image White "Images/PHorse_W.bmp" 
+			 Black "Images/PHorse_B.bmp" )
+      (moves
+       (move-type normal)
+         (shift n)  (shift e)  (shift s)  (shift w)
+         (slide nw) (slide ne) (slide se) (slide sw)
+	   )
+   )
+
+(piece
+      (name Kylin)		
+      (notation "Ky")
+      (help "Kylin: steps one square diagonally, or jumps orthogonally. Promotes to Lion.")
+      (description "Kylin\\A Kylin may step one square diagonally, or jump to the second square in the four orthogonal directions. \May promote to Lion upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/Kylin_W.bmp" 
+			 Black "Images/Kylin_B.bmp" )
+     (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (leap2P n n Kylin Lion!)   (leap2P e e Kylin Lion!)   (leap2P s s Kylin Lion!)
+         (leap2P w w Kylin Lion!)   (shiftP nw Kylin Lion!) (shiftP ne Kylin Lion!)
+         (shiftP se Kylin Lion!) (shiftP sw Kylin Lion!)
+      )
+   )
+
+(piece
+      (name Phoenix)	
+      (notation "Ph")
+      (help "Phoenix: steps one square orthogonally, or jumps diagonally. Promotes to Queen.")
+      (description "Phoenix\\A Phoenix may step one square orthogonally, or jump to the second square in the four diagonal directions. \May promote to Queen upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/Phoenix_W.bmp" 
+		 Black "Images/Phoenix_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (leap2P nw nw Phoenix Queen!) (leap2P ne ne Phoenix Queen!) 
+         (leap2P se se Phoenix Queen!) (leap2P sw sw Phoenix Queen!)
+         (shiftP n Phoenix Queen!) (shiftP e Phoenix Queen!)
+         (shiftP s Phoenix Queen!) (shiftP w Phoenix Queen!)
+      )
+   )
+
+(piece
+      (name Reverse-Chariot)	
+      (notation "RC")
+      (help "Reverse Chariot: slides any number of squares forwards or backwards. Promotes to Whale.")
+      (description "Reverse Chariot\\A Reverse Chariot slides any number of empty squares straight forwards or backwards in a file. It can not jump over other pieces. \May promote to Whale upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/Reverse_W.bmp" 
+			 Black "Images/Reverse_B.bmp" )
+      (moves
+       (move-type normal)
+         (slideP n Reverse-Chariot Whale) (slideP s Reverse-Chariot Whale)
+	   )
+   )
+
+   (piece
+      (name Side-Mover)	
+      (notation "SM")
+      (help "Side Mover: slides sideways, or steps one square forwards or backwards. Promotes to Free-Boar.")
+      (description "Side Mover\\A Side Mover slides any number of empty squares straight sideways in a rank, or steps one square vertically. It can not jump over other pieces. \May promote to Free-Boar upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/Side_W.bmp" 
+			 Black "Images/Side_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (slideP e Side-Mover Free-Boar) (slideP w Side-Mover Free-Boar)
+         (shiftP n Side-Mover Free-Boar) (shiftP s Side-Mover Free-Boar)
+	   )
+   )
+
+(piece
+      (name Side-Mover!)	 
+      (notation "SM!")
+      (help "Side Mover: slides any number of squares sideways, or steps one square forwards or backwards.")
+      (description "Side Mover (promoted Copper General)\\A Side Mover slides any number of empty squares straight sideways in a rank, or steps one square vertically. It can not jump over other pieces.")
+      (image White "Images/PSide_W.bmp" 
+		 Black "Images/PSide_B.bmp" )
+      (moves
+       (move-type normal)
+         (slide e) (slide w)
+         (shift n) (shift s)
+	   )
+   )
+
+   (piece
+      (name Vertical-Mover)	
+      (notation "VM")
+      (help "Vertical Mover: slides vertically, or steps one square sideways. Promotes to Flying-Ox.")
+      (description "Vertical Mover\\A Vertical Mover may slide any number of squares straight forwards or backwards in a file, or step one square horizontally. It can not jump over other pieces. \May promote to Flying-Ox upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/Vertical_W.bmp" 
+			 Black "Images/Vertical_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (slideP s Vertical-Mover Flying-Ox) (slideP n Vertical-Mover Flying-Ox)
+         (shiftP e Vertical-Mover Flying-Ox) (shiftP w Vertical-Mover Flying-Ox)
+	   )
+   )
+
+(piece
+      (name Vertical-Mover!)	
+      (notation "VM!")
+      (help "Vertical Mover: slides any number of squares vertically, or steps one square sideways.")
+      (description "Vertical Mover (promoted Silver General)\\A Vertical Mover may slide any number of squares straight forwards or backwards in a file, or step one square horizontally. It can not jump over other pieces.")
+      (image White "Images/PVertical_W.bmp" 
+			 Black "Images/PVertical_B.bmp" )
+      (moves
+       (move-type normal)
+         (slide s) (slide n)
+         (shift e) (shift w)
+	   )
+   )
+
+   (piece
+      (name Flying-Stag) 
+      (notation "FS")
+      (help "Flying Stag: slides forwards or backwards, or steps one square in other directions.")
+      (description "Flying Stag (promoted Blind Tiger)\\A Flying Stag may slide any number of squares straight forwards or backwards in a file, or steps one square in any other direction. It can not jump over other pieces.")
+      (image White "Images/Stag_W.bmp" 
+			 Black "Images/Stag_B.bmp" )
+      (moves
+       (move-type normal)
+         (slide s)  (slide n)  (shift e)  (shift w)
+         (shift se) (shift sw) (shift ne) (shift nw)
+	   )
+   )
+
+   (piece
+      (name Lance)	
+	(notation "L")
+	  (help "Lance: can only slide straight forward. Promotes to White-Horse.")
+      (description "Lance\\A Lance slides any number of unobstructed squares straight forwards. It can not jump over other pieces. \May promote to White-Horse upon reaching the promotion zone (rank 12 to 16); Will be force-promoted when on the last row!")
+      (image White "Images/Lance_W.bmp" 
+			 Black "Images/Lance_B.bmp" )
+      (moves
+       (move-type normal)
+         (lance-move n)         
+	   )
+   )
+
+   (piece
+      (name King)	
+	(notation "K")
+	(help "King: steps one square in any direction. Always protect your royal pieces!")
+      (description "King\\A King can step to any adjacent square. \\The King is allowed to be in check in Tenjiku-Shogi (ie: it can be threatened by an enemy capture for one or more turn); Though it is not recommended. \If there is no Prince on the board for a player and his King is captured, the game is lost.")
+      (image White "Images/King_W.bmp" 
+			 Black "Images/King_B.bmp" )
+      (moves
+       (move-type normal)
+         (shift n)  (shift e)  (shift s)  (shift w)
+         (shift ne) (shift nw) (shift se) (shift sw)
+	   )
+   )
+ 
+   (piece
+      (name Prince)	
+	(notation "CP")
+	  (help "Prince: steps one square in any direction. Always protect your royal pieces!")
+      (description "Prince (promoted Drunk-Elephant)\\A Prince is effectively a second King (ie: an additional royal piece to capture to win thre game) and can step to any adjacent square. If there is no longer a King for a player and his Prince is captured, the game is lost.")
+      (image White "Images/Prince_W.bmp" 
+			 Black "Images/Prince_B.bmp" )
+      (moves
+       (move-type normal)
+         (shift n)  (shift e)  (shift s)  (shift w)
+         (shift ne) (shift nw) (shift se) (shift sw)
+	   )
+   )
+
+(piece
+      (name Blind-Tiger) 
+	(notation "BT")
+	(help "Blind Tiger: steps one square in any direction, except forward. Promotes to Flying-Stag.")
+      (description "Blind Tiger\\A Blind Tiger can step to any adjacent square, except the front one. \May promote to Flying-Stag upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/Tiger_W.bmp" 
+			 Black "Images/Tiger_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (shiftP e Blind-Tiger Flying-Stag)  (shiftP s Blind-Tiger Flying-Stag)
+         (shiftP w Blind-Tiger Flying-Stag)  (shiftP ne Blind-Tiger Flying-Stag)
+         (shiftP nw Blind-Tiger Flying-Stag) (shiftP se Blind-Tiger Flying-Stag) 
+         (shiftP sw Blind-Tiger Flying-Stag)
+      )
+   )
+
+(piece
+      (name Drunk-Elephant)	
+	(notation "DE")
+	(help "Drunk Elephant: steps one square in any direction, except backward. Promotes to Prince.")
+      (description "Drunk Elephant\\A Drunk Elephant can step to any adjacent square, except the back one. \May promote to Prince upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/Elephant_W.bmp" 
+			 Black "Images/Elephant_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (shiftP e Drunk-Elephant Prince)  (shiftP n Drunk-Elephant Prince)  
+         (shiftP w Drunk-Elephant Prince)  (shiftP ne Drunk-Elephant Prince)
+         (shiftP nw Drunk-Elephant Prince) (shiftP se Drunk-Elephant Prince) 
+         (shiftP sw Drunk-Elephant Prince)
+      )
+   )
+
+(piece
+      (name Ferocious-Leopard)	
+	(notation "FL")
+	(help "Ferocious Leopard: steps one square in any direction, except sideways. Promotes to Bishop.")
+      (description "Ferocious Leopard\\A Ferocious Leopard can step to any adjacent square, except horizontal ones. \May promote to Bishop upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/Leopard_W.bmp" 
+		 Black "Images/Leopard_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (shiftP s Ferocious-Leopard Bishop!)  (shiftP n Ferocious-Leopard Bishop!)  
+         (shiftP ne Ferocious-Leopard Bishop!) (shiftP nw Ferocious-Leopard Bishop!)
+         (shiftP se Ferocious-Leopard Bishop!) (shiftP sw Ferocious-Leopard Bishop!)
+      )
+   )
+
+(piece
+      (name Gold-General)	
+	(notation "G")
+	(help "Gold General: steps one square in any direction, except diagonally backwards. Promotes to Rook.")
+      (description "Gold General\\A Gold General can step to any adjacent square, except diagonally backward ones. \May promote to Rook upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/Gold_W.bmp" 
+			 Black "Images/Gold_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (shiftP s Gold-General Rook!) (shiftP n Gold-General Rook!) 
+         (shiftP ne Gold-General Rook!)(shiftP nw Gold-General Rook!)
+         (shiftP e Gold-General Rook!) (shiftP w Gold-General Rook!)
+      )
+   )
+
+(piece
+      (name Gold-General!)	
+	(notation "G!")
+	(help "Gold General: steps one square in any direction, except diagonally backwards.")
+      (description "Gold General (promoted Pawn)\\A Gold General can step to any adjacent square, except diagonally backward ones.")
+      (image White "Images/PGold_W.bmp" "Images/PGold_W.bmp"
+			 Black "Images/PGold_B.bmp" "Images/PGold_B.bmp")
+      (moves
+       (move-type normal)
+         (shift s) (shift n)
+         (shift ne)(shift nw)
+         (shift e) (shift w)
+      )
+   )
+
+(piece
+      (name Silver-General)	
+	(notation "S")
+	(help "Silver General: steps one square diagonally, or straight forward. Promotes to Vertical Mover.")
+      (description "Silver General\\A Silver General can step to any adjacent square diagonally, or to the front one. \May promote to Vertical-Mover upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/Silver_W.bmp" 
+			 Black "Images/Silver_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (shiftP se Silver-General Vertical-Mover!) (shiftP sw Silver-General Vertical-Mover!) 
+         (shiftP ne Silver-General Vertical-Mover!) (shiftP nw Silver-General Vertical-Mover!) 
+         (shiftP n Silver-General Vertical-Mover!)
+      )
+   )
+
+(piece
+      (name Copper-General)	
+	(notation "C")
+	(help "Copper General: steps forward and backward, or diagonally forwards. Promotes to Side-Mover.")
+      (description "Copper General\\A Copper General can step to any adjacent square forward, backward or diagonally forward. \May promote to Side-Mover upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/Copper_W.bmp" 
+			 Black "Images/Copper_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (shiftP s Copper-General Side-Mover!) (shiftP n Copper-General Side-Mover!) 
+         (shiftP ne Copper-General Side-Mover!) (shiftP nw Copper-General Side-Mover!)
+      )
+   )
+
+
+	(piece
+      (name Chariot-Soldier)	
+      (notation "CS")
+      (help "Chariot Soldier: slides in any direction, except sideways; which are double-steps. Promotes to Heavenly-Tetrarch.")
+      (description "Chariot Soldier\\A Chariot Soldier can slide any number of squares in any direction, except sideways; On its left or right movement, the piece can do a single OR DOUBLE normal-step (if the passing square is empty) and stops when capturing. It can not jump over other pieces. \May promote to Heavenly-Tetrarch upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/ChariotSoldier_W.bmp" 
+			 Black "Images/ChariotSoldier_B.bmp" )
+      (moves
+       (move-type normal)
+         (slideP n Chariot-Soldier Heavenly-Tetrarch)  (slideP s Chariot-Soldier Heavenly-Tetrarch)  (slideP nw Chariot-Soldier Heavenly-Tetrarch)
+         (slideP ne Chariot-Soldier Heavenly-Tetrarch) (slideP se Chariot-Soldier Heavenly-Tetrarch) (slideP sw Chariot-Soldier Heavenly-Tetrarch)
+         (shiftP w Chariot-Soldier Heavenly-Tetrarch) (shiftP e Chariot-Soldier Heavenly-Tetrarch)
+         (shift2P w Chariot-Soldier Heavenly-Tetrarch) (shift2P e Chariot-Soldier Heavenly-Tetrarch)
+	   )
+   )
+   
+   	(piece
+      (name Chariot-Soldier!)	 
+      (notation "CS!")
+      (help "Chariot Soldier: slides in any direction, except sideways; where it may do a single OR double step.")
+      (description "Chariot Soldier (promoted Vertical-Soldier)\\A Chariot Soldier can slide any number of squares in any direction, except sideways; On its left or right movement, the piece can do a single OR DOUBLE normal-step (if the passing square is empty) and stops when capturing. It can not jump over other pieces.")
+      (image White "Images/PChariotSoldier_W.bmp" 
+			 Black "Images/PChariotSoldier_B.bmp" )
+      (moves
+       (move-type normal)
+         (slide n)  (slide s)  (slide nw)
+         (slide ne) (slide se) (slide sw)
+         (shift w) (shift e)
+         (shift2 w) (shift2 e)
+	   )
+   )
+   
+	(piece 
+      (name Dog)	 
+      (notation "D")
+      (help "Dog: steps one square forward, or diagonally backwards. Promotes to Multi-General.")
+      (description "Dog\\A Dog can step one square directly forward, or diagonally backwards left and right. \May promote to Multi-General upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/Dog_W.bmp" 
+	  	   Black "Images/Dog_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (shiftP n Dog Multi-General) (shiftP se Dog Multi-General) (shiftP sw Dog Multi-General)
+      )
+	)
+   
+	(piece 
+      (name Bishop-General)  
+      (notation "BG")
+      (help "Bishop General: slides diagonally on empty squares, OR RANGE-JUMPS diagonally! Promotes to Vice-General.")
+      (description "Bishop General\\A Bishop General slides diagonally (exactly like a Bishop) on empty squares; But it can also RANGE-JUMP diagonally (it is like a normal slide but bypassing almost any friendly or adverse pieces on its trajectory). \\The rules for range-jumping generals are that they can only range-jump behind a piece of lower rank (the number of stars on the piece!) than themselves, but they can capture them like this nonetheless!. The Bishop and Rook Generals are the lowest rank (3 stars) so they can not range-jump behind any generals (star pieces), only behind normal pieces so. The last rule is that range-jumping pieces can not capture a King or Prince by this movement (or range-jumps behind; Because King and Prince are considered '6 stars' pieces... chiefs of all the generals!) But they can do so by normal sliding/stepping (on empty squares) nonetheless!
+      \\May promote to Vice-General upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/BishopGeneral_W.bmp" 
+	   		 Black "Images/BishopGeneral_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+         (move-type normal)
+         (general-slide-promote nw Bishop-General Vice-General) (general-slide-promote ne Bishop-General Vice-General)
+         (general-slide-promote sw Bishop-General Vice-General) (general-slide-promote se Bishop-General Vice-General)
+	   )
+   )
+   
+	(piece 
+      (name Bishop-General!)  
+      (notation "BG!")
+      (help "Bishop General: slides diagonally on empty squares, OR RANGE-JUMPS diagonally!")
+      (description "Bishop General (promoted Horned-Falcon)\\A Bishop General slides diagonally (exactly like a Bishop) on empty squares; But it can also RANGE-JUMP diagonally (it is like a normal slide but bypassing almost any friendly or adverse pieces on its trajectory). \\The rules for range-jumping generals are that they can only range-jump behind a piece of lower rank (the number of stars on the piece!) than themselves, but they can capture them like this nonetheless!. The Bishop and Rook Generals are the lowest rank (3 stars) so they can not range-jump behind any generals (star pieces), only behind normal pieces so. The last rule is that range-jumping pieces can not capture a King or Prince by this movement (or range-jumps behind; Because King and Prince are considered '6 stars' pieces... chiefs of all the generals!) But they can do so by normal sliding/stepping (on empty squares) nonetheless!")
+      (image White "Images/PBishopGeneral_W.bmp" 
+	    	 Black "Images/PBishopGeneral_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (general-slide nw) (general-slide ne)
+         (general-slide sw) (general-slide se)
+	   )
+    )
+	
+	(piece 
+      (name Rook-General)	
+      (notation "RG")
+      (help "Rook General: slides orthogonally on empty squares, OR RANGE-JUMPS orthogonally! Promotes to Great-General.")
+      (description "Rook General\\A Rook General slides orthogonally (exactly like a Rook) on empty squares; But it can also RANGE-JUMP orthogonally (it is like a normal slide but bypassing almost any friendly or adverse pieces on its trajectory). \\The rules for range-jumping generals are that they can only range-jump behind a piece of lower rank (the number of stars on the piece!) than themselves, but they can capture them like this nonetheless!. The Bishop and Rook Generals are the lowest rank (3 stars) so they can not range-jump behind any generals (star pieces), only behind normal pieces so. The last rule is that range-jumping pieces can not capture a King or Prince by this movement (or range-jumps behind; Because King and Prince are considered '6 stars' pieces... chiefs of all the generals!) But they can do so by normal sliding/stepping (on empty squares) nonetheless!
+      \\May promote to Great-General upon reaching the promotion zone (rank 12 to 16).")
+
+      (image White "Images/RookGeneral_W.bmp" 
+	    	 Black "Images/RookGeneral_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (general-slide-promote n Rook-General Great-General) (general-slide-promote w Rook-General Great-General)
+         (general-slide-promote s Rook-General Great-General) (general-slide-promote e Rook-General Great-General)
+	   )
+    )
+   
+	(piece 
+      (name Rook-General!)	
+      (notation "RG!")
+      (help "Rook General: slides orthogonally on empty squares, OR RANGE-JUMPS orthogonally!")
+      (description "Rook General (promoted Soaring-Eagle)\\A Rook General slides orthogonally (exactly like a Rook) on empty squares; But it can also RANGE-JUMP orthogonally (it is like a normal slide but bypassing almost any friendly or adverse pieces on its trajectory). \\The rules for range-jumping generals are that they can only range-jump behind a piece of lower rank (the number of stars on the piece!) than themselves, but they can capture them like this nonetheless!. The Bishop and Rook Generals are the lowest rank (3 stars) so they can not range-jump behind any generals (star pieces), only behind normal pieces so. The last rule is that range-jumping pieces can not capture a King or Prince by this movement (or range-jumps behind; Because King and Prince are considered '6 stars' pieces... chiefs of all the generals!) But they can do so by normal sliding/stepping (on empty squares) nonetheless!")
+      (image White "Images/PRookGeneral_W.bmp" 
+	     	 Black "Images/PRookGeneral_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (general-slide n) (general-slide w)
+         (general-slide s) (general-slide e)
+	   )
+    )
+	
+   	(piece 
+      (name Vice-General)	
+      (notation "VG")
+      (help "Vice General: slides or RANGE-JUMPS diagonally! Has also a (single capture) TRIPLE-STEP move!")
+      (description "Vice General\\A Vice General slides diagonally (exactly like a Bishop) on empty squares; But it can also RANGE-JUMP diagonally (it is like a normal slide but bypassing almost any friendly or adverse pieces on its trajectory). It has also an additional TRIPLE-STEP move (the player can choose to do 1,2 or 3 simple King-like steps in any direction) which stops when capturing; The Vice General can move and return to its starting square to pass a turn. (NOTE: To pass a turn without actually moving, if there is at least one empty square around it, select the piece and then drop it back on its starting square). 
+      \\The rules for range-jumping generals are that they can only range-jump behind a piece of lower rank (the number of stars on the piece!) than themselves, but they can capture them like this nonetheless!. The Vice General is a '4 stars' piece that can range-jump behind any Bishop or Rook generals ('3 stars' pieces), and behind normal pieces. The last rule is that range-jumping pieces can not capture a King or Prince by this movement (or range-jumps behind; Because King and Prince are considered '6 stars' pieces... chiefs of all the generals!) But they can do so by normal sliding/stepping (on empty squares) nonetheless!")
+      (image White "Images/ViceGeneral_W.bmp" 
+	    	 Black "Images/ViceGeneral_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (vg-slide nw) (vg-slide ne);
+         (vg-slide sw) (vg-slide se);
+         (common-nomove Vice-General);
+         (general-step  n  left-2-type) (general-step  e  left-2-type)
+         (general-step  s  left-2-type) (general-step  w  left-2-type)
+         (general-step  nw left-2-type) (general-step  ne left-2-type)
+         (general-step  sw left-2-type) (general-step  se left-2-type)
+         (general-leap  n n left-1-type) (general-leap  s s left-1-type) (general-leap  w w left-1-type) (general-leap  e e left-1-type)
+         (general-leap  nw nw left-1-type) (general-leap sw sw left-1-type) (general-leap ne ne left-1-type) (general-leap se se left-1-type)
+         (general-leap  n nw left-1-type) (general-leap  n ne left-1-type) (general-leap s sw left-1-type) (general-leap s se left-1-type) 
+         (general-leap  w nw left-1-type) (general-leap  w sw left-1-type) (general-leap e ne left-1-type) (general-leap e se left-1-type)
+         (general-jump n n n) (general-jump n n nw) (general-jump n n ne);
+         (general-jump s s s) (general-jump s s sw) (general-jump s s se);
+         (general-jump w w w) (general-jump w w sw) (general-jump w w nw);
+         (general-jump e e e) (general-jump e e se) (general-jump e e ne);
+         (general-jump nw nw nw) (general-jump nw nw n) (general-jump nw nw w);
+         (general-jump ne ne ne) (general-jump ne ne n) (general-jump ne ne e);
+         (general-jump se se se) (general-jump se se s) (general-jump se se e);
+         (general-jump sw sw sw) (general-jump sw sw s) (general-jump sw sw w);
+         (move-type left-1-type)
+         (general-stop-1  n ) (general-stop-1  e )
+         (general-stop-1  s ) (general-stop-1  w )
+         (general-stop-1  nw) (general-stop-1  ne)
+         (general-stop-1  sw) (general-stop-1  se)
+         (no-move Vice-General);
+         (move-type left-2-type)
+         (general-step  n  left-1-type) (general-step  e  left-1-type)
+         (general-step  s  left-1-type) (general-step  w  left-1-type)
+         (general-step  nw left-1-type) (general-step  ne left-1-type)
+         (general-step  sw left-1-type) (general-step  se left-1-type)
+         (general-stop-2  n n) (general-stop-2  s s) (general-stop-2  w w) (general-stop-2  e e)
+         (general-stop-2  nw nw) (general-stop-2 sw sw) (general-stop-2 ne ne) (general-stop-2 se se)
+         (general-stop-2  n nw) (general-stop-2  n ne) (general-stop-2 s sw) (general-stop-2 s se) 
+         (general-stop-2  w nw) (general-stop-2  w sw) (general-stop-2 e ne) (general-stop-2 e se)
+         (no-move Vice-General);
+	   )
+    )
+	
+   
+	(piece 
+      (name Great-General)	
+      (notation "GG")
+      (help "Great General: slides in any direction on empty squares, OR RANGE-JUMPS in any direction too!")
+      (description "Great General\\A Great General slides in any direction (exactly like a Queen) on empty squares; But it can also RANGE-JUMP in any direction too. (it is like a normal slide but bypassing almost any friendly or adverse pieces on its trajectory).
+      \\The rules for range-jumping generals are that they can only range-jump behind a piece of lower rank (the number of stars on the piece!) than themselves, but they can capture them like this nonetheless!. The Great General is a '5 stars' piece that can range-jump behind any generals, and behind normal pieces. The last rule is that range-jumping pieces can not capture a King or Prince by this movement (or range-jumps behind; Because King and Prince are considered '6 stars' pieces... chiefs of all the generals!) But they can do so by normal sliding/stepping (on empty squares) nonetheless!")
+      (image White "Images/GreatGeneral_W.bmp" 
+	  	     Black "Images/GreatGeneral_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (gg-slide nw) (gg-slide ne)
+         (gg-slide sw) (gg-slide se)
+         (gg-slide n) (gg-slide w)
+         (gg-slide s) (gg-slide e)
+	   )
+    )
+   
+	(piece
+      (name Side-Soldier)	
+      (notation "SS")
+      (help "Side Soldier: slides sideways, steps backward or double-steps forward. Promotes to Water-Buffalo.")
+      (description "Side Soldier\\A Side Soldier may slide any number of squares straight sideways in a rank, or step one square back; On its front movement, the piece can do a single OR DOUBLE normal-step (if the passing square is empty) and stops when capturing. It can not jump over other pieces. \May promote to Water-Buffalo upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/SideSoldier_W.bmp" 
+			 Black "Images/SideSoldier_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (slideP w Side-Soldier Water-Buffalo!)  (slideP e Side-Soldier Water-Buffalo!)
+         (shiftP n Side-Soldier Water-Buffalo!) (shiftP s Side-Soldier Water-Buffalo!)
+         (shift2P n Side-Soldier Water-Buffalo!)
+	   )
+    )
+ 
+      
+	(piece
+      (name Side-Soldier!)	
+      (notation "SS!")
+      (help "Side Soldier: slides sideways, steps one square backward, or makes a simple OR double step forward.")
+ 	  (description "Side Soldier (promoted Knight)\\A Side Soldier may slide any number of squares straight sideways in a rank, or step one square back; On its front movement, the piece can do a single OR DOUBLE normal-step (if the passing square is empty) and stops when capturing. It can not jump over other pieces.")
+      (image White "Images/PSideSoldier_W.bmp" 
+		 	 Black "Images/PSideSoldier_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (slide w)  (slide e)
+         (shift n) (shift s)
+         (shift2 n)
+	   )
+    )
+
+	
+   	(piece
+      (name Vertical-Soldier)	
+      (notation "VS")
+      (help "Vertical Mover: slides forward, steps backwards, or double-steps sideways. Promotes to Chariot-Soldier.")
+     (description "Vertical Soldier\\A Vertical Soldier may slide any number of squares straight ahead, or step one square back; On its left and right movements, the piece can do a single OR DOUBLE normal-step (if the passing square is empty) and stops when capturing. It can not jump over other pieces. \May promote to Chariot-Soldier upon reaching the promotion zone (rank 12 to 16).")
+      (image White "Images/VerticalSoldier_W.bmp" 
+			 Black "Images/VerticalSoldier_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (slideP n Vertical-Soldier Chariot-Soldier!)
+         (shiftP w Vertical-Soldier Chariot-Soldier!) (shift2P w Vertical-Soldier Chariot-Soldier!)
+         (shiftP e Vertical-Soldier Chariot-Soldier!) (shift2P e Vertical-Soldier Chariot-Soldier!)
+         (shiftP s Vertical-Soldier Chariot-Soldier!)
+	   )
+    )
+
+	
+     (piece
+      (name Vertical-Soldier!)	
+      (notation "VS!")
+      (help "Vertical Mover: slides straight forwards, steps backward, or makes a simple OR double step sideways. ")
+      (description "Vertical Soldier (promoted Iron-General)\\A Vertical Soldier may slide any number of squares straight ahead, or step one square back; On its left and right movements, the piece can do a single OR DOUBLE normal-step (if the passing square is empty) and stops when capturing. It can not jump over other pieces.")
+      (image White "Images/PVerticalSoldier_W.bmp" 
+			 Black "Images/PVerticalSoldier_B.bmp" )
+      (attribute promote-rule? false)
+      (moves
+       (move-type normal)
+         (slide n)
+         (shift w) (shift2 w)
+         (shift e) (shift2 e)
+         (shift s)
+	   )
+   )
+   
+	(piece
+      (name Water-Buffalo)  ;wwbb
+      (notation "WB")
+      (help "Water Buffalo: slides in any direction except vertically; which are double-steps. Promotes to Fire-Demon.")
+      (description "Water Buffalo\\A Water Buffalo can slide any number of squares in any direction, except forward and backward; On its frontal or rear movements, the piece can do a single OR DOUBLE normal-step (if the passing square is empty) and stops when capturing. It can not jump over other pieces. \\May promote to Fire-Demon upon reaching the promotion zone (rank 12 to 16). Note that the Water-Buffalo when promoting, becomes a newborn Fire-Demon (in grey colour) and doesn't burn on the spot all enemy pieces around him until its next turn. On the very next turn, the newborn Fire-Demon activates its normal passive burn, and becomes a full-grown Fire-Demon.")
+      (image White "Images/WaterBuffalo_W.bmp" 
+			 Black "Images/WaterBuffalo_B.bmp" )
+      (moves
+       (move-type normal)
+         (slideP w Water-Buffalo Fire-DemonNB)  (slideP e Water-Buffalo Fire-DemonNB)  (slideP nw Water-Buffalo Fire-DemonNB)
+         (slideP ne Water-Buffalo Fire-DemonNB) (slideP se Water-Buffalo Fire-DemonNB) (slideP sw Water-Buffalo Fire-DemonNB)
+         (shiftP n Water-Buffalo Fire-DemonNB)  (shiftP s Water-Buffalo Fire-DemonNB)
+         (shift2P n Water-Buffalo Fire-DemonNB) (shift2P s Water-Buffalo Fire-DemonNB)
+	   )
+   )	
+	
+   	(piece
+      (name Water-Buffalo!)	
+      (notation "WB!")
+       (help "Water Buffalo: slides in any direction except vertically; where it may do a single OR double step.")
+      (description "Water Buffalo (promoted Side-Soldier)\\A Water Buffalo can slide any number of squares in any direction, except forward and backward; On its frontal or rear movements, the piece can do a single OR DOUBLE normal-step (if the passing square is empty) and stops when capturing. It can not jump over other pieces.")
+      (image White "Images/PWaterBuffalo_W.bmp" 
+			 Black "Images/PWaterBuffalo_B.bmp" )
+      (moves
+       (move-type normal)
+         (slide w)  (slide e)  (slide nw)
+         (slide ne) (slide se) (slide sw)
+         (shift n) (shift s)
+         (shift2 n) (shift2 s)
+	   )
+   )
+   
+    (piece
+      (name Fire-DemonNB) 
+      (notation "FDnb")
+      (help "New-Born Fire Demon: will activate its passive burn on your next turn.")
+      (description "New-Born Fire Demon\\Note that the Water-Buffalo when promoting, becomes a newborn Fire-Demon (in grey colour) and doesn't burn on the spot all enemy pieces around him until its next turn. On the very next turn, the newborn Fire-Demon activates its normal passive burn, and becomes a full-grown Fire-Demon,)
+      \\A Fire Demon can slide any number of squares in any direction, except forward and backward; It has also an additional TRIPLE-STEP move (the player can choose to do 1,2 or 3 simple King-like steps in any direction) which stops when capturing; It can also move and return to its starting square to pass a turn. (NOTE: To pass a turn without actually moving, if there is at least one empty square around it, select the piece and then drop it back on its starting square) It can not jump over other pieces. 
+      \\The particularities of the Fire Demon are numerous and powerful: \-Firstly, when the adversary is playing his moves and he lands a piece on a square around your Fire Demon and finishes his turn, the piece is immediately/passively 'burned' (captured) without even counting as a turn/move for the player! \-Secondly, every time a player is moving the Fire Demon (stepping or sliding, even capturing) and his turn ends, all adverse (normal) pieces one square around his halted Fire Demon are 'burned' (captured). Like this, it can remove up to eight adverse pieces from the board in one turn! (one central piece that it captures normally, and the seven others that are 'burned around') \-Thirdly, the rules between Fire Demons themselves are as follow: a Fire Demon can capture directly another if it lands on its square (normal capture). But when an attacking Fire Demon stops next to an adverse one, the first is 'burned' (captured) by the defending one and all the pieces around are left untouched!... Making your Fire Demons the best defense against the adverse ones! 
+      \\Note that pieces that have multiple steps (like Lion, Lion-Hawk, Vice-General, Fire-Demon and Free-Eagle) can move around an adverse Fire Demon wihtout being burned until their last move, finishing the turn; (the 'burning effects' are only calculated at the end of every full turn) So they can walk/graze past it without being burned if their final landing square is not next to it!")
+      (image White "Images/FireDemonNB_W.bmp" 
+		 	 Black "Images/FireDemonNB_B.bmp" )
+      (moves
+      (move-type burning)
+      (demon-no-move Fire-Demon)
+      )
+    )
+   
+   	(piece
+      (name Fire-Demon)	;ffdd
+      (notation "FD")
+      (help "Fire Demon: slides in any direction except vertically; Has a TRIPLE-STEP move, and BURNS around!")
+      (description "Fire Demon\\A Fire Demon can slide any number of squares in any direction, except forward and backward; It has also an additional TRIPLE-STEP move (the player can choose to do 1,2 or 3 simple King-like steps in any direction) which stops when capturing; It can also move and return to its starting square to pass a turn. (NOTE: To pass a turn without actually moving, if there is at least one empty square around it, select the piece and then drop it back on its starting square) It can not jump over other pieces. 
+      \\The particularities of the Fire Demon are numerous and powerful: \-Firstly, when the adversary is playing his moves and he lands a piece on a square around your Fire Demon and finish his turn, the piece is immediately/passively 'burned' (captured) without even counting as a turn/move for the player! \-Secondly, every time a player is moving the Fire Demon (stepping or sliding, even capturing) and his turn ends, all adverse (normal) pieces one square around his halted Fire Demon are 'burned' (captured). Like this, it can remove up to eight adverse pieces from the board in one turn! (one central piece that it captures normally, and the seven others that are 'burned around') \-Thirdly, the rules between Fire Demons themselves are as follow: a Fire Demon can capture directly another if it lands on its square (normal capture). But when an attacking Fire Demon stops next to an adverse one, the first is 'burned' (captured) by the defending one and all the pieces around are left untouched!... Making your Fire Demons the best defense against the adverse ones! 
+      \\Note that pieces that have multiple steps (like Lion, Lion-Hawk, Vice-General, Fire-Demon and Free-Eagle) can move around an adverse Fire Demon wihtout being burned until their last move, finishing the turn; (the 'burning effects' are only calculated at the end of every full turn) So they can walk/graze past it without being burned if their final landing square is not next to it!")
+      (image White "Images/FireDemon_W.bmp" 
+		 Black "Images/FireDemon_B.bmp" )
+      (moves
+       (move-type normal)
+         (common-nomove Fire-Demon);
+         (demon-slide e)  (demon-slide w)  (demon-slide nw);
+         (demon-slide ne) (demon-slide se) (demon-slide sw);
+         (demon-step  n  left-2-type) (demon-step  e  left-2-type)
+         (demon-step  s  left-2-type) (demon-step  w  left-2-type)
+         (demon-step  nw left-2-type) (demon-step  ne left-2-type)
+         (demon-step  sw left-2-type) (demon-step  se left-2-type)
+         (demon-leap  n n left-1-type)  (demon-leap  s s left-1-type)  (demon-leap  w w left-1-type) (demon-leap  e e left-1-type)
+         (demon-leap  nw nw left-1-type)(demon-leap sw sw left-1-type) (demon-leap ne ne left-1-type) (demon-leap se se left-1-type)
+         (demon-leap  n nw left-1-type) (demon-leap  n ne left-1-type) (demon-leap s sw left-1-type) (demon-leap s se left-1-type) 
+         (demon-leap  w nw left-1-type) (demon-leap  w sw left-1-type) (demon-leap e ne left-1-type) (demon-leap e se left-1-type)
+         (demon-jump n n n) (demon-jump n n nw) (demon-jump n n ne);
+         (demon-jump s s s) (demon-jump s s sw) (demon-jump s s se);
+         (demon-jump w w w) (demon-jump w w sw) (demon-jump w w nw);
+         (demon-jump e e e) (demon-jump e e se) (demon-jump e e ne);
+         (demon-jump nw nw nw) (demon-jump nw nw n) (demon-jump nw nw w);
+         (demon-jump ne ne ne) (demon-jump ne ne n) (demon-jump ne ne e);
+         (demon-jump se se se) (demon-jump se se s) (demon-jump se se e);
+         (demon-jump sw sw sw) (demon-jump sw sw s) (demon-jump sw sw w);
+         (move-type left-1-type)
+         (demon-stop-1  n ) (demon-stop-1  e )
+         (demon-stop-1  s ) (demon-stop-1  w )
+         (demon-stop-1  nw) (demon-stop-1  ne)
+         (demon-stop-1  sw) (demon-stop-1  se)
+         (demon-no-move Fire-Demon);
+         (move-type left-2-type)
+         (demon-step2  n  left-1-type) (demon-step2  e  left-1-type)
+         (demon-step2  s  left-1-type) (demon-step2  w  left-1-type)
+         (demon-step2  nw left-1-type) (demon-step2  ne left-1-type)
+         (demon-step2  sw left-1-type) (demon-step2  se left-1-type)
+         (demon-stop-2  n n) (demon-stop-2  s s) (demon-stop-2  w w) (demon-stop-2  e e)
+         (demon-stop-2  nw nw) (demon-stop-2 sw sw) (demon-stop-2 ne ne) (demon-stop-2 se se)
+         (demon-stop-2  n nw) (demon-stop-2  n ne) (demon-stop-2 s sw) (demon-stop-2 s se) 
+         (demon-stop-2  w nw) (demon-stop-2  w sw) (demon-stop-2 e ne) (demon-stop-2 e se)
+         (demon-no-move Fire-Demon);
+	   )
+   )
+	
+   	(piece
+      (name Free-Eagle)	
+      (notation "FE")
+      (help "Free Eagle: slides or jumps (2nd square) in any direction; Has also a DOUBLE diagonal step/capture!")
+      (description "Free Eagle\\A Free Eagle slides any number of empty squares in the eight directions (like a Queen). Besides, it can jump to the second square in the eight directions (bypassing entirely friendly or adverse pieces on the first square)
+      \\The Free Eagle has also a curious/unique Lion-like DOUBLE CAPTURE move: it can double-step/capture, but only diagonally! It means that you can step/capture one square in the four diagonal directions, and then either stop here, go back to your starting square, continue/capture on the second square in that diagonal direction OR turn 90° and step/capture in another diagonal direction before finishing your turn!")
+      (image White "Images/FreeEagle_W.bmp" 
+			 Black "Images/FreeEagle_B.bmp" )
+      (moves
+       (move-type normal)
+         (slide2 n) (slide2 s) (slide2 e) (slide2 w)
+         (slide2 nw) (slide2 sw) (slide2 ne) (slide2 se)
+         (shift n) (shift s) (shift e) (shift w)
+         (lion-leap2 n n)(lion-leap2 nw nw)
+         (lion-leap2 s s)(lion-leap2 sw sw)
+         (lion-leap2 e e)(lion-leap2 se se)
+         (lion-leap2 w w)(lion-leap2 sw sw)
+         (lion-leap2 ne ne)(lion-leap2 se se)
+         (no-move-4 Free-Eagle nw ne sw se)
+         (lion-type-move nw left-1-type) 
+         (lion-type-move ne left-1-type) 
+         (lion-type-move sw left-1-type) 
+         (lion-type-move se left-1-type) 
+       (move-type left-1-type)
+         (no-move Free-Eagle)
+         (shift nw) (shift sw) (shift ne) (shift se)
+	   )
+   )   
+
+	(piece
+      (name Lion-Hawk) 	
+      (notation "LH")	;LLHH (for quick searching)
+      (help "Lion Hawk: makes one OR TWO single step or may jump in any direction; Slides diagonally too!")
+      (description "Lion Hawk \\A Lion Hawk has a very complex and powerful move:\it may move as a King (a single step move in any direction), or it may make TWO consecutive King step in any different directions, during which it may capture up to TWICE or return to its starting square to pass a turn. (NOTE: To pass a turn without actually moving, if there is at least one empty square around the Lion Hawk, select the piece and then drop it back on its starting square).\\The Lion Hawk may also jump directly to any position two squares away (bypassing any friendly/adverse piece on the first square entirely): it can jump in any orthogonal/diagonal directions, but also 'mixed orthogonal-diagonal' ones, as a Knight in Western Chess!
+      \\As the Lion Hawk, the piece has an additional diagonal sliding move (exactly like a bishop).")
+      (image White "Images/Lion-Hawk_W.bmp" 
+			 Black "Images/Lion-Hawk_B.bmp" )
+      (moves
+       (move-type normal)
+         (slide2 nw) (slide2 sw) (slide2 ne) (slide2 se)
+         (lion-type-move n left-1-type) (lion-type-move nw left-1-type)
+         (lion-type-move s left-1-type) (lion-type-move sw left-1-type)
+         (lion-type-move w left-1-type) (lion-type-move se left-1-type)
+         (lion-type-move e left-1-type) (lion-type-move ne left-1-type)
+         (no-move-all Lion-Hawk)
+         (lion-leap2 n n)(lion-leap2 nw nw)
+         (lion-leap2 s s)(lion-leap2 sw sw)
+         (lion-leap2 e e)(lion-leap2 se se)
+         (lion-leap2 w w)(lion-leap2 sw sw)
+         (lion-leap2 ne ne)(lion-leap2 se se)
+         (lion-leap2 n ne)(lion-leap2 n nw)(lion-leap2 s se)(lion-leap2 s sw)
+         (lion-leap2 e ne)(lion-leap2 e se)(lion-leap2 w nw)(lion-leap2 w sw)
+       (move-type left-1-type)
+         (no-move Lion-Hawk)
+         (shift n) (shift nw) 
+         (shift s) (shift sw) 
+         (shift w) (shift ne) 
+         (shift e) (shift se)
+	   )
+   )   
+
+	(piece
+      (name Heavenly-Tetrarch)	 
+      (notation "HT")
+      (help "Heavenly Tetrarch: gap-slides/jumps in any direction except sideways. Captures next to him FIXEDLY!")
+      (description "Heavenly Tetrarch (promoted Chariot-Soldier)\\A Heavenly Tetrarch has strange/unique moves: \-It may capture enemy pieces that are next to him (in any direction one square away) without moving from his position! (only one capture per turn) 
+      \-It may also jump directly in any direction two squares away (bypassing any friendly/adverse piece on the first square entirely).
+      \-It can 'gap-slide' any number of empty squares in any direction (bypassing any friendly/adverse piece on the first square entirely), except horizontally. For his left and right movements, it can additionally reach/capture the third square if the second is empty.")
+      (image White "Images/Heaven_W.bmp" 
+			 Black "Images/Heaven_B.bmp" )
+      (moves
+       (move-type normal)
+         (tetrarch-slide n)  (tetrarch-slide s) (tetrarch-shift e) (tetrarch-shift w)
+         (tetrarch-slide nw) (tetrarch-slide ne) (tetrarch-slide se) (tetrarch-slide sw)
+         (tetrarch-igui n) (tetrarch-igui s) (tetrarch-igui w) (tetrarch-igui e)
+         (tetrarch-igui nw) (tetrarch-igui ne) (tetrarch-igui sw) (tetrarch-igui se)
+	   )
+   )  
+   
+	(piece 
+      (name Multi-General)	 		   ;Not a range-Jumping piece! (only normal slides)
+      (notation "MG")
+      (help "Multi General: slides any number of empty squares directly forward, or diagonally backwards.")
+      (description "Multi General (promoted Dog)\\A Multi General slides any number of empty squares straight forward, or diagonally backwards (left and right). It can not jump over other pieces.")
+      (image White "Images/Multi-General_W2.bmp" 
+	    	 Black "Images/Multi-General_B2.bmp" )
+      (moves
+       (move-type normal)
+         (slide n) 
+         (slide se) (slide sw)
+	   )
+   )
+   
+   
+   
+   
+   
+   (loss-condition (White Black)
+	 (and (pieces-remaining 0 King)(pieces-remaining 0 Prince)))
+ ) 
+  
+ 
+ ;Enjoy!
+
+

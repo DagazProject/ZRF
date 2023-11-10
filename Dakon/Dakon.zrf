@@ -1,0 +1,2788 @@
+(define is-piece?
+  (or (piece? p$1) (piece? q$1))
+)
+
+(define add-1
+  (if empty? (cp 01))
+  (if (is-piece? 01) (cp 02))
+  (if (is-piece? 02) (cp 03))
+  (if (is-piece? 03) (cp 04))
+  (if (is-piece? 04) (cp 05))
+  (if (is-piece? 05) (cp 06))
+  (if (is-piece? 06) (cp 07))
+  (if (is-piece? 07) (cp 08))
+  (if (is-piece? 08) (cp 09))
+  (if (is-piece? 09) (cp 10))
+  (if (is-piece? 10) (cp 11))
+  (if (is-piece? 11) (cp 12))
+  (if (is-piece? 12) (cp 13))
+  (if (is-piece? 13) (cp 14))
+  (if (is-piece? 14) (cp 15))
+  (if (is-piece? 15) (cp 16))
+  (if (is-piece? 16) (cp 17))
+  (if (is-piece? 17) (cp 18))
+  (if (is-piece? 18) (cp 19))
+  (if (is-piece? 19) (cp 20))
+  (if (is-piece? 20) (cp 21))
+  (if (is-piece? 21) (cp 22))
+  (if (is-piece? 22) (cp 23))
+  (if (is-piece? 23) (cp 24))
+  (if (is-piece? 24) (cp 25))
+  (if (is-piece? 25) (cp 26))
+  (if (is-piece? 26) (cp 27))
+  (if (is-piece? 27) (cp 28))
+  (if (is-piece? 28) (cp 29))
+  (if (is-piece? 29) (cp 30))
+  (if (piece? p30)   (cp 31))
+  (if (piece? p31)   (cp 32))
+  (if (piece? p32)   (cp 33))
+  (if (piece? p33)   (cp 34))
+  (if (piece? p34)   (cp 35))
+  (if (piece? p35)   (cp 36))
+  (if (piece? p36)   (cp 37))
+  (if (piece? p37)   (cp 38))
+  (if (piece? p38)   (cp 39))
+  (if (piece? p39)   (cp 40))
+  (if (piece? p40)   (cp 41))
+  (if (piece? p41)   (cp 42))
+  (if (piece? p42)   (cp 43))
+  (if (piece? p43)   (cp 44))
+  (if (piece? p44)   (cp 45))
+  (if (piece? p45)   (cp 46))
+  (if (piece? p46)   (cp 47))
+  (if (piece? p47)   (cp 48))
+  (if (piece? p48)   (cp 49))
+  (if (piece? p49)   (cp 50))
+)
+
+(define add-2
+  (if empty? (cp 02))
+  (if (is-piece? 01) (cp 03))
+  (if (is-piece? 02) (cp 04))
+  (if (is-piece? 03) (cp 05))
+  (if (is-piece? 04) (cp 06))
+  (if (is-piece? 05) (cp 07))
+  (if (is-piece? 06) (cp 08))
+  (if (is-piece? 07) (cp 09))
+  (if (is-piece? 08) (cp 10))
+  (if (is-piece? 09) (cp 11))
+  (if (is-piece? 10) (cp 12))
+  (if (is-piece? 11) (cp 13))
+  (if (is-piece? 12) (cp 14))
+  (if (is-piece? 13) (cp 15))
+  (if (is-piece? 14) (cp 16))
+  (if (is-piece? 15) (cp 17))
+  (if (is-piece? 16) (cp 18))
+  (if (is-piece? 17) (cp 19))
+  (if (is-piece? 18) (cp 20))
+  (if (is-piece? 19) (cp 21))
+  (if (is-piece? 20) (cp 22))
+  (if (is-piece? 21) (cp 23))
+  (if (is-piece? 22) (cp 24))
+  (if (is-piece? 23) (cp 25))
+  (if (is-piece? 24) (cp 26))
+  (if (is-piece? 25) (cp 27))
+  (if (is-piece? 26) (cp 28))
+  (if (is-piece? 27) (cp 29))
+  (if (is-piece? 28) (cp 30))
+  (if (is-piece? 29) (cp 31))
+  (if (piece? p30)   (cp 32))
+  (if (piece? p31)   (cp 33))
+  (if (piece? p32)   (cp 34))
+  (if (piece? p33)   (cp 35))
+  (if (piece? p34)   (cp 36))
+  (if (piece? p35)   (cp 37))
+  (if (piece? p36)   (cp 38))
+  (if (piece? p37)   (cp 39))
+  (if (piece? p38)   (cp 40))
+  (if (piece? p39)   (cp 41))
+  (if (piece? p40)   (cp 42))
+  (if (piece? p41)   (cp 43))
+  (if (piece? p42)   (cp 44))
+  (if (piece? p43)   (cp 45))
+  (if (piece? p44)   (cp 46))
+  (if (piece? p45)   (cp 47))
+  (if (piece? p46)   (cp 48))
+  (if (piece? p47)   (cp 49))
+  (if (piece? p48)   (cp 50))
+  (if (piece? p49)   (cp 50))
+)
+
+(define stop-1
+  (if empty? (cap $1 $2))
+  (if (is-piece? 01) (ap 02))
+  (if (is-piece? 02) (ap 03))
+  (if (is-piece? 03) (ap 04))
+  (if (is-piece? 04) (ap 05))
+  (if (is-piece? 05) (ap 06))
+  (if (is-piece? 06) (ap 07))
+  (if (is-piece? 07) (ap 08))
+  (if (is-piece? 08) (ap 09))
+  (if (is-piece? 09) (ap 10))
+  (if (is-piece? 10) (ap 11))
+  (if (is-piece? 11) (ap 12))
+  (if (is-piece? 12) (ap 13))
+  (if (is-piece? 13) (ap 14))
+  (if (is-piece? 14) (ap 15))
+  (if (is-piece? 15) (ap 16))
+  (if (is-piece? 16) (ap 17))
+  (if (is-piece? 17) (ap 18))
+  (if (is-piece? 18) (ap 19))
+  (if (is-piece? 19) (ap 20))
+  (if (is-piece? 20) (ap 21))
+  (if (is-piece? 21) (ap 22))
+  (if (is-piece? 22) (ap 23))
+  (if (is-piece? 23) (ap 24))
+  (if (is-piece? 24) (ap 25))
+  (if (is-piece? 25) (ap 26))
+  (if (is-piece? 26) (ap 27))
+  (if (is-piece? 27) (ap 28))
+  (if (is-piece? 28) (ap 29))
+  (if (is-piece? 29) (cp 30) add)
+  (if (piece? p30)   (cp 31) add)
+  (if (piece? p31)   (cp 32) add)
+  (if (piece? p32)   (cp 33) add)
+  (if (piece? p33)   (cp 34) add)
+  (if (piece? p34)   (cp 35) add)
+  (if (piece? p35)   (cp 36) add)
+  (if (piece? p36)   (cp 37) add)
+  (if (piece? p37)   (cp 38) add)
+  (if (piece? p38)   (cp 39) add)
+  (if (piece? p39)   (cp 40) add)
+  (if (piece? p40)   (cp 41) add)
+  (if (piece? p41)   (cp 42) add)
+  (if (piece? p42)   (cp 43) add)
+  (if (piece? p43)   (cp 44) add)
+  (if (piece? p44)   (cp 45) add)
+  (if (piece? p45)   (cp 46) add)
+  (if (piece? p46)   (cp 47) add)
+  (if (piece? p47)   (cp 48) add)
+  (if (piece? p48)   (cp 49) add)
+  (if (piece? p49)   (cp 50) add)
+)
+
+(define stop-2
+  (if empty? (ap 02))
+  (if (is-piece? 01) (ap 03))
+  (if (is-piece? 02) (ap 04))
+  (if (is-piece? 03) (ap 05))
+  (if (is-piece? 04) (ap 06))
+  (if (is-piece? 05) (ap 07))
+  (if (is-piece? 06) (ap 08))
+  (if (is-piece? 07) (ap 09))
+  (if (is-piece? 08) (ap 10))
+  (if (is-piece? 09) (ap 11))
+  (if (is-piece? 10) (ap 12))
+  (if (is-piece? 11) (ap 13))
+  (if (is-piece? 12) (ap 14))
+  (if (is-piece? 13) (ap 15))
+  (if (is-piece? 14) (ap 16))
+  (if (is-piece? 15) (ap 17))
+  (if (is-piece? 16) (ap 18))
+  (if (is-piece? 17) (ap 19))
+  (if (is-piece? 18) (ap 20))
+  (if (is-piece? 19) (ap 21))
+  (if (is-piece? 20) (ap 22))
+  (if (is-piece? 21) (ap 23))
+  (if (is-piece? 22) (ap 24))
+  (if (is-piece? 23) (ap 25))
+  (if (is-piece? 24) (ap 26))
+  (if (is-piece? 25) (ap 27))
+  (if (is-piece? 26) (ap 28))
+  (if (is-piece? 27) (ap 29))
+  (if (is-piece? 28) (cp 30) add)
+  (if (is-piece? 29) (cp 31) add)
+  (if (piece? p30)   (cp 32) add)
+  (if (piece? p31)   (cp 33) add)
+  (if (piece? p32)   (cp 34) add)
+  (if (piece? p33)   (cp 35) add)
+  (if (piece? p34)   (cp 36) add)
+  (if (piece? p35)   (cp 37) add)
+  (if (piece? p36)   (cp 38) add)
+  (if (piece? p37)   (cp 39) add)
+  (if (piece? p38)   (cp 40) add)
+  (if (piece? p39)   (cp 41) add)
+  (if (piece? p40)   (cp 42) add)
+  (if (piece? p41)   (cp 43) add)
+  (if (piece? p42)   (cp 44) add)
+  (if (piece? p43)   (cp 45) add)
+  (if (piece? p44)   (cp 46) add)
+  (if (piece? p45)   (cp 47) add)
+  (if (piece? p46)   (cp 48) add)
+  (if (piece? p47)   (cp 49) add)
+  (if (piece? p48)   (cp 50) add)
+  (if (piece? p49)   (cp 50) add)
+)                        
+
+(define ce
+  (if (in-zone? acc S)
+      (create North p$1)
+   else
+      (create South p$1)
+  )
+)
+
+(define cp
+  (if (in-zone? home)
+      (create p$1)
+   else
+      (ce $1)
+  )
+)
+
+(define ap
+  (if empty?
+      (if (in-zone? home)
+          (add p$1)
+       else
+          (ce $1)
+          add
+      )
+   else
+      (if (in-zone? acc)
+          (add p$1)
+       else
+          (add-partial q$1 continue-type)
+      )
+  )
+)
+
+(define set-bits
+  (set-flag $1-01 (or (piece? p01) (piece? p03) (piece? p05) (piece? p07) (piece? p09) (piece? p11) (piece? p13) (piece? p15) (piece? p17) (piece? p19) (piece? p21) (piece? p23) (piece? p25) (piece? p27) (piece? p29) (piece? p31) (piece? p33) (piece? p35) (piece? p37) (piece? p39) (piece? p41) (piece? p43) (piece? p45) (piece? p47) (piece? p49)))
+  (set-flag $1-02 (or (piece? p02) (piece? p03) (piece? p06) (piece? p07) (piece? p10) (piece? p11) (piece? p14) (piece? p15) (piece? p18) (piece? p19) (piece? p22) (piece? p23) (piece? p26) (piece? p27) (piece? p30) (piece? p31) (piece? p34) (piece? p35) (piece? p38) (piece? p39) (piece? p42) (piece? p43) (piece? p46) (piece? p47)))
+  (set-flag $1-04 (or (piece? p04) (piece? p05) (piece? p06) (piece? p07) (piece? p12) (piece? p13) (piece? p14) (piece? p15) (piece? p20) (piece? p21) (piece? p22) (piece? p23) (piece? p28) (piece? p29) (piece? p30) (piece? p31) (piece? p36) (piece? p37) (piece? p38) (piece? p39) (piece? p44) (piece? p45) (piece? p46) (piece? p47)))
+  (set-flag $1-08 (or (piece? p08) (piece? p09) (piece? p10) (piece? p11) (piece? p12) (piece? p13) (piece? p14) (piece? p15) (piece? p24) (piece? p25) (piece? p26) (piece? p27) (piece? p28) (piece? p29) (piece? p30) (piece? p31) (piece? p40) (piece? p41) (piece? p42) (piece? p43) (piece? p44) (piece? p45) (piece? p46) (piece? p47)))
+  (set-flag $1-16 (or (piece? p16) (piece? p17) (piece? p18) (piece? p19) (piece? p20) (piece? p21) (piece? p22) (piece? p23) (piece? p24) (piece? p25) (piece? p26) (piece? p27) (piece? p28) (piece? p29) (piece? p30) (piece? p31) (piece? p48) (piece? p49)))
+  (set-flag $1-32 (or (piece? p32) (piece? p33) (piece? p34) (piece? p35) (piece? p36) (piece? p37) (piece? p38) (piece? p39) (piece? p40) (piece? p41) (piece? p42) (piece? p43) (piece? p44) (piece? p45) (piece? p46) (piece? p47) (piece? p48) (piece? p49)))
+)
+
+(define not-0?
+  (or (flag? $1-32)
+      (flag? $1-16)
+      (flag? $1-08)
+      (flag? $1-04)
+      (flag? $1-02)
+      (flag? $1-01)
+  )
+)
+
+(define not-50?
+  (or (not-flag? $1-32)
+      (not-flag? $1-16)
+      (flag? $1-08)
+      (flag? $1-04)
+      (not-flag? $1-02)
+      (flag? $1-01)
+  )
+)
+
+(define not-26?
+  (or (flag? $1-32)
+      (not-flag? $1-16)
+      (not-flag? $1-08)
+      (flag? $1-04)
+      (not-flag? $1-02)
+      (flag? $1-01)
+  )
+)
+
+(define not-limit?
+  (or (and (in-zone? var a1) (not-26?))
+      (and (in-zone? var a2) (not-50?))
+  )
+)
+
+(define eq?
+  (and 
+      (or (and (flag? $1-32) (flag? $2-32))
+          (and (not-flag? $1-32) (not-flag? $2-32))
+      )
+      (or (and (flag? $1-16) (flag? $2-16))
+          (and (not-flag? $1-16) (not-flag? $2-16))
+      )
+      (or (and (flag? $1-08) (flag? $2-08))
+          (and (not-flag? $1-08) (not-flag? $2-08))
+      )
+      (or (and (flag? $1-04) (flag? $2-04))
+          (and (not-flag? $1-04) (not-flag? $2-04))
+      )
+      (or (and (flag? $1-02) (flag? $2-02))
+          (and (not-flag? $1-02) (not-flag? $2-02))
+      )
+      (or (and (flag? $1-01) (flag? $2-01))
+          (and (not-flag? $1-01) (not-flag? $2-01))
+      )
+  )
+)
+
+(define inc
+   (if (flag? $1-01)
+       (set-flag $1-01 false)
+       (if (flag? $1-02)
+           (set-flag $1-02 false)
+           (if (flag? $1-04)
+               (set-flag $1-04 false)
+               (if (flag? $1-08)
+                   (set-flag $1-08 false)
+                   (if (flag? $1-16)
+                       (set-flag $1-16 false)
+                       (if (flag? $1-32)
+                           (set-flag $1-32 false)
+                        else
+                           (set-flag $1-32 true)
+                       )
+                    else
+                       (set-flag $1-16 true)
+                   )
+                else
+                   (set-flag $1-08 true)
+               )
+            else
+               (set-flag $1-04 true)
+           )
+        else
+           (set-flag $1-02 true)
+       )
+    else
+       (set-flag $1-01 true)
+   )
+)
+
+(define dec
+   (if (not-flag? $1-01)
+       (set-flag $1-01 true)
+       (if (not-flag? $1-02)
+           (set-flag $1-02 true)
+           (if (not-flag? $1-04)
+               (set-flag $1-04 true)
+               (if (not-flag? $1-08)
+                   (set-flag $1-08 true)
+                   (if (not-flag? $1-16)
+                       (set-flag $1-16 true)
+                       (if (not-flag? $1-32)
+                           (set-flag $1-32 true)
+                        else
+                           (set-flag $1-32 false)
+                       )
+                    else
+                       (set-flag $1-16 false)
+                   )
+                else
+                   (set-flag $1-08 false)
+               )
+            else
+               (set-flag $1-04 false)
+           )
+        else
+           (set-flag $1-02 false)
+       )
+    else
+       (set-flag $1-01 false)
+   )
+)
+
+(define sum
+   (while (not-0? $2)
+       (if (not-50? $1)
+           (inc $1)
+       )
+       (dec $2)
+   )
+)
+
+(define add-bits
+  (if (and (not-flag? a-32) (not-flag? a-16) (not-flag? a-08) (not-flag? a-04) (not-flag? a-02) (flag? a-01)) (ce 01))
+  (if (and (not-flag? a-32) (not-flag? a-16) (not-flag? a-08) (not-flag? a-04) (flag? a-02) (not-flag? a-01)) (ce 02))
+  (if (and (not-flag? a-32) (not-flag? a-16) (not-flag? a-08) (not-flag? a-04) (flag? a-02) (flag? a-01))     (ce 03))
+  (if (and (not-flag? a-32) (not-flag? a-16) (not-flag? a-08) (flag? a-04) (not-flag? a-02) (not-flag? a-01)) (ce 04))
+  (if (and (not-flag? a-32) (not-flag? a-16) (not-flag? a-08) (flag? a-04) (not-flag? a-02) (flag? a-01))     (ce 05))
+  (if (and (not-flag? a-32) (not-flag? a-16) (not-flag? a-08) (flag? a-04) (flag? a-02) (not-flag? a-01))     (ce 06))
+  (if (and (not-flag? a-32) (not-flag? a-16) (not-flag? a-08) (flag? a-04) (flag? a-02) (flag? a-01))         (ce 07))
+  (if (and (not-flag? a-32) (not-flag? a-16) (flag? a-08) (not-flag? a-04) (not-flag? a-02) (not-flag? a-01)) (ce 08))
+  (if (and (not-flag? a-32) (not-flag? a-16) (flag? a-08) (not-flag? a-04) (not-flag? a-02) (flag? a-01))     (ce 09))
+  (if (and (not-flag? a-32) (not-flag? a-16) (flag? a-08) (not-flag? a-04) (flag? a-02) (not-flag? a-01))     (ce 10))
+  (if (and (not-flag? a-32) (not-flag? a-16) (flag? a-08) (not-flag? a-04) (flag? a-02) (flag? a-01))         (ce 11))
+  (if (and (not-flag? a-32) (not-flag? a-16) (flag? a-08) (flag? a-04) (not-flag? a-02) (not-flag? a-01))     (ce 12))
+  (if (and (not-flag? a-32) (not-flag? a-16) (flag? a-08) (flag? a-04) (not-flag? a-02) (flag? a-01))         (ce 13))
+  (if (and (not-flag? a-32) (not-flag? a-16) (flag? a-08) (flag? a-04) (flag? a-02) (not-flag? a-01))         (ce 14))
+  (if (and (not-flag? a-32) (not-flag? a-16) (flag? a-08) (flag? a-04) (flag? a-02) (flag? a-01))             (ce 15))
+  (if (and (not-flag? a-32) (flag? a-16) (not-flag? a-08) (not-flag? a-04) (not-flag? a-02) (not-flag? a-01)) (ce 16))
+  (if (and (not-flag? a-32) (flag? a-16) (not-flag? a-08) (not-flag? a-04) (not-flag? a-02) (flag? a-01))     (ce 17))
+  (if (and (not-flag? a-32) (flag? a-16) (not-flag? a-08) (not-flag? a-04) (flag? a-02) (not-flag? a-01))     (ce 18))
+  (if (and (not-flag? a-32) (flag? a-16) (not-flag? a-08) (not-flag? a-04) (flag? a-02) (flag? a-01))         (ce 19))
+  (if (and (not-flag? a-32) (flag? a-16) (not-flag? a-08) (flag? a-04) (not-flag? a-02) (not-flag? a-01))     (ce 20))
+  (if (and (not-flag? a-32) (flag? a-16) (not-flag? a-08) (flag? a-04) (not-flag? a-02) (flag? a-01))         (ce 21))
+  (if (and (not-flag? a-32) (flag? a-16) (not-flag? a-08) (flag? a-04) (flag? a-02) (not-flag? a-01))         (ce 22))
+  (if (and (not-flag? a-32) (flag? a-16) (not-flag? a-08) (flag? a-04) (flag? a-02) (flag? a-01))             (ce 23))
+  (if (and (not-flag? a-32) (flag? a-16) (flag? a-08) (not-flag? a-04) (not-flag? a-02) (not-flag? a-01))     (ce 24))
+  (if (and (not-flag? a-32) (flag? a-16) (flag? a-08) (not-flag? a-04) (not-flag? a-02) (flag? a-01))         (ce 25))
+  (if (and (not-flag? a-32) (flag? a-16) (flag? a-08) (not-flag? a-04) (flag? a-02) (not-flag? a-01))         (ce 26))
+  (if (and (not-flag? a-32) (flag? a-16) (flag? a-08) (not-flag? a-04) (flag? a-02) (flag? a-01))             (ce 27))
+  (if (and (not-flag? a-32) (flag? a-16) (flag? a-08) (flag? a-04) (not-flag? a-02) (not-flag? a-01))         (ce 28))
+  (if (and (not-flag? a-32) (flag? a-16) (flag? a-08) (flag? a-04) (not-flag? a-02) (flag? a-01))             (ce 29))
+  (if (and (not-flag? a-32) (flag? a-16) (flag? a-08) (flag? a-04) (flag? a-02) (not-flag? a-01))             (ce 30))
+  (if (and (not-flag? a-32) (flag? a-16) (flag? a-08) (flag? a-04) (flag? a-02) (flag? a-01))                 (ce 31))
+  (if (and (flag? a-32) (not-flag? a-16) (not-flag? a-08) (not-flag? a-04) (not-flag? a-02) (not-flag? a-01)) (ce 32))
+  (if (and (flag? a-32) (not-flag? a-16) (not-flag? a-08) (not-flag? a-04) (not-flag? a-02) (flag? a-01))     (ce 33))
+  (if (and (flag? a-32) (not-flag? a-16) (not-flag? a-08) (not-flag? a-04) (flag? a-02) (not-flag? a-01))     (ce 34))
+  (if (and (flag? a-32) (not-flag? a-16) (not-flag? a-08) (not-flag? a-04) (flag? a-02) (flag? a-01))         (ce 35))
+  (if (and (flag? a-32) (not-flag? a-16) (not-flag? a-08) (flag? a-04) (not-flag? a-02) (not-flag? a-01))     (ce 36))
+  (if (and (flag? a-32) (not-flag? a-16) (not-flag? a-08) (flag? a-04) (not-flag? a-02) (flag? a-01))         (ce 37))
+  (if (and (flag? a-32) (not-flag? a-16) (not-flag? a-08) (flag? a-04) (flag? a-02) (not-flag? a-01))         (ce 38))
+  (if (and (flag? a-32) (not-flag? a-16) (not-flag? a-08) (flag? a-04) (flag? a-02) (flag? a-01))             (ce 39))
+  (if (and (flag? a-32) (not-flag? a-16) (flag? a-08) (not-flag? a-04) (not-flag? a-02) (not-flag? a-01))     (ce 40))
+  (if (and (flag? a-32) (not-flag? a-16) (flag? a-08) (not-flag? a-04) (not-flag? a-02) (flag? a-01))         (ce 41))
+  (if (and (flag? a-32) (not-flag? a-16) (flag? a-08) (not-flag? a-04) (flag? a-02) (not-flag? a-01))         (ce 42))
+  (if (and (flag? a-32) (not-flag? a-16) (flag? a-08) (not-flag? a-04) (flag? a-02) (flag? a-01))             (ce 43))
+  (if (and (flag? a-32) (not-flag? a-16) (flag? a-08) (flag? a-04) (not-flag? a-02) (not-flag? a-01))         (ce 44))
+  (if (and (flag? a-32) (not-flag? a-16) (flag? a-08) (flag? a-04) (not-flag? a-02) (flag? a-01))             (ce 45))
+  (if (and (flag? a-32) (not-flag? a-16) (flag? a-08) (flag? a-04) (flag? a-02) (not-flag? a-01))             (ce 46))
+  (if (and (flag? a-32) (not-flag? a-16) (flag? a-08) (flag? a-04) (flag? a-02) (flag? a-01))                 (ce 47))
+  (if (and (flag? a-32) (flag? a-16) (not-flag? a-08) (not-flag? a-04) (not-flag? a-02) (not-flag? a-01))     (ce 48))
+  (if (and (flag? a-32) (flag? a-16) (not-flag? a-08) (not-flag? a-04) (not-flag? a-02) (flag? a-01))         (ce 49))
+  (if (and (flag? a-32) (flag? a-16) (not-flag? a-08) (not-flag? a-04) (flag? a-02) (not-flag? a-01))         (ce 50))
+  add
+)
+
+(define check-captured
+  mark
+  (if (on-board? $1)
+      $1
+      (if (on-board? $1)
+          $1
+          (if is-captured?
+              (set-bits a)
+              (sum b a)
+              (inc b)
+              capture
+          )
+      )
+  )
+  back
+)
+
+(define to-acc (
+  (verify is-captured?)
+  (set-bits b)
+  (check-captured nx)
+  (check-captured pr)
+  a1 na (set-bits a)
+  (sum a b)
+  (add-bits)
+))
+
+(define cap
+  (if (in-zone? acc)
+      (add p01)
+   else
+      (if (in-zone? home)
+          (if (not-empty? up)
+              mark up (set-attribute is-captured? true) back
+          )
+          (add p01)
+       else
+          (if (and (on-board? $1) (on-board? $2))
+              mark $2 (set-bits a) (inc a) $1 $1 (set-bits b)
+              (if (eq? a b)
+                  (set-attribute is-captured? true)
+                  $2 capture $2
+                  (set-attribute is-captured? true)
+              )
+              back
+          )
+          (ce 01)
+          add
+      )
+  )
+)
+
+(define m-01 (
+  (verify (not-in-zone? acc))
+  $1 (stop-1 $2 $3) 
+))
+
+(define m-02 (
+  (verify (not-in-zone? acc))
+  $1 (add-1)
+  $1 (stop-1 $2 $3) 
+))
+
+(define m-03 (
+  (verify (not-in-zone? acc))
+  mark $1 $1 $1
+  (set-position-flag is-dest? true)
+  back
+  (while (not-position-flag? is-dest?)
+     $1
+     (add-1)
+  )
+  (stop-1 $2 $3) 
+))
+
+(define m-04 (
+  (verify (not-in-zone? acc))
+  mark $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  back
+  (while (not-position-flag? is-dest?)
+     $1
+     (add-1)
+  )
+  (stop-1 $2 $3) 
+))
+
+(define m-05 (
+  (verify (not-in-zone? acc))
+  mark $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  back
+  (while (not-position-flag? is-dest?)
+     $1
+     (add-1)
+  )
+  (stop-1 $2 $3) 
+))
+
+(define m-06 (
+  (verify (not-in-zone? acc))
+  mark $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  back
+  (while (not-position-flag? is-dest?)
+     $1
+     (add-1)
+  )
+  (stop-1 $2 $3) 
+))
+
+(define m-07 (
+  (verify (not-in-zone? acc))
+  mark $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  back
+  (while (not-position-flag? is-dest?)
+     $1
+     (add-1)
+  )
+  (stop-1 $2 $3) 
+))
+
+(define m-08 (
+  (verify (not-in-zone? acc))
+  mark $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  back
+  (while (not-position-flag? is-dest?)
+     $1
+     (add-1)
+  )
+  (stop-1 $2 $3) 
+))
+
+(define m-09 (
+  (verify (not-in-zone? acc))
+  mark $1 $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  back
+  (while (not-position-flag? is-dest?)
+     $1
+     (add-1)
+  )
+  (stop-1 $2 $3) 
+))
+
+(define m-10 (
+  (verify (not-in-zone? acc))
+  mark $1 $1 $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  back
+  (while (not-position-flag? is-dest?)
+     $1
+     (add-1)
+  )
+  (stop-1 $2 $3) 
+))
+
+(define m-7-11 (
+  (verify (not-in-zone? acc))
+  mark $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  back
+  (while (not-position-flag? is-dest?)
+     $1
+     (add-1)
+  )
+  (stop-1 $2 $3) 
+))
+
+(define m-7-12 (
+  (verify (not-in-zone? acc))
+  mark $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  back
+  (while (not-position-flag? is-dest?)
+     $1
+     (add-1)
+  )
+  (stop-1 $2 $3) 
+))
+
+(define m-7-13 (
+  (verify (not-in-zone? acc))
+  mark $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  back
+  (while (not-position-flag? is-dest?)
+     $1
+     (add-1)
+  )
+  (stop-1 $2 $3) 
+))
+
+(define m-7-14 (
+  (verify (not-in-zone? acc))
+  mark $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  back
+  (while (not-position-flag? is-dest?)
+     $1
+     (add-1)
+  )
+  (stop-1 $2 $3) 
+))
+
+(define m-7-15 (
+  (verify (not-in-zone? acc))
+  (cp 01) mark 
+  $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  back
+  (while (not-position-flag? is-dest?)
+     $1
+     (add-1)
+  )
+  add
+))
+
+(define m-7-16 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-7-17 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-7-18 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-7-19 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-7-20 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-7-21 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-7-22 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-7-23 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-7-24 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-7-25 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-7-26 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-7-27 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-7-28 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-7-29 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-5-11 (
+  (verify (not-in-zone? acc))
+  (cp 01) mark 
+  $1 $1 $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  back
+  (while (not-position-flag? is-dest?)
+     $1
+     (add-1)
+  )
+  add
+))
+
+(define m-5-12 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-5-13 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-5-14 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-5-15 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-5-16 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-5-17 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-5-18 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-5-19 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-5-20 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define m-5-21 (
+  (verify (not-in-zone? acc))
+  (cp 01) 
+  (set-position-flag is-start? true)
+  $1 $1 $1 $1 $1 $1 $1 $1 $1 $1
+  (set-position-flag is-dest? true)
+  $1
+  (while (not-position-flag? is-start?)
+     (add-1)
+     $1
+  )
+  $1
+  (while (not-position-flag? is-dest?)
+     (add-2)
+     $1
+  )
+  (stop-2) 
+))
+
+(define board-2x5
+  (board 
+     (image "images/Dakon/2x5.bmp")
+     (positions 
+         (S   22  43  91 115)
+         (N   442 43 511 115)
+         (a1  93  86 162 158)
+         (b1 161  86 230 158)
+         (c1 230  86 299 158)
+         (d1 299  86 368 158)
+         (e1 368  86 437 158)
+         (a2  93   6 162  78)
+         (b2 161   6 230  78)
+         (c2 230   6 299  78)
+         (d2 299   6 368  78)
+         (e2 368   6 437  78)
+     )
+     (links up
+         (a1 a2) (b1 b2) (c1 c2) (d1 d2) (e1 e2)
+         (a2 a1) (b2 b1) (c2 c1) (d2 d1) (e2 e1)
+     )
+     (links next
+         (a2 b2) (b2 c2) (c2 d2) (d2 e2)
+         (b1 a1) (c1 b1) (d1 c1) (e1 d1)
+         (e2 e1) (a1  S) (S  a2)
+     )
+     (links prev
+         (b2 a2) (c2 b2) (d2 c2) (e2 d2)
+         (a1 b1) (b1 c1) (c1 d1) (d1 e1)
+         (e1 e2) (S  a1) (a2  S)
+     )
+     (links nn
+         (a2 b2) (b2 c2) (c2 d2) (d2 e2)
+         (b1 a1) (c1 b1) (d1 c1) (e1 d1)
+         (a1 a2) (e2  N) (N  e1)
+     )
+     (links pp
+         (b2 a2) (c2 b2) (d2 c2) (e2 d2)
+         (a1 b1) (b1 c1) (c1 d1) (d1 e1)
+         (a2 a1) (N  e2) (e1  N)
+     )
+     (links nx
+         (a2 b2) (b2 c2) (c2 d2) (d2 e2)
+         (b1 a1) (c1 b1) (d1 c1) (e1 d1)
+     )
+     (links pr
+         (b2 a2) (c2 b2) (d2 c2) (e2 d2)
+         (a1 b1) (b1 c1) (c1 d1) (d1 e1)
+     )
+     (links sa (a1 S))
+     (links na (a1 N))
+     (symmetry North (next nn) (prev pp) (na sa))
+     (zone (name home) (players South)
+           (positions a1 b1 c1 d1 e1 S)
+     )
+     (zone (name home) (players North)
+           (positions a2 b2 c2 d2 e2 N)
+     )
+     (zone (name acc) (players South ?S)
+           (positions S)
+     )
+     (zone (name acc) (players North ?N)
+           (positions N)
+     )
+     (zone (name var) (players South North ?S ?N)
+           (positions a1)
+     )
+  )
+  (board-setup
+     (South (p05 a1 b1 c1 d1 e1))
+     (North (p05 a2 b2 c2 d2 e2))
+  )
+  (win-condition (South North) (pieces-remaining 1 p26))
+  (win-condition (South North) (pieces-remaining 1 p27))
+)
+
+(define odd-5-11
+  (piece
+     (name p11)
+     (help " ")
+     (image South "images/Dakon/p11.bmp"
+            North "images/Dakon/p11.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-5-11 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q11)
+     (help " ")
+     (image South "images/Dakon/q11.bmp"
+            North "images/Dakon/q11.bmp")
+     (moves
+        (move-type continue-type)
+        (m-5-11 $1)
+     )
+  )
+)
+
+(define odd-5-13
+  (piece
+     (name p13)
+     (help " ")
+     (image South "images/Dakon/p13.bmp"
+            North "images/Dakon/p13.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-5-13 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q13)
+     (help " ")
+     (image South "images/Dakon/q13.bmp"
+            North "images/Dakon/q13.bmp")
+     (moves
+        (move-type continue-type)
+        (m-5-13 $1)
+     )
+  )
+)
+
+(define odd-5-15
+  (piece
+     (name p15)
+     (help " ")
+     (image South "images/Dakon/p15.bmp"
+            North "images/Dakon/p15.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-5-15 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q15)
+     (help " ")
+     (image South "images/Dakon/q15.bmp"
+            North "images/Dakon/q15.bmp")
+     (moves
+        (move-type continue-type)
+        (m-5-15 $1)
+     )
+  )
+)
+
+(define odd-5-17
+  (piece
+     (name p17)
+     (help " ")
+     (image South "images/Dakon/p17.bmp"
+            North "images/Dakon/p17.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-5-17 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q17)
+     (help " ")
+     (image South "images/Dakon/q17.bmp"
+            North "images/Dakon/q17.bmp")
+     (moves
+        (move-type continue-type)
+        (m-5-17 $1)
+     )
+  )
+)
+
+(define odd-5-19
+  (piece
+     (name p19)
+     (help " ")
+     (image South "images/Dakon/p19.bmp"
+            North "images/Dakon/p19.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-5-19 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q19)
+     (help " ")
+     (image South "images/Dakon/q19.bmp"
+            North "images/Dakon/q19.bmp")
+     (moves
+        (move-type continue-type)
+        (m-5-19 $1)
+     )
+  )
+)
+
+(define odd-5-21
+  (piece
+     (name p21)
+     (help " ")
+     (image South "images/Dakon/p21.bmp"
+            North "images/Dakon/p21.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-5-21 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q21)
+     (help " ")
+     (image South "images/Dakon/q21.bmp"
+            North "images/Dakon/q21.bmp")
+     (moves
+        (move-type continue-type)
+        (m-5-21 $1)
+     )
+  )
+)
+
+(define even-5-12
+  (piece
+     (name p12)
+     (help " ")
+     (image South "images/Dakon/p12.bmp"
+            North "images/Dakon/p12.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-5-12 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q12)
+     (help " ")
+     (image South "images/Dakon/q12.bmp"
+            North "images/Dakon/q12.bmp")
+     (moves
+        (move-type continue-type)
+        (m-5-12 $1)
+     )
+  )
+)
+
+(define even-5-14
+  (piece
+     (name p14)
+     (help " ")
+     (image South "images/Dakon/p14.bmp"
+            North "images/Dakon/p14.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-5-14 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q14)
+     (help " ")
+     (image South "images/Dakon/q14.bmp"
+            North "images/Dakon/q14.bmp")
+     (moves
+        (move-type continue-type)
+        (m-5-14 $1)
+     )
+  )
+)
+
+(define even-5-16
+  (piece
+     (name p16)
+     (help " ")
+     (image South "images/Dakon/p16.bmp"
+            North "images/Dakon/p16.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-5-16 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q16)
+     (help " ")
+     (image South "images/Dakon/q16.bmp"
+            North "images/Dakon/q16.bmp")
+     (moves
+        (move-type continue-type)
+        (m-5-16 $1)
+     )
+  )
+)
+
+(define even-5-18
+  (piece
+     (name p18)
+     (help " ")
+     (image South "images/Dakon/p18.bmp"
+            North "images/Dakon/p18.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-5-18 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q18)
+     (help " ")
+     (image South "images/Dakon/q18.bmp"
+            North "images/Dakon/q18.bmp")
+     (moves
+        (move-type continue-type)
+        (m-5-18 $1)
+     )
+  )
+)
+
+(define even-5-20
+  (piece
+     (name p20)
+     (help " ")
+     (image South "images/Dakon/p20.bmp"
+            North "images/Dakon/p20.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-5-20 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q20)
+     (help " ")
+     (image South "images/Dakon/q20.bmp"
+            North "images/Dakon/q20.bmp")
+     (moves
+        (move-type continue-type)
+        (m-5-20 $1)
+     )
+  )
+)
+
+(define p-common
+  (piece
+     (name p$1)
+     (help " ")
+     (image South "images/Dakon/p$1.bmp"
+            North "images/Dakon/p$1.bmp")
+  )
+  (piece
+     (name q$1)
+     (help " ")
+     (image South "images/Dakon/q$1.bmp"
+            North "images/Dakon/q$1.bmp")
+  )
+)
+
+(variant
+  (title "Dakon (2x5)")
+  (board-2x5)
+  (odd-5-11  next)
+  (odd-5-13  next)
+  (odd-5-15  next)
+  (odd-5-17  next)
+  (odd-5-19  next)
+  (odd-5-21  next)
+  (even-5-12 next)
+  (even-5-14 next)
+  (even-5-16 next)
+  (even-5-18 next)
+  (even-5-20 next)
+  (p-common 22)
+  (p-common 23)
+  (p-common 24)
+  (p-common 25)
+  (p-common 26)
+  (p-common 27)
+  (p-common 28)
+  (p-common 29)
+)
+
+(define board-2x7
+  (board 
+     (image "images/Dakon/2x7.bmp")
+     (positions 
+         (S    38  43 102 117)
+         (N   577  43 641 117)
+         (a1  114  85 178 159)
+         (b1  178  85 243 159)
+         (c1  243  85 306 159)
+         (d1  306  85 370 159)
+         (e1  370  85 434 159)
+         (f1  434  85 498 159)
+         (g1  498  85 562 159)
+         (a2  114   6 178  78)
+         (b2  178   6 243  78)
+         (c2  243   6 306  78)
+         (d2  306   6 370  78)
+         (e2  370   6 434  78)
+         (f2  434   6 498  78)
+         (g2  498   6 562  78)
+     )
+     (links up
+         (a1 a2) (b1 b2) (c1 c2) (d1 d2) (e1 e2) (f1 f2) (g1 g2)
+         (a2 a1) (b2 b1) (c2 c1) (d2 d1) (e2 e1) (f2 f1) (g2 g1)
+     )
+     (links next
+         (a2 b2) (b2 c2) (c2 d2) (d2 e2) (e2 f2) (f2 g2)
+         (b1 a1) (c1 b1) (d1 c1) (e1 d1) (f1 e1) (g1 f1)
+         (g2 g1) (a1  S) (S  a2)
+     )
+     (links prev
+         (b2 a2) (c2 b2) (d2 c2) (e2 d2) (f2 e2) (g2 f2)
+         (a1 b1) (b1 c1) (c1 d1) (d1 e1) (e1 f1) (f1 g1)
+         (g1 g2) (S  a1) (a2  S)
+     )
+     (links nn
+         (a2 b2) (b2 c2) (c2 d2) (d2 e2) (e2 f2) (f2 g2)
+         (b1 a1) (c1 b1) (d1 c1) (e1 d1) (f1 e1) (g1 f1)
+         (a1 a2) (g2  N) (N  g1)
+     )
+     (links pp
+         (b2 a2) (c2 b2) (d2 c2) (e2 d2) (f2 e2) (g2 f2)
+         (a1 b1) (b1 c1) (c1 d1) (d1 e1) (e1 f1) (f1 g1)
+         (a2 a1) (N  g2) (g1  N)
+     )
+     (links nx
+         (a2 b2) (b2 c2) (c2 d2) (d2 e2) (e2 f2) (f2 g2)
+         (b1 a1) (c1 b1) (d1 c1) (e1 d1) (f1 e1) (g1 f1)
+     )
+     (links pr
+         (b2 a2) (c2 b2) (d2 c2) (e2 d2) (f2 e2) (g2 f2)
+         (a1 b1) (b1 c1) (c1 d1) (d1 e1) (e1 f1) (f1 g1)
+     )
+     (links sa (a1 S))
+     (links na (a1 N))
+     (symmetry North (next nn) (prev pp) (na sa))
+     (zone (name home) (players South)
+           (positions a1 b1 c1 d1 e1 f1 g1 S)
+     )
+     (zone (name home) (players North)
+           (positions a2 b2 c2 d2 e2 f2 g2 N)
+     )
+     (zone (name acc) (players South)
+           (positions S)
+     )
+     (zone (name acc) (players North)
+           (positions N)
+     )
+     (zone (name var) (players South North ?S ?N)
+           (positions a2)
+     )
+  )
+  (board-setup
+     (South (p07 a1 b1 c1 d1 e1 f1 g1))
+     (North (p07 a2 b2 c2 d2 e2 f2 g2))
+  )
+  (win-condition (South North) (pieces-remaining 1 p50))
+)
+
+(define odd-01
+  (piece
+     (name p01)
+     (help " ")
+     (image South "images/Dakon/p01.bmp"
+            North "images/Dakon/p01.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-01 $1 $2 $3)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q01)
+     (help " ")
+     (image South "images/Dakon/q01.bmp"
+            North "images/Dakon/q01.bmp")
+     (moves
+        (move-type continue-type)
+        (m-01 $1 $2 $3)
+     )
+  )
+)
+
+(define odd-03
+  (piece
+     (name p03)
+     (help " ")
+     (image South "images/Dakon/p03.bmp"
+            North "images/Dakon/p03.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-03 $1 $2 $3)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q03)
+     (help " ")
+     (image South "images/Dakon/q03.bmp"
+            North "images/Dakon/q03.bmp")
+     (moves
+        (move-type continue-type)
+        (m-03 $1 $2 $3)
+     )
+  )
+)
+
+(define odd-05
+  (piece
+     (name p05)
+     (help " ")
+     (image South "images/Dakon/p05.bmp"
+            North "images/Dakon/p05.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-05 $1 $2 $3)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q05)
+     (help " ")
+     (image South "images/Dakon/q05.bmp"
+            North "images/Dakon/q05.bmp")
+     (moves
+        (move-type continue-type)
+        (m-05 $1 $2 $3)
+     )
+  )
+)
+
+(define odd-07
+  (piece
+     (name p07)
+     (help " ")
+     (image South "images/Dakon/p07.bmp"
+            North "images/Dakon/p07.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-07 $1 $2 $3) 
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q07)
+     (help " ")
+     (image South "images/Dakon/q07.bmp"
+            North "images/Dakon/q07.bmp")
+     (moves
+        (move-type continue-type)
+        (m-07 $1 $2 $3)
+     )
+  )
+)
+
+(define odd-09
+  (piece
+     (name p09)
+     (help " ")
+     (image South "images/Dakon/p09.bmp"
+            North "images/Dakon/p09.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-09 $1 $2 $3)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q09)
+     (help " ")
+     (image South "images/Dakon/q09.bmp"
+            North "images/Dakon/q09.bmp")
+     (moves
+        (move-type continue-type)
+        (m-09 $1 $2 $3)
+     )
+  )
+)
+
+(define even-02
+  (piece
+     (name p02)
+     (help " ")
+     (image South "images/Dakon/p02.bmp"
+            North "images/Dakon/p02.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-02 $1 $2 $3)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q02)
+     (help " ")
+     (image South "images/Dakon/q02.bmp"
+            North "images/Dakon/q02.bmp")
+     (moves
+        (move-type continue-type)
+        (m-02 $1 $2 $3)
+     )
+  )
+)
+
+(define even-04
+  (piece
+     (name p04)
+     (help " ")
+     (image South "images/Dakon/p04.bmp"
+            North "images/Dakon/p04.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-04 $1 $2 $3)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q04)
+     (help " ")
+     (image South "images/Dakon/q04.bmp"
+            North "images/Dakon/q04.bmp")
+     (moves
+        (move-type continue-type)
+        (m-04 $1 $2 $3)
+     )
+  )
+)
+
+(define even-06
+  (piece
+     (name p06)
+     (help " ")
+     (image South "images/Dakon/p06.bmp"
+            North "images/Dakon/p06.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-06 $1 $2 $3)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q06)
+     (help " ")
+     (image South "images/Dakon/q06.bmp"
+            North "images/Dakon/q06.bmp")
+     (moves
+        (move-type continue-type)
+        (m-06 $1 $2 $3)
+     )
+  )
+)
+
+(define even-08
+  (piece
+     (name p08)
+     (help " ")
+     (image South "images/Dakon/p08.bmp"
+            North "images/Dakon/p08.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-08 $1 $2 $3)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q08)
+     (help " ")
+     (image South "images/Dakon/q08.bmp"
+            North "images/Dakon/q08.bmp")
+     (moves
+        (move-type continue-type)
+        (m-08 $1 $2 $3)
+     )
+  )
+)
+
+(define even-10
+  (piece
+     (name p10)
+     (help " ")
+     (image South "images/Dakon/p10.bmp"
+            North "images/Dakon/p10.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-10 $1 $2 $3)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q10)
+     (help " ")
+     (image South "images/Dakon/q10.bmp"
+            North "images/Dakon/q10.bmp")
+     (moves
+        (move-type continue-type)
+        (m-10 $1 $2 $3)
+     )
+  )
+)
+
+(define odd-7-11
+  (piece
+     (name p11)
+     (help " ")
+     (image South "images/Dakon/p11.bmp"
+            North "images/Dakon/p11.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-11 $1 $2 $3)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q11)
+     (help " ")
+     (image South "images/Dakon/q11.bmp"
+            North "images/Dakon/q11.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-11 $1 $2 $3)
+     )
+  )
+)
+
+(define odd-7-13
+  (piece
+     (name p13)
+     (help " ")
+     (image South "images/Dakon/p13.bmp"
+            North "images/Dakon/p13.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-13 $1 $2 $3)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q13)
+     (help " ")
+     (image South "images/Dakon/q13.bmp"
+            North "images/Dakon/q13.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-13 $1 $2 $3)
+     )
+  )
+)
+
+(define odd-7-15
+  (piece
+     (name p15)
+     (help " ")
+     (image South "images/Dakon/p15.bmp"
+            North "images/Dakon/p15.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-15 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q15)
+     (help " ")
+     (image South "images/Dakon/q15.bmp"
+            North "images/Dakon/q15.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-15 $1)
+     )
+  )
+)
+
+(define odd-7-17
+  (piece
+     (name p17)
+     (help " ")
+     (image South "images/Dakon/p17.bmp"
+            North "images/Dakon/p17.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-17 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q17)
+     (help " ")
+     (image South "images/Dakon/q17.bmp"
+            North "images/Dakon/q17.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-17 $1)
+     )
+  )
+)
+
+(define odd-7-19
+  (piece
+     (name p19)
+     (help " ")
+     (image South "images/Dakon/p19.bmp"
+            North "images/Dakon/p19.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-19 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q19)
+     (help " ")
+     (image South "images/Dakon/q19.bmp"
+            North "images/Dakon/q19.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-19 $1)
+     )
+  )
+)
+
+(define odd-7-21
+  (piece
+     (name p21)
+     (help " ")
+     (image South "images/Dakon/p21.bmp"
+            North "images/Dakon/p21.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-21 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q21)
+     (help " ")
+     (image South "images/Dakon/q21.bmp"
+            North "images/Dakon/q21.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-21 $1)
+     )
+  )
+)
+
+(define odd-7-23
+  (piece
+     (name p23)
+     (help " ")
+     (image South "images/Dakon/p23.bmp"
+            North "images/Dakon/p23.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-23 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q23)
+     (help " ")
+     (image South "images/Dakon/q23.bmp"
+            North "images/Dakon/q23.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-23 $1)
+     )
+  )
+)
+
+(define odd-7-25
+  (piece
+     (name p25)
+     (help " ")
+     (image South "images/Dakon/p25.bmp"
+            North "images/Dakon/p25.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-25 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q25)
+     (help " ")
+     (image South "images/Dakon/q25.bmp"
+            North "images/Dakon/q25.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-25 $1)
+     )
+  )
+)
+
+(define odd-7-27
+  (piece
+     (name p27)
+     (help " ")
+     (image South "images/Dakon/p27.bmp"
+            North "images/Dakon/p27.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-27 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q27)
+     (help " ")
+     (image South "images/Dakon/q27.bmp"
+            North "images/Dakon/q27.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-27 $1)
+     )
+  )
+)
+
+(define odd-7-29
+  (piece
+     (name p29)
+     (help " ")
+     (image South "images/Dakon/p29.bmp"
+            North "images/Dakon/p29.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-29 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q29)
+     (help " ")
+     (image South "images/Dakon/q29.bmp"
+            North "images/Dakon/q29.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-29 $1)
+     )
+  )
+)
+
+(define even-7-12
+  (piece
+     (name p12)
+     (help " ")
+     (image South "images/Dakon/p12.bmp"
+            North "images/Dakon/p12.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-12 $1 $2 $3)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q12)
+     (help " ")
+     (image South "images/Dakon/q12.bmp"
+            North "images/Dakon/q12.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-12 $1 $2 $3)
+     )
+  )
+)
+
+(define even-7-14
+  (piece
+     (name p14)
+     (help " ")
+     (image South "images/Dakon/p14.bmp"
+            North "images/Dakon/p14.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-14 $1 $2 $3)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q14)
+     (help " ")
+     (image South "images/Dakon/q14.bmp"
+            North "images/Dakon/q14.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-14 $1 $2 $3)
+     )
+  )
+)
+
+(define even-7-16
+  (piece
+     (name p16)
+     (help " ")
+     (image South "images/Dakon/p16.bmp"
+            North "images/Dakon/p16.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-16 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q16)
+     (help " ")
+     (image South "images/Dakon/q16.bmp"
+            North "images/Dakon/q16.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-16 $1)
+     )
+  )
+)
+
+(define even-7-18
+  (piece
+     (name p18)
+     (help " ")
+     (image South "images/Dakon/p18.bmp"
+            North "images/Dakon/p18.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-18 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q18)
+     (help " ")
+     (image South "images/Dakon/q18.bmp"
+            North "images/Dakon/q18.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-18 $1)
+     )
+  )
+)
+
+(define even-7-20
+  (piece
+     (name p20)
+     (help " ")
+     (image South "images/Dakon/p20.bmp"
+            North "images/Dakon/p20.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-20 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q20)
+     (help " ")
+     (image South "images/Dakon/q20.bmp"
+            North "images/Dakon/q20.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-20 $1)
+     )
+  )
+)
+
+(define even-7-22
+  (piece
+     (name p22)
+     (help " ")
+     (image South "images/Dakon/p22.bmp"
+            North "images/Dakon/p22.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-22 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q22)
+     (help " ")
+     (image South "images/Dakon/q22.bmp"
+            North "images/Dakon/q22.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-22 $1)
+     )
+  )
+)
+
+(define even-7-24
+  (piece
+     (name p24)
+     (help " ")
+     (image South "images/Dakon/p24.bmp"
+            North "images/Dakon/p24.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-24 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q24)
+     (help " ")
+     (image South "images/Dakon/q24.bmp"
+            North "images/Dakon/q24.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-24 $1)
+     )
+  )
+)
+
+(define even-7-26
+  (piece
+     (name p26)
+     (help " ")
+     (image South "images/Dakon/p26.bmp"
+            North "images/Dakon/p26.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-26 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q26)
+     (help " ")
+     (image South "images/Dakon/q26.bmp"
+            North "images/Dakon/q26.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-26 $1)
+     )
+  )
+)
+
+(define even-7-28
+  (piece
+     (name p28)
+     (help " ")
+     (image South "images/Dakon/p28.bmp"
+            North "images/Dakon/p28.bmp")
+     (attribute is-captured? false)
+     (moves
+        (move-type normal-type)
+        (m-7-28 $1)
+        (move-type capture-type)
+        (to-acc)
+     )
+  )
+  (piece
+     (name q28)
+     (help " ")
+     (image South "images/Dakon/q28.bmp"
+            North "images/Dakon/q28.bmp")
+     (moves
+        (move-type continue-type)
+        (m-7-28 $1)
+     )
+  )
+)
+
+(game
+  (title "Dakon (2x7)")
+  (default)
+  (description "On a turn, a player chooses one of the holes under their control. The player \
+removes all seeds from this hole, and distributes them in each hole clockwise \
+from this hole, in a process called sowing. Sowing skips an opponent's store, \
+but does not skip a player's own store.\\
+If the last seed falls into an occupied hole, all the seeds are removed from \
+that hole, and are sown starting from that hole. The process continues until \
+the last seed falls into a player's store, or an empty hole.\\
+When the last seed falls in an empty hole of the own side, the seeds in the \
+opposite hole are captured. This is called ''nembak'' (''shoot'') or ''gendong'' \
+(''carrying a load using a length of cloth strapped round the back'').\\
+When the last seed is dropped into an opponent's hole, which is empty, the \
+opponent's seeds on the right and left sides are taken, if they both contain \
+an equal number, and also the seed effecting the capture. This is known as \
+''mikul'' (''carrying two loads at once using a balanced shoulder pole'').")
+  (history "Dakon was first mentioned by Sir Thomas Stamford Raffles im his ''History of Java'' \
+in 1817, who wrote that it ''is much practiced by women''. In Java, the term \
+''dakon stone'' refers to the similarly pitmarked stones from the bronze-iron \
+age period of Indonesia.")
+
+  (option "animate captures"   false)
+  (option "pass turn"          forced)
+  (option "pass partial"       false)
+  (option "prevent flipping"   true)
+  (option "smart moves"        true)
+
+  (move-sound    "Audio/Clack.wav")
+  (release-sound "Audio/Clack.wav")
+  (drop-sound    "")
+  (capture-sound "")
+  (change-sound  "")
+  (click-sound   "")
+  (draw-sound    "")
+
+  (players South North ?S ?N)
+  (turn-order 
+     (South normal-type)
+     (?S North capture-type) 
+     (North normal-type)
+     (?N South capture-type) 
+  )
+
+  (board-2x7)
+
+  (odd-01  next nx pr)
+  (odd-03  next nx pr)
+  (odd-05  next nx pr)
+  (odd-07  next nx pr)
+  (odd-09  next nx pr)
+
+  (even-02 next nx pr)
+  (even-04 next nx pr)
+  (even-06 next nx pr)
+  (even-08 next nx pr)
+  (even-10 next nx pr)
+
+  (odd-7-11  next nx pr)
+  (odd-7-13  next nx pr)
+  (odd-7-15  next)
+  (odd-7-17  next)
+  (odd-7-19  next)
+  (odd-7-21  next)
+  (odd-7-23  next)
+  (odd-7-25  next)
+  (odd-7-27  next)
+  (odd-7-29  next)
+
+  (even-7-12 next nx pr)
+  (even-7-14 next nx pr)
+  (even-7-16 next)
+  (even-7-18 next)
+  (even-7-20 next)
+  (even-7-22 next)
+  (even-7-24 next)
+  (even-7-26 next)
+  (even-7-28 next)
+
+  (piece
+     (name p30)
+     (help " ")
+     (image South "images/Dakon/p30.bmp"
+            North "images/Dakon/p30.bmp")
+  )
+  (piece
+     (name p31)
+     (help " ")
+     (image South "images/Dakon/p31.bmp"
+            North "images/Dakon/p31.bmp")
+  )
+  (piece
+     (name p32)
+     (help " ")
+     (image South "images/Dakon/p32.bmp"
+            North "images/Dakon/p32.bmp")
+  )
+  (piece
+     (name p33)
+     (help " ")
+     (image South "images/Dakon/p33.bmp"
+            North "images/Dakon/p33.bmp")
+  )
+  (piece
+     (name p34)
+     (help " ")
+     (image South "images/Dakon/p34.bmp"
+            North "images/Dakon/p34.bmp")
+  )
+  (piece
+     (name p35)
+     (help " ")
+     (image South "images/Dakon/p35.bmp"
+            North "images/Dakon/p35.bmp")
+  )
+  (piece
+     (name p36)
+     (help " ")
+     (image South "images/Dakon/p36.bmp"
+            North "images/Dakon/p36.bmp")
+  )
+  (piece
+     (name p37)
+     (help " ")
+     (image South "images/Dakon/p37.bmp"
+            North "images/Dakon/p37.bmp")
+  )
+  (piece
+     (name p38)
+     (help " ")
+     (image South "images/Dakon/p38.bmp"
+            North "images/Dakon/p38.bmp")
+  )
+  (piece
+     (name p39)
+     (help " ")
+     (image South "images/Dakon/p39.bmp"
+            North "images/Dakon/p39.bmp")
+  )
+  (piece
+     (name p40)
+     (help " ")
+     (image South "images/Dakon/p40.bmp"
+            North "images/Dakon/p40.bmp")
+  )
+  (piece
+     (name p41)
+     (help " ")
+     (image South "images/Dakon/p41.bmp"
+            North "images/Dakon/p41.bmp")
+  )
+  (piece
+     (name p42)
+     (help " ")
+     (image South "images/Dakon/p42.bmp"
+            North "images/Dakon/p42.bmp")
+  )
+  (piece
+     (name p43)
+     (help " ")
+     (image South "images/Dakon/p43.bmp"
+            North "images/Dakon/p43.bmp")
+  )
+  (piece
+     (name p44)
+     (help " ")
+     (image South "images/Dakon/p44.bmp"
+            North "images/Dakon/p44.bmp")
+  )
+  (piece
+     (name p45)
+     (help " ")
+     (image South "images/Dakon/p45.bmp"
+            North "images/Dakon/p45.bmp")
+  )
+  (piece
+     (name p46)
+     (help " ")
+     (image South "images/Dakon/p46.bmp"
+            North "images/Dakon/p46.bmp")
+  )
+  (piece
+     (name p47)
+     (help " ")
+     (image South "images/Dakon/p47.bmp"
+            North "images/Dakon/p47.bmp")
+  )
+  (piece
+     (name p48)
+     (help " ")
+     (image South "images/Dakon/p48.bmp"
+            North "images/Dakon/p48.bmp")
+  )
+  (piece
+     (name p49)
+     (help " ")
+     (image South "images/Dakon/p49.bmp"
+            North "images/Dakon/p49.bmp")
+  )
+  (piece
+     (name p50)
+     (help " ")
+     (image South "images/Dakon/p50.bmp"
+            North "images/Dakon/p50.bmp")
+  )
+)
+
+(variant
+  (title "-")
+)
+
+(variant
+  (title "Anti Dakon (2x5)")
+  (board-2x5)
+  (odd-01  prev pr nx)
+  (odd-03  prev pr nx)
+  (odd-05  prev pr nx)
+  (odd-07  prev pr nx)
+  (odd-09  prev pr nx)
+  (even-02 prev pr nx)
+  (even-04 prev pr nx)
+  (even-06 prev pr nx)
+  (even-08 prev pr nx)
+  (even-10 prev pr nx)
+  (odd-5-11  prev)
+  (odd-5-13  prev)
+  (odd-5-15  prev)
+  (odd-5-17  prev)
+  (odd-5-19  prev)
+  (odd-5-21  prev)
+  (even-5-12 prev)
+  (even-5-14 prev)
+  (even-5-16 prev)
+  (even-5-18 prev)
+  (even-5-20 prev)
+  (p-common 22)
+  (p-common 23)
+  (p-common 24)
+  (p-common 25)
+  (p-common 26)
+  (p-common 27)
+  (p-common 28)
+  (p-common 29)
+)
+
+(variant
+  (title "Anti Dakon (2x7)")
+  (odd-01  prev pr nx)
+  (odd-03  prev pr nx)
+  (odd-05  prev pr nx)
+  (odd-07  prev pr nx)
+  (odd-09  prev pr nx)
+  (even-02 prev pr nx)
+  (even-04 prev pr nx)
+  (even-06 prev pr nx)
+  (even-08 prev pr nx)
+  (even-10 prev pr nx)
+  (odd-7-11  prev pr nx)
+  (odd-7-13  prev pr nx)
+  (odd-7-15  prev)
+  (odd-7-17  prev)
+  (odd-7-19  prev)
+  (odd-7-21  prev)
+  (odd-7-23  prev)
+  (odd-7-25  prev)
+  (odd-7-27  prev)
+  (odd-7-29  prev)
+  (even-7-12 prev pr nx)
+  (even-7-14 prev pr nx)
+  (even-7-16 prev)
+  (even-7-18 prev)
+  (even-7-20 prev)
+  (even-7-22 prev)
+  (even-7-24 prev)
+  (even-7-26 prev)
+  (even-7-28 prev)
+)
+
+(variant
+  (title "-")
+)
+
+(variant
+  (title "Cross Dakon (2x5)")
+  (board-2x5)
+  (odd-01  next nx pr)
+  (odd-03  next nx pr)
+  (odd-05  next nx pr)
+  (odd-07  next nx pr)
+  (odd-09  next nx pr)
+  (even-02 prev pr nx)
+  (even-04 prev pr nx)
+  (even-06 prev pr nx)
+  (even-08 prev pr nx)
+  (even-10 prev pr nx)
+  (odd-5-11  next)
+  (odd-5-13  next)
+  (odd-5-15  next)
+  (odd-5-17  next)
+  (odd-5-19  next)
+  (odd-5-21  next)
+  (even-5-12 prev)
+  (even-5-14 prev)
+  (even-5-16 prev)
+  (even-5-18 prev)
+  (even-5-20 prev)
+  (p-common 22)
+  (p-common 23)
+  (p-common 24)
+  (p-common 25)
+  (p-common 26)
+  (p-common 27)
+  (p-common 28)
+  (p-common 29)
+)
+
+(variant
+  (title "Cross Dakon (2x7)")
+  (odd-01  next nx pr)
+  (odd-03  next nx pr)
+  (odd-05  next nx pr)
+  (odd-07  next nx pr)
+  (odd-09  next nx pr)
+  (even-02 prev pr nx)
+  (even-04 prev pr nx)
+  (even-06 prev pr nx)
+  (even-08 prev pr nx)
+  (even-10 prev pr nx)
+  (odd-7-11  next nx pr)
+  (odd-7-13  next nx pr)
+  (odd-7-15  next)
+  (odd-7-17  next)
+  (odd-7-19  next)
+  (odd-7-21  next)
+  (odd-7-23  next)
+  (odd-7-25  next)
+  (odd-7-27  next)
+  (odd-7-29  next)
+  (even-7-12 prev pr nx)
+  (even-7-14 prev pr nx)
+  (even-7-16 prev)
+  (even-7-18 prev)
+  (even-7-20 prev)
+  (even-7-22 prev)
+  (even-7-24 prev)
+  (even-7-26 prev)
+  (even-7-28 prev)
+)
+
+(variant
+  (title "-")
+)
+
+(variant
+  (title "Anti Cross Dakon (2x5)")
+  (board-2x5)
+  (odd-01  prev pr nx)
+  (odd-03  prev pr nx)
+  (odd-05  prev pr nx)
+  (odd-07  prev pr nx)
+  (odd-09  prev pr nx)
+  (even-02 next nx pr)
+  (even-04 next nx pr)
+  (even-06 next nx pr)
+  (even-08 next nx pr)
+  (even-10 next nx pr)
+  (odd-5-11  prev)
+  (odd-5-13  prev)
+  (odd-5-15  prev)
+  (odd-5-17  prev)
+  (odd-5-19  prev)
+  (odd-5-21  prev)
+  (even-5-12 next)
+  (even-5-14 next)
+  (even-5-16 next)
+  (even-5-18 next)
+  (even-5-20 next)
+  (p-common 22)
+  (p-common 23)
+  (p-common 24)
+  (p-common 25)
+  (p-common 26)
+  (p-common 27)
+  (p-common 28)
+  (p-common 29)
+)
+
+(variant
+  (title "Anti Cross Dakon (2x7)")
+  (odd-01  prev pr nx)
+  (odd-03  prev pr nx)
+  (odd-05  prev pr nx)
+  (odd-07  prev pr nx)
+  (odd-09  prev pr nx)
+  (even-02 next nx pr)
+  (even-04 next nx pr)
+  (even-06 next nx pr)
+  (even-08 next nx pr)
+  (even-10 next nx pr)
+  (odd-7-11  prev pr nx)
+  (odd-7-13  prev pr nx)
+  (odd-7-15  prev)
+  (odd-7-17  prev)
+  (odd-7-19  prev)
+  (odd-7-21  prev)
+  (odd-7-23  prev)
+  (odd-7-25  prev)
+  (odd-7-27  prev)
+  (odd-7-29  prev)
+  (even-7-12 next nx pr)
+  (even-7-14 next nx pr)
+  (even-7-16 next)
+  (even-7-18 next)
+  (even-7-20 next)
+  (even-7-22 next)
+  (even-7-24 next)
+  (even-7-26 next)
+  (even-7-28 next)
+)

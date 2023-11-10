@@ -1,0 +1,546 @@
+(define add-to-empty 
+  ( (verify empty?) 
+    (set-position-flag is-cleaner true)
+    a1
+    (while (not-position? offboard) 
+       (if (piece? Cleaner)
+            capture
+       )
+       next
+    )
+    a1
+    (while (not-position? offboard) 
+       (if (position-flag? is-cleaner)
+            add
+       )
+       next
+    )
+  )
+)
+
+(define common-check
+   mark
+   (if (on-board? $1)
+        $1
+        (while (and (or (position-flag? is-start) (or (piece? Cleaner) empty?)) (on-board? $1)) $1)
+        (if (piece? Stone)
+             (if (flag? is-first)
+                 (set-flag is-second true)
+              else
+                 (set-flag is-first true)
+             )
+        )
+   )
+   back
+)
+
+(define common-capture
+   mark
+   (if (on-board? $1)
+        $1
+        (while (and (or (position-flag? is-start) (or (piece? Cleaner) empty?)) (on-board? $1)) $1)
+        (if (piece? Stone) capture)
+   )
+   back
+)
+
+(define nightrider-check
+   mark
+   (while (on-board? $1)
+        $1
+        (if (piece? Stone)
+             (if (flag? is-first)
+                 (set-flag is-second true)
+              else
+                 (set-flag is-first true)
+             )
+        )
+   )
+   back
+)
+
+(define nightrider-capture
+   mark
+   (while (on-board? $1)
+        $1
+        (if (piece? Stone) capture)
+   )
+   back
+)
+
+(define knight-check
+   mark
+   (if (on-board? $1)
+        $1
+        (if (piece? Stone)
+             (if (flag? is-first)
+                 (set-flag is-second true)
+              else
+                 (set-flag is-first true)
+             )
+        )
+   )
+   back
+)
+
+(define knight-capture
+   mark
+   (if (on-board? $1)
+        $1
+        (if (piece? Stone) capture)
+   )
+   back
+)
+
+(define slide
+   (   (set-position-flag is-start true)
+       $1 
+       (while empty? 
+           add 
+           $1
+       ) 
+   )
+)
+
+(define slide-nightriders
+   (   (set-position-flag is-start true)
+       (while (on-board? $1) 
+           $1
+           (if empty?
+               add
+           )
+       ) 
+   )
+)
+
+(define clean-queen
+  ( (verify empty?)
+    (set-flag is-succeed false)
+    (set-position-flag is-cleaner true)
+    a1
+    (while (not-position? offboard) 
+       (if (piece? Queen)
+           (set-flag is-first false)
+           (set-flag is-second false)
+           (common-check n)(common-check nw)
+           (common-check s)(common-check ne)
+           (common-check w)(common-check sw)
+           (common-check e)(common-check se)
+           (if (flag? is-second)
+               (set-flag is-succeed true)
+               (common-capture n)(common-capture nw)
+               (common-capture s)(common-capture ne)
+               (common-capture w)(common-capture sw)
+               (common-capture e)(common-capture se)
+           )
+       )
+       next
+    )
+    a1
+    (while (not-position? offboard) 
+       (if (and (flag? is-succeed) (position-flag? is-cleaner))
+            add
+       )
+       next
+    )
+  )
+)
+
+(define clean-rook 
+  ( (verify empty?)
+    (set-flag is-succeed false)
+    (set-position-flag is-cleaner true)
+    a1
+    (while (not-position? offboard) 
+       (if (piece? Rook)
+           (set-flag is-first false)
+           (set-flag is-second false)
+           (common-check n)
+           (common-check s)
+           (common-check w)
+           (common-check e)
+           (if (flag? is-second)
+               (set-flag is-succeed true)
+               (common-capture n)
+               (common-capture s)
+               (common-capture w)
+               (common-capture e)
+           )
+       )
+       next
+    )
+    a1
+    (while (not-position? offboard) 
+       (if (and (flag? is-succeed) (position-flag? is-cleaner))
+            add
+       )
+       next
+    )
+  )
+)
+
+(define clean-bishop
+  ( (verify empty?)
+    (set-flag is-succeed false)
+    (set-position-flag is-cleaner true)
+    a1
+    (while (not-position? offboard) 
+       (if (piece? Bishop)
+           (set-flag is-first false)
+           (set-flag is-second false)
+           (common-check nw)
+           (common-check ne)
+           (common-check sw)
+           (common-check se)
+           (if (flag? is-second)
+               (set-flag is-succeed true)
+               (common-capture nw)
+               (common-capture ne)
+               (common-capture sw)
+               (common-capture se)
+           )
+       )
+       next
+    )
+    a1
+    (while (not-position? offboard) 
+       (if (and (flag? is-succeed) (position-flag? is-cleaner))
+            add
+       )
+       next
+    )
+  )
+)
+
+(define clean-knight
+  ( (verify empty?)
+    (set-flag is-succeed false)
+    (set-position-flag is-cleaner true)
+    a1
+    (while (not-position? offboard) 
+       (if (piece? Knight)
+           (set-flag is-first false)
+           (set-flag is-second false)
+           (knight-check nnw)
+           (knight-check nne)
+           (knight-check een)
+           (knight-check ees)
+           (knight-check ssw)
+           (knight-check sse)
+           (knight-check wwn)
+           (knight-check wws)
+           (if (flag? is-second)
+               (set-flag is-succeed true)
+               (knight-capture nnw)
+               (knight-capture nne)
+               (knight-capture een)
+               (knight-capture ees)
+               (knight-capture ssw)
+               (knight-capture sse)
+               (knight-capture wwn)
+               (knight-capture wws)
+           )
+       )
+       next
+    )
+    a1
+    (while (not-position? offboard) 
+       (if (and (flag? is-succeed) (position-flag? is-cleaner))
+            add
+       )
+       next
+    )
+  )
+)
+
+(define clean-nightrider
+  ( (verify empty?)
+    (set-flag is-succeed false)
+    (set-position-flag is-cleaner true)
+    a1
+    (while (not-position? offboard) 
+       (if (piece? Nightrider)
+           (set-flag is-first false)
+           (set-flag is-second false)
+           (nightrider-check nnw)
+           (nightrider-check nne)
+           (nightrider-check een)
+           (nightrider-check ees)
+           (nightrider-check ssw)
+           (nightrider-check sse)
+           (nightrider-check wwn)
+           (nightrider-check wws)
+           (if (flag? is-second)
+               (set-flag is-succeed true)
+               (nightrider-capture nnw)
+               (nightrider-capture nne)
+               (nightrider-capture een)
+               (nightrider-capture ees)
+               (nightrider-capture ssw)
+               (nightrider-capture sse)
+               (nightrider-capture wwn)
+               (nightrider-capture wws)
+           )
+       )
+       next
+    )
+    a1
+    (while (not-position? offboard) 
+       (if (and (flag? is-succeed) (position-flag? is-cleaner))
+            add
+       )
+       next
+    )
+  )
+)
+
+(define knight-move
+   ($1 
+       (if empty? 
+          add 
+       ) 
+   )
+)
+
+(define Board-Definitions
+  (image "images\Chess\SHaag\Chess8x8.bmp")
+  (grid
+     (start-rectangle 5 5 53 53)
+     (dimensions
+         ("a/b/c/d/e/f/g/h" (49 0)) ; files
+         ("8/7/6/5/4/3/2/1" (0 49)) ; ranks
+     )
+     (directions (n 0 -1) (e 1 0) (s 0 1) (w -1 0)
+                 (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)
+                 (nnw -1 -2) (nne 1 -2) (een 2 -1) (ees 2 1)
+                 (ssw -1 2) (sse 1 2) (wwn -2 -1) (wws -2 1)
+     )
+  )
+)
+
+(define Next-Definitions
+      (dummy offboard)
+      (links next (a1 b1) (b1 c1) (c1 d1) (d1 e1) (e1 f1) (f1 g1) (g1 h1) (h1 a2) 
+                  (a2 b2) (b2 c2) (c2 d2) (d2 e2) (e2 f2) (f2 g2) (g2 h2) (h2 a3) 
+                  (a3 b3) (b3 c3) (c3 d3) (d3 e3) (e3 f3) (f3 g3) (g3 h3) (h3 a4) 
+                  (a4 b4) (b4 c4) (c4 d4) (d4 e4) (e4 f4) (f4 g4) (g4 h4) (h4 a5) 
+                  (a5 b5) (b5 c5) (c5 d5) (d5 e5) (e5 f5) (f5 g5) (g5 h5) (h5 a6) 
+                  (a6 b6) (b6 c6) (c6 d6) (d6 e6) (e6 f6) (f6 g6) (g6 h6) (h6 a7) 
+                  (a7 b7) (b7 c7) (c7 d7) (d7 e7) (e7 f7) (f7 g7) (g7 h7) (h7 a8) 
+                  (a8 b8) (b8 c8) (c8 d8) (d8 e8) (e8 f8) (f8 g8) (g8 h8) (h8 offboard)
+      )
+)
+
+(game
+    (title  "Queen")
+
+    (description "You play the black pieces. The white pieces are placed randomly.
+
+White pieces removed from the board when attacked 2 or more pices.")
+    (history "Implemented by Valentin Chelnokov, 2014-04-03")
+
+    (option "prevent flipping" 2)
+    (option "animate captures" false)
+    (option "recycle captures" true)
+    (option "pass turn" 2)
+    (option "show moves list" false)
+
+    (win-sound "Audio\Orchestra_CF.wav")
+    (loss-sound "Audio\Orchestra_FC.wav")
+    (click-sound "Audio\Pickup.wav")
+    (release-sound "Audio\WoodThunk.wav")
+    (drop-sound "")
+
+    (players Black ?White ?Clean)
+    (turn-order ?White ?White ?White ?White ?White ?White ?White ?White Black ?Clean ?Clean ?Clean)
+    (board (Board-Definitions) (Next-Definitions))
+
+    (board-setup
+       (?Clean
+          (Cleaner off 3)
+       )
+       (?White
+          (Stone off 8)
+       )
+       (Black
+          (Queen e4)
+       )
+    )
+
+    (piece
+      (name Stone)
+      (image ?White "images\Chess\SHaag\wpawn.bmp")
+      (help " ")
+      (drops 
+         (add-to-empty)
+      )
+    )
+    (piece
+      (name Cleaner)
+      (image ?Clean "images\DarkChess\Invisible.bmp")
+      (drops 
+         (clean-queen)
+      )
+    )
+    (piece
+      (name Queen)
+      (image Black "images\Chess\SHaag\bqueen.bmp")
+      (help "Queen: can slide any number of squares in any direction")
+      (moves
+         (slide n)(slide ne)
+         (slide e)(slide nw)
+         (slide s)(slide se)
+         (slide w)(slide sw)
+      )
+    )
+)
+
+(variant
+    (title  "Rooks")
+
+    (board-setup
+       (?Clean
+          (Cleaner off 3)
+       )
+       (?White
+          (Stone off 8)
+       )
+       (Black
+          (Rook c3 f6)
+       )
+    )
+
+    (piece
+       (name Cleaner)
+       (image ?Clean "images\DarkChess\Invisible.bmp")
+       (drops 
+          (clean-rook)
+       )
+    )
+    (piece
+      (name Rook)
+      (image Black "images\Chess\SHaag\brook.bmp")
+      (help "Rook: slides any number of squares along the row or column.")
+      (moves
+         (slide n)
+         (slide e)
+         (slide s)
+         (slide w)
+      )
+    )
+)
+
+(variant
+    (title  "Bishops")
+
+    (board-setup
+       (?Clean
+          (Cleaner off 3)
+       )
+       (?White
+          (Stone off 8)
+       )
+       (Black
+          (Bishop c3 c6 f3 f6)
+       )
+    )
+
+    (piece
+       (name Cleaner)
+       (image ?Clean "images\DarkChess\Invisible.bmp")
+       (drops 
+          (clean-bishop)
+       )
+    )
+    (piece
+      (name Bishop)
+      (image Black "images\Chess\SHaag\bbishop.bmp")
+      (help "Bishop: slides diagonally any number of squares")
+      (moves
+         (slide nw)
+         (slide ne)
+         (slide sw)
+         (slide se)
+      )
+    )
+)
+
+(variant
+    (title  "Knights")
+
+    (board-setup
+       (?Clean
+          (Cleaner off 1)
+       )
+       (?White
+          (Stone off 15)
+       )
+       (Black
+          (Knight b2 b7 g2 g7)
+       )
+    )
+
+    (turn-order ?White ?White ?White ?White ?White ?White ?White ?White ?White ?White ?White ?White ?White ?White ?White Black ?Clean)
+
+    (piece
+       (name Cleaner)
+       (image ?Clean "images\DarkChess\Invisible.bmp")
+       (drops 
+          (clean-knight)
+       )
+    )
+    (piece
+      (name Knight)
+      (image Black "images\Chess\SHaag\bknight.bmp")
+      (help "Knight: moves like an `L`, 2 squares one way and one the other")
+      (moves
+         (knight-move nnw)
+         (knight-move nne)
+         (knight-move een)
+         (knight-move ees)
+         (knight-move ssw)
+         (knight-move sse)
+         (knight-move wwn)
+         (knight-move wws)
+      )
+    )
+)
+
+(variant
+    (title  "Nightriders")
+
+    (board-setup
+       (?Clean
+          (Cleaner off 1)
+       )
+       (?White
+          (Stone off 8)
+       )
+       (Black
+          (Nightrider b2 g7)
+       )
+    )
+
+    (piece
+       (name Cleaner)
+       (image ?Clean "images\DarkChess\Invisible.bmp")
+       (drops 
+          (clean-nightrider)
+       )
+    )
+    (piece
+      (name Nightrider)
+      (image Black "images\Chess\SHaag\bknight.bmp")
+      (help "Nightrider: Moves repeatedly like a Knight in same direction")
+      (moves
+         (slide-nightriders nnw)
+         (slide-nightriders nne)
+         (slide-nightriders een)
+         (slide-nightriders ees)
+         (slide-nightriders ssw)
+         (slide-nightriders sse)
+         (slide-nightriders wwn)
+         (slide-nightriders wws)
+      )
+    )
+)

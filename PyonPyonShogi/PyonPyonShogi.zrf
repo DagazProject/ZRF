@@ -1,0 +1,141 @@
+(define step (
+  $1 (verify empty?) add
+))
+
+(define jump (
+  $1 (verify not-empty?)
+  (while not-empty? $1)
+  (verify empty?) 
+  (add-partial continue-type)
+))
+
+(variant
+  (title "Pyon Pyon Shogi")
+  (board
+        (image "images/PyonPyonShogi/PyonPyon.bmp")
+        (grid
+               (start-rectangle 18 14 58 59)
+               (dimensions ("a/b/c" (41 0))
+                           ("9/8/7/6/5/4/3/2/1" (0 41))
+               )
+               (directions (n 0 -1) (s 0 1))
+        )
+        (symmetry North (n s) (s n))
+  )
+
+  (piece
+        (name  Pawn)
+        (image South "images/PyonPyonShogi/Kanji/SPawn.bmp"
+               North "images/PyonPyonShogi/Kanji/NPawn+.bmp"
+        )
+        (moves 
+           (move-type normal-type)
+           (step n) (jump n)
+           (move-type continue-type)
+           (jump n)
+        )
+  )
+
+  (board-setup
+        ( South 
+           (Pawn a1 a2 a3 b1 b2 b3 c1 c2 c3)
+        )
+        ( North 
+           (Pawn a9 a8 a7 b9 b8 b7 c9 c8 c7)
+        )
+  )
+
+  (win-condition (South) (absolute-config Pawn (a9 a8 a7 b9 b8 b7 c9 c8 c7)))
+  (win-condition (North) (absolute-config Pawn (a1 a2 a3 b1 b2 b3 c1 c2 c3)))
+)
+
+(define check-home
+  mark a9
+  (while (on-board? home)
+      home
+      (verify not-friend?)
+  )
+  back
+)
+
+(define ext-step (
+  $1 (verify empty?) 
+  (if (in-zone? goal)
+      (check-home)
+  )
+  add
+))
+
+(define ext-jump (
+  $1 (verify not-empty?)
+  (while not-empty? $1)
+  (verify empty?) 
+  (if (in-zone? goal)
+      (check-home)
+  )
+  (add-partial continue-type)
+))
+
+(game
+  (title "Pyon Pyon Shogi (extended)")
+
+  (players South North)
+  (turn-order South North)
+
+  (option "pass turn"          forced)
+  (option "pass partial"       true)
+
+  (move-sound "Audio/Pickup.wav")
+  (release-sound "Audio/Pickup.wav")
+  (capture-sound "")
+
+; (move-priorities normal-type low-type)
+
+  (board
+        (image "images/PyonPyonShogi/Pyon.bmp")
+        (grid
+               (start-rectangle 18 14 58 59)
+               (dimensions ("a/b/c/d/e/f/g/h/i" (41 0))
+                           ("9/8/7/6/5/4/3/2/1" (0 41))
+               )
+               (directions (n 0 -1) (e 1 0) (s 0 1) (w -1 0))
+        )
+        (links home (a9 a1) (a1 a2) (a2 a3) (a3 b1) (b1 b2) (b2 b3) (b3 c1) (c1 c2) (c2 c3))
+        (links north-home (a9 g7) (g7 g8) (g8 g9) (g9 h7) (h7 h8) (h8 h9) (h9 i7) (i7 i8) (i8 i9))
+        (symmetry North (n s) (s n) (e w) (w e) (home north-home))
+        (zone (name goal) (players South)
+              (positions g7 g8 g9 h7 h8 h9 i7 i8 i9)
+        )
+        (zone (name goal) (players North)
+              (positions a1 a2 a3 b1 b2 b3 c1 c2 c3)
+        )
+  )
+
+  (piece
+        (name  Pawn)
+        (image South "images/PyonPyonShogi/Kanji/SPawn.bmp"
+               North "images/PyonPyonShogi/Kanji/NPawn+.bmp"
+        )
+        (moves 
+           (move-type normal-type)
+           (ext-step n) (ext-step e)
+           (ext-jump n) (ext-jump e)
+           (move-type continue-type)
+           (ext-jump n) (ext-jump e)
+;          (move-type low-type)
+;          (ext-step s) (ext-step w)
+        )
+  )
+
+  (board-setup
+        ( South 
+           (Pawn a1 a2 a3 b1 b2 b3 c1 c2 c3)
+        )
+        ( North 
+           (Pawn g9 g8 g7 h9 h8 h7 i9 i8 i7)
+        )
+  )
+
+  (win-condition (South) (absolute-config Pawn (g9 g8 g7 h9 h8 h7 i9 i8 i7)))
+  (win-condition (North) (absolute-config Pawn (a1 a2 a3 b1 b2 b3 c1 c2 c3)))
+)

@@ -1,0 +1,480 @@
+(define check-dice-pos
+  $2 
+  (if (and (piece? $1) (not-flag? found))
+      (set-flag found true)
+      capture
+  )
+)
+
+(define check-dice
+  (set-flag found false)
+  mark
+  (check-dice-pos $1 X)
+  (check-dice-pos $1 Y)
+  (check-dice-pos $1 Z)
+  back
+  (verify (flag? found))
+)
+
+(define drop-dice (
+  (verify (in-zone? dices))
+  (verify not-friend?)
+  add
+))
+
+(define kill-enemies
+  mark
+  (while (on-board? up)
+      up
+      (if (piece? King)
+           change-owner
+       else
+           (if enemy? capture)
+      )
+  )
+  back
+)
+
+(define man-common
+  (while (and friend? (on-board? up)) up)
+  (verify (not-in-zone? restricted))
+  (kill-enemies)
+  (if (flag? is-ok) add else (add $1))
+)
+
+(define king-common
+  mark
+  (while (on-board? dn)
+      dn
+      (if enemy? capture)
+  )
+  back add
+)
+
+(define king-done (
+  $1 (verify not-last-from?)
+  (king-common)
+))
+
+(define king-step (
+  $1 (verify not-last-from?)
+  (add-partial $2)
+))
+
+(define king-step-1 (
+  (check-dice D1)
+  $1 (verify not-last-from?)
+  (king-common)
+))
+
+(define king-step-2 (
+  (check-dice D2)
+  $1 (verify not-last-from?)
+  (add-partial $2)
+))
+
+(define king-step-3 (
+  (check-dice D3)
+  $1 (verify not-last-from?)
+  (add-partial $2)
+))
+
+(define check-up
+  mark
+  (while (and (on-board? up) (not-in-zone? restricted up))
+     up
+     (verify empty?)
+  )
+  back
+)
+
+(define activate (
+  (check-dice D1)
+  (verify (and (not-on-board? na) (not-on-board? nb)))
+  up (verify empty?)
+  (check-up)
+  add
+))
+
+(define step-1 (
+  (check-dice D1)
+  (set-flag is-ok (on-board? $1))
+  (check-up)
+  (if (flag? is-ok) $1 else $2)
+  (man-common $3)
+))
+
+(define step-2 (
+  (check-dice D2)
+  (set-flag is-ok (on-board? $1))
+  (check-up)
+  (if (flag? is-ok) $1 else $2)
+  (set-flag is-ok (on-board? $1))
+  (if (flag? is-ok) $1 else $2)
+  (man-common $3)
+))
+
+(define step-3 (
+  (check-dice D3)
+  (set-flag is-ok (on-board? $1))
+  (check-up)
+  (if (flag? is-ok) $1 else $2)
+  (set-flag is-ok (on-board? $1))
+  (if (flag? is-ok) $1 else $2)
+  (set-flag is-ok (on-board? $1))
+  (if (flag? is-ok) $1 else $2)
+  (man-common $3)
+))
+
+(define king-jump-1 (
+  (check-dice D1)
+  $1 (verify not-last-from?)
+  (king-common)
+))
+
+(define king-jump-2 (
+  (check-dice D2)
+  $1 (verify not-last-from?)
+  $1 (verify not-last-from?)
+  (king-common)
+))
+
+(define king-jump-3 (
+  (check-dice D3)
+  $1 (verify not-last-from?)
+  $1 (verify not-last-from?)
+  $1 (verify not-last-from?)
+  (king-common)
+))
+
+(game
+  (title "Sahkku")
+  (description "When the game begins, the soldiers are inactive — that is, unable to move. \
+                A player can activate a soldier by throwing a sahkku. Pieces are moved \
+                in accordance with values shown on the dice after a throw. Several pieces \
+                are allowed to occupy the same point.\\
+                Soldier's path is as follows: towards the player's right when they are \
+                in their home row (the row where they begin), towards the left when they \
+                are in the middle row, towards the right when they are in the enemy row, \
+                towards the left again the second time they move across the middle row, \
+                and repeat.\\
+                The King begins neutral, not controlled by either player and will be recruited\
+                by he first player to move one of their pieces onto the point currently occupied \
+                by the King. The king can move orthogonally right, left, up, and down. This means \
+                that when reaching an end of the middle row, it can choose to go up into the enemy \
+                row, or down into the home row, and also that it can move between the horizontal \
+                lines. It can not change direction while utilizing the value of one die.\\
+                The player not currently playing with the king may recruit it by moving a soldier \
+                onto the point currently occupied by the king. The king then becomes part of that \
+                player's army, until it is recruited by the opposing player again.\\
+                The object of the game is to capture all of the opponent's soldiers, that is, \
+                to remove them from the board. An opponent's soldier is captured when a player \
+                moves a soldier, or the recruited king, onto a point occupied by the opponent. \
+                If the point in question is occupied by several opposing soldiers, all those \
+                soldiers are captured.")
+  (history "Sahkku is a running-fight game, which means that players move their pieces \
+            along a track with the goal of eliminating the other player's pieces. \
+            Many different versions of sahkku have been played in different parts of Sapmi.")
+
+  (option "animate captures" false)
+  (option "animate drops"    false)
+  (option "prevent flipping" true)
+  (option "smart moves"      true)
+  (option "pass turn"        forced)
+  (option "recycle captures" true)
+
+  (move-sound    "Audio/Clack.wav")
+  (release-sound "Audio/Clack.wav")
+  (drop-sound    "Audio/Dice_cup.wav")
+  (capture-sound "")
+  (change-sound  "")
+  (click-sound   "")
+  (draw-sound    "")
+
+  (players Black White ?N)
+  (turn-order 
+    (?N Black drop)
+    (?N Black drop)
+    (?N Black drop)
+    (Black normal) 
+    (Black normal) 
+    (Black normal) 
+    (?N White drop)
+    (?N White drop)
+    (?N White drop)
+    (White normal)
+    (White normal)
+    (White normal)
+  )
+
+  (board
+    (image "images/Sahkku/board.bmp")
+    (grid
+      (start-rectangle 751 107 843 128)
+      (dimensions
+        ("X/Y/Z" (0 48))
+      )
+    )
+    (grid
+      (start-rectangle 11 78 53 121)
+      (dimensions
+        ("a/b/c/d/e/f/g/h/i/j/k/l/m/n/o" (47 0)) ; files
+        ("III/II/I" (0 67)) ; ranks
+      )
+      (directions (n 0 -1) (s 0 1) (w -1 0) (e 1 0))
+    )
+    (grid
+      (start-rectangle 12 21 52 37)
+      (dimensions
+        ("a/b/c/d/e/f/g/h/i/j/k/l/m/n/o" (47 0)) ; files
+        ("17/16/15" (0 17)) ; ranks
+      )
+      (directions (up 0 1) (wup 0 1) (dn 0 -1))
+    )
+    (grid
+      (start-rectangle 12 125 52 140)
+      (dimensions
+        ("a/b/c/d/e/f/g/h/i/j/k/l/m/n/o" (47 0)) ; files
+        ("11/7" (0 67)) ; ranks
+      )
+    )
+    (grid
+      (start-rectangle 12 261 52 277)
+      (dimensions
+        ("a/b/c/d/e/f/g/h/i/j/k/l/m/n/o" (47 0)) ; files
+        ("3/2/1" (0 17)) ; ranks
+      )
+      (directions (up 0 -1) (wup 0 -1) (dn 0 1))
+    )
+    (zone (name restricted) (players Black White)
+      (positions
+         aI bI cI dI eI fI gI hI iI jI kI lI mI nI oI
+         aII bII cII dII eII fII gII hII iII jII kII lII mII nII oII
+         aIII bIII cIII dIII eIII fIII gIII hIII iIII jIII kIII lIII mIII nIII oIII
+      )
+    )
+    (zone (name dices) (players Black White) (positions X Y Z))
+    (links up
+      (a7 a11) (b7 b11) (c7 c11) (d7 d11) (e7 e11) (f7 f11) (g7 g11)
+      (h7 h11) (i7 i11) (j7 j11) (k7 k11) (l7 l11) (m7 m11) (n7 n11)
+      (o7 o11) (a3 aI) (b3 bI) (c3 cI) (d3 dI) (e3 eI) (f3 fI) (g3 gI)
+      (h3 hI) (i3 iI) (j3 jI) (k3 kI) (l3 lI) (m3 mI) (n3 nI) (o3 oI)
+      (a15 aIII) (b15 bIII) (c15 cIII) (d15 dIII) (e15 eIII) (f15 fIII)
+      (g15 gIII) (h15 hIII) (i15 iIII) (j15 jIII) (k15 kIII) (l15 lIII)
+      (m15 mIII) (n15 nIII) (o15 oIII) (a11 aII) (b11 bII) (c11 cII) 
+      (e11 eII) (f11 fII) (g11 gII) (h11 hII) (i11 iII) (j11 jII) 
+      (l11 lII) (m11 mII) (n11 nII) (o11 oII) (d11 dII) (k11 kII)
+    )
+    (links wup
+      (a11 a7) (b11 b7) (c11 c7) (d11 d7) (e11 e7) (f11 f7) (g11 g7)
+      (h11 h7) (i11 i7) (j11 j7) (k11 k7) (l11 l7) (m11 m7) (n11 n7)
+      (o11 o7) (a3 aI) (b3 bI) (c3 cI) (d3 dI) (e3 eI) (f3 fI) (g3 gI)
+      (h3 hI) (i3 iI) (j3 jI) (k3 kI) (l3 lI) (m3 mI) (n3 nI)
+      (o3 oI) (m15 mIII) (n15 nIII) (o15 oIII)
+      (a15 aIII) (b15 bIII) (c15 cIII) (d15 dIII) (e15 eIII) (f15 fIII)
+      (g15 gIII) (h15 hIII) (i15 iIII) (j15 jIII) (k15 kIII) (l15 lIII)
+      (a7 aII) (b7 bII) (c7 cII) (d7 dII) (e7 eII) (f7 fII) (g7 gII)
+      (h7 hII) (i7 iII) (j7 jII) (k7 kII) (l7 lII) (m7 mII) (n7 nII) (o7 oII)
+    )
+    (links dn
+      (aI a3) (bI b3) (cI c3) (dI d3) (eI e3) (fI f3) (gI g3) (hI h3) (iI i3) (jI j3) (kI k3) (lI l3) (mI m3) (nI n3) (oI o3)
+      (aIII a15) (bIII b15) (cIII c15) (dIII d15) (eIII e15) (fIII f15) (gIII g15) (hIII h15) (iIII i15) (jIII j15) (kIII k15) (lIII l15) (mIII m15) (nIII n15) (oIII o15)
+      (aII a11) (a11 a7) (bII b11) (b11 b7) (cII c11) (c11 c7)
+      (dII d11) (d11 d7) (eII e11) (e11 e7) (fII f11) (f11 f7) 
+      (gII g11) (g11 g7) (hII h11) (h11 h7) (iII i11) (i11 i7) 
+      (jII j11) (j11 j7) (kII k11) (k11 k7) (lII l11) (l11 l7) 
+      (mII m11) (m11 m7) (nII n11) (n11 n7) (oII o11) (o11 o7)
+    )
+    (links na
+      (a2 b2) (a3 b2) (a15 b16) (a16 b16)
+      (b2 c2) (b3 c2) (b15 c16) (b16 c16)
+      (c2 d2) (c3 d2) (c15 d16) (c16 d16)
+      (d2 e2) (d3 e2) (d15 e16) (d16 e16)
+      (e2 f2) (e3 f2) (e15 f16) (e16 f16)
+      (f2 g2) (f3 g2) (f15 g16) (f16 g16)
+      (g2 h2) (g3 h2) (g15 h16) (g16 h16)
+      (h2 i2) (h3 i2) (h15 i16) (h16 i16)
+      (i2 j2) (i3 j2) (i15 j16) (i16 j16)
+      (j2 k2) (j3 k2) (j15 k16) (j16 k16)
+      (k2 l2) (k3 l2) (k15 l16) (k16 l16)
+      (l2 m2) (l3 m2) (l15 m16) (l16 m16)
+      (m2 n2) (m3 n2) (m15 n16) (m16 n16)
+      (n2 o2) (n3 o2) (n15 o16) (n16 o16)
+      (o11 n7) (n11 m7) (m11 l7) (l11 k7)
+      (k11 j7) (j11 i7) (i11 h7) (h11 g7)
+      (g11 f7) (f11 e7) (e11 d7) (d11 c7)
+      (c11 b7) (b11 a7) (c7 b7) (b7 a7)
+      (o7 n7) (n7 m7) (m7 l7) (l7 k7)
+      (k7 j7) (j7 i7) (i7 h7) (h7 g7)
+      (g7 f7) (f7 e7) (e7 d7) (d7 c7)
+      (o2 o7) (o3 o7) (a7 a16) (a11 a16)
+    )
+    (links wna
+      (o16 n16) (o15 n16) (o2 n2) (o3 n2)
+      (n16 m16) (n15 m16) (n2 m2) (n3 m2)
+      (m16 l16) (m15 l16) (m2 l2) (m2 l2)
+      (l16 k16) (l15 k16) (l2 k2) (l3 k2)
+      (k16 j16) (k15 j16) (k2 j2) (k3 j2)
+      (j16 i16) (j15 i16) (j2 i2) (j3 i2)
+      (i16 h16) (i15 h16) (i2 h2) (i3 h2)
+      (h16 g16) (h15 g16) (h2 g2) (h3 g2)
+      (g16 f16) (g15 f16) (g2 f2) (g3 f2)
+      (f16 e16) (f15 e16) (f2 e2) (f3 e2)
+      (e16 d16) (e15 d16) (e2 d2) (e3 d2)
+      (d16 c16) (d15 c16) (d2 c2) (d3 c2)
+      (c16 b16) (c15 b16) (c2 b2) (c3 b2)
+      (b16 a16) (b15 a16) (b2 a2) (b3 a2)
+      (a11 b11) (a7 b11) (b11 c11) (b7 c11)
+      (c11 d11) (c7 d11) (d11 e11) (d7 e11)
+      (e11 f11) (e7 f11) (f11 g11) (f7 g11)
+      (g11 h11) (g7 h11) (h11 i11) (h7 i11)
+      (i11 j11) (i7 j11) (j11 k11) (j7 k11)
+      (k11 l11) (k7 l11) (l11 m11) (l7 m11)
+      (m11 n11) (m7 n11) (n11 o11) (n7 o11)
+      (a16 a11) (a15 a11) (o7 o2) (o11 o2)
+    )
+    (links nb
+      (o11 n7) (n11 m7) (m11 l7) (l11 k7)
+      (k11 j7) (j11 i7) (i11 h7) (h11 g7)
+      (g11 f7) (f11 e7) (e11 d7) (d11 c7)
+      (c11 b7) (b11 a7) (c7 b7) (b7 a7)
+      (o7 n7) (n7 m7) (m7 l7) (l7 k7)
+      (k7 j7) (j7 i7) (i7 h7) (h7 g7)
+      (g7 f7) (f7 e7) (e7 d7) (d7 c7)
+      (a7 a2) (a11 a2) (o16 o7) (o15 o7)
+    )
+    (links wnb
+      (a11 b11) (a7 b11) (b11 c11) (b7 c11)
+      (c11 d11) (c7 d11) (d11 e11) (d7 e11)
+      (e11 f11) (e7 f11) (f11 g11) (f7 g11)
+      (g11 h11) (g7 h11) (h11 i11) (h7 i11)
+      (i11 j11) (i7 j11) (j11 k11) (j7 k11)
+      (k11 l11) (k7 l11) (l11 m11) (l7 m11)
+      (m11 n11) (m7 n11) (n11 o11) (n7 o11)
+      (a2 a11)  (a3 a11) (o7 o16) (o11 o16)
+    )
+    (unlink 
+      (a2 dn) (b2 dn) (c2 dn) (d2 dn) (e2 dn) (f2 dn) (g2 dn) (h2 dn) (i2 dn) (j2 dn) (k2 dn) (l2 dn) (m2 dn) (n2 dn) (o2 dn)
+      (a16 dn) (b16 dn) (c16 dn) (d16 dn) (e16 dn) (f16 dn) (g16 dn) (h16 dn) (i16 dn) (j16 dn) (k16 dn) (l16 dn) (m16 dn) (n16 dn) (o16 dn)
+    )
+    (symmetry White (na wna) (nb wnb) (up wup))
+  )
+
+  (piece
+     (name  King)
+     (help "King")
+     (image White "images/Sahkku/WKing.bmp"
+            Black "images/Sahkku/BKing.bmp"
+            ?N    "images/Sahkku/King.bmp")
+     (moves
+         (move-type normal)
+         (king-step-1 n) (king-step-2 n left-1) (king-step-3 n left-2)
+         (king-step-1 s) (king-step-2 s left-1) (king-step-3 s left-2)
+         (king-step-1 w) (king-step-2 w left-1) (king-step-3 w left-2)
+         (king-step-1 e) (king-step-2 e left-1) (king-step-3 e left-2)
+         (move-type left-2)
+         (king-step n left-1)
+         (king-step s left-1)
+         (king-step w left-1)
+         (king-step e left-1)
+         (move-type left-1)
+         (king-done n)
+         (king-done s)
+         (king-done w)
+         (king-done e)
+     )
+  )
+  (piece
+     (name  ManA)
+     (help "Man")
+     (image White "images/Sahkku/White.bmp"
+            Black "images/Sahkku/Black.bmp")
+     (moves
+         (move-type normal)
+         (activate)
+         (step-1 na nb ManB)
+         (step-2 na nb ManB)
+         (step-3 na nb ManB)
+     )
+  )
+  (piece
+     (name  ManB)
+     (help "Man")
+     (image White "images/Sahkku/White.bmp"
+            Black "images/Sahkku/Black.bmp")
+     (moves
+         (move-type normal)
+         (activate)
+         (step-1 nb na ManA)
+         (step-2 nb na ManA)
+         (step-3 nb na ManA)
+     )
+  )
+
+  (piece
+     (name D0)
+     (help " ")
+     (image White "images/Sahkku/D0.bmp"
+            Black "images/Sahkku/D0.bmp")
+     (drops
+         (move-type drop)
+         (drop-dice)
+     )
+  )
+  (piece
+     (name D1)
+     (help " ")
+     (image White "images/Sahkku/D1.bmp"
+            Black "images/Sahkku/D1.bmp")
+     (drops
+         (move-type drop)
+         (drop-dice)
+     )
+  )
+  (piece
+     (name D2)
+     (help " ")
+     (image White "images/Sahkku/D2.bmp"
+            Black "images/Sahkku/D2.bmp")
+     (drops
+         (move-type drop)
+         (drop-dice)
+     )
+  )
+  (piece
+     (name D3)
+     (help " ")
+     (image White "images/Sahkku/D3.bmp"
+            Black "images/Sahkku/D3.bmp")
+     (drops
+         (move-type drop)
+         (drop-dice)
+     )
+  )
+
+  (board-setup
+     (White (D0 off 3) (D1 off 3) (D2 off 3) (D3 off 3) (ManA a17 b17 c17 d17 e17 f17 g17 h17 i17 j17 k17 l17 m17 n17 o17))
+     (Black (D0 off 3) (D1 off 3) (D2 off 3) (D3 off 3) (ManA a1 b1 c1 d1 e1 f1 g1 h1 i1 j1 k1 l1 m1 n1 o1))
+     (?N (King hII))
+  )
+
+  (loss-condition (Black White) (and (pieces-remaining 0 ManA) (pieces-remaining 0 ManB)))
+)
+
+(variant
+  (title "Sahkku (variant)")
+  (piece
+     (name  King)
+     (help "King")
+     (image White "images/Sahkku/WKing.bmp"
+            Black "images/Sahkku/BKing.bmp"
+            ?N    "images/Sahkku/King.bmp")
+     (moves
+         (move-type normal)
+         (king-jump-1 n) (king-jump-2 n) (king-jump-3 n)
+         (king-jump-1 s) (king-jump-2 s) (king-jump-3 s)
+         (king-jump-1 w) (king-jump-2 w) (king-jump-3 w)
+         (king-jump-1 e) (king-jump-2 e) (king-jump-3 e)
+     )
+  )
+)

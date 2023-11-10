@@ -1,0 +1,513 @@
+(define check-blood
+  (if enemy? (create Pawn blood))
+  (if (piece? WestGeneral)
+      mark
+      a0 (while (on-board? nx)
+          nx (if (and enemy? (not-piece? WestGeneral) (in-zone? west-flank)) capture)
+      )
+      back
+  )
+  (if (piece? EastGeneral)
+      mark
+      a0 (while (on-board? nx)
+          nx (if (and enemy? (not-piece? EastGeneral) (in-zone? east-flank)) capture)
+      )
+      back
+  )
+)
+
+(define step (
+  $1 (verify not-friend?) 
+  (check-blood)
+  add
+))
+
+(define stepz (
+  $1 (verify not-friend?)
+  (verify (in-zone? $2))
+  (check-blood)
+  add
+))
+
+(define step-elephant (
+  $1 (verify empty?)
+  $2 (verify empty?)
+  $2 (verify not-friend?)
+  (check-blood)
+  add
+))
+
+(define slide (
+  $1 
+  (while empty?
+     add
+     $1
+  )
+  (verify not-friend?)
+  (check-blood)
+  add
+))
+
+(define shoot (
+  $1 (while empty? $1)
+  (verify (not-piece? Cannon)) $1
+  (while empty? add $1)
+  (verify not-friend?)
+  (verify (not-piece? Cannon))
+  (check-blood)
+  add
+))
+
+(define step-horse (
+  $1 (verify empty?)
+  $2 (verify not-friend?)
+  (check-blood)
+  add
+))
+
+(define slidez (
+  $1 
+  (while empty?
+     (if (in-zone? $2) add)
+     $1
+  )
+  (verify (in-zone? $2))
+  (verify not-friend?)
+  (check-blood)
+  add
+))
+
+(define slidef (
+  $1 
+  (while empty?
+     (if (in-zone? $2) add)
+     $1
+  )
+  (verify (in-zone? $2))
+  (verify not-friend?)
+  (if enemy?
+     (verify (not-empty? blood))
+  )
+  (check-blood)
+  add
+))
+
+(define step-knight (
+  $1 (verify empty?)
+  $1 (verify not-friend?)
+  (check-blood)
+  add
+))
+
+(define step-killer (
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $2 (verify enemy?)
+  (check-blood)
+  add
+))
+
+(game
+   (title "Gwangsanghui")
+   (description "Gwangsanghui is an 18th-century Janggi variant.")
+   (history "Gwangsanghui was recorded in Noeyeonjip which was written by Nam Yuyong.")
+
+   (move-sound "Audio/Pickup.wav")
+   (release-sound "Audio/Pickup.wav")
+   (capture-sound "")
+
+   (animate-captures false)
+
+   (players South North)
+   (turn-order South North)
+
+   (board
+      (image "images/Gwangsanghui/board.bmp")
+      (grid
+         (start-rectangle 14 13 62 61)
+         (dimensions
+             ("a/b/c/d/e/f/g/h/i/j/k/l/m/n/o" (48 0)) ; files
+             ("14/13/12/11/10/9/8/7/6/5/4/3/2/1" (0 48)) ; ranks
+         )
+         (directions (n  0 -1) (e   1  0) (s  0 1) (w  -1 0)
+                     (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)
+                     (nx 0 -1)
+         )
+      )
+      (positions  
+         (blood -20 -20 5 5)
+      )
+      (dummy a0)
+      (links nx (a0  a1)  (a14 b1)  (b14 c1)  (c14 d1)  (d14 e1)  (e14 f1)
+                (f14 g1)  (g14 h1)  (h14 i1)  (i14 j1)  (j14 k1)  (k14 l1)
+                (l14 m1)  (m14 n1)  (n14 o1))
+      (symmetry North (n s) (s n) (e w) (w e) (nw se) (se nw) (ne sw) (sw ne) (nx nx))
+      (zone
+         (name fortress)
+         (players South North)
+         (positions a2 a3 a4 a11 a12 a13 
+                    b2 b3 b4 b11 b12 b13 
+                    c2 c3 c4 c11 c12 c13
+                    g2 g3 g4 g11 g12 g13 
+                    h2 h3 h4 h11 h12 h13 
+                    i2 i3 i4 i11 i12 i13
+                    m2 m3 m4 m11 m12 m13 
+                    n2 n3 n4 n11 n12 n13 
+                    o2 o3 o4 o11 o12 o13
+         )
+      )
+      (zone
+         (name cross)
+         (players South North)
+         (positions a2 a4 a11 a13 b3 b12 c2 c4 c11 c13 
+                    g2 g4 g11 g13 h3 h12 i2 i4 i11 i13
+                    m2 m4 m11 m13 n3 n12 o2 o4 o11 o13
+         )
+      )
+      (zone
+         (name middle)
+         (players South)
+         (positions a2 b2 c2 d2 e2 f2 g2 h2 i2 j2 k2 l2 m2 n2 o2
+                    a3 b3 c3 d3 e3 f3 g3 h3 i3 j3 k3 l3 m3 n3 o3
+                    a4 b4 c4 d4 e4 f4 g4 h4 i4 j4 k4 l4 m4 n4 o4
+         )
+      )
+      (zone
+         (name middle)
+         (players North)
+         (positions a11 b11 c11 d11 e11 f11 g11 h11 i11 j11 k11 l11 m11 n11 o11
+                    a12 b12 c12 d12 e12 f12 g12 h12 i12 j12 k12 l12 m12 n12 o12
+                    a13 b13 c13 d13 e13 f13 g13 h13 i13 j13 k13 l13 m13 n13 o13
+         )
+      )
+      (zone
+         (name outer)
+         (players South)
+         (positions a7  b7  c7  d7  e7  f7  g7  h7  i7  j7  k7  l7  m7  n7  o7
+                    a8  b8  c8  d8  e8  f8  g8  h8  i8  j8  k8  l8  m8  n8  o8
+                    a9  b9  c9  d9  e9  f9  g9  h9  i9  j9  k9  l9  m9  n9  o9
+                    a10 b10 c10 d10 e10 f10 g10 h10 i10 j10 k10 l10 m10 n10 o10
+                    a11 b11 c11 d11 e11 f11 g11 h11 i11 j11 k11 l11 m11 n11 o11
+                    a12 b12 c12 d12 e12 f12 g12 h12 i12 j12 k12 l12 m12 n12 o12
+                    a13 b13 c13 d13 e13 f13 g13 h13 i13 j13 k13 l13 m13 n13 o13
+                    a14 b14 c14 d14 e14 f14 g14 h14 i14 j14 k14 l14 m14 n14 o14
+         )
+      )
+      (zone
+         (name outer)
+         (players North)
+         (positions a1  b1  c1  d1  e1  f1  g1  h1  i1  j1  k1  l1  m1  n1  o1
+                    a2  b2  c2  d2  e2  f2  g2  h2  i2  j2  k2  l2  m2  n2  o2
+                    a3  b3  c3  d3  e3  f3  g3  h3  i3  j3  k3  l3  m3  n3  o3
+                    a4  b4  c4  d4  e4  f4  g4  h4  i4  j4  k4  l4  m4  n4  o4
+                    a5  b5  c5  d5  e5  f5  g5  h5  i5  j5  k5  l5  m5  n5  o5
+                    a6  b6  c6  d6  e6  f6  g6  h6  i6  j6  k6  l6  m6  n6  o6
+                    a7  b7  c7  d7  e7  f7  g7  h7  i7  j7  k7  l7  m7  n7  o7
+                    a8  b8  c8  d8  e8  f8  g8  h8  i8  j8  k8  l8  m8  n8  o8
+         )
+      )
+      (zone
+         (name inner)
+         (players South)
+         (positions a1  b1  c1  d1  e1  f1  g1  h1  i1  j1  k1  l1  m1  n1  o1
+                    a2  b2  c2  d2  e2  f2  g2  h2  i2  j2  k2  l2  m2  n2  o2
+                    a3  b3  c3  d3  e3  f3  g3  h3  i3  j3  k3  l3  m3  n3  o3
+                    a4  b4  c4  d4  e4  f4  g4  h4  i4  j4  k4  l4  m4  n4  o4
+                    a5  b5  c5  d5  e5  f5  g5  h5  i5  j5  k5  l5  m5  n5  o5
+                    a6  b6  c6  d6  e6  f6  g6  h6  i6  j6  k6  l6  m6  n6  o6
+         )
+      )
+      (zone
+         (name inner)
+         (players North)
+         (positions a9  b9  c9  d9  e9  f9  g9  h9  i9  j9  k9  l9  m9  n9  o9
+                    a10 b10 c10 d10 e10 f10 g10 h10 i10 j10 k10 l10 m10 n10 o10
+                    a11 b11 c11 d11 e11 f11 g11 h11 i11 j11 k11 l11 m11 n11 o11
+                    a12 b12 c12 d12 e12 f12 g12 h12 i12 j12 k12 l12 m12 n12 o12
+                    a13 b13 c13 d13 e13 f13 g13 h13 i13 j13 k13 l13 m13 n13 o13
+                    a14 b14 c14 d14 e14 f14 g14 h14 i14 j14 k14 l14 m14 n14 o14
+         )
+      )
+
+      (zone
+         (name west-flank)
+         (players North)
+         (positions a1 a2 a3 a4 a5
+                    b1 b2 b3 b4 b5
+                    c1 c2 c3 c4 c5
+         )
+      )
+      (zone
+         (name west-flank)
+         (players South)
+         (positions m10 m11 m12 m13 m14
+                    n10 n11 n12 n13 n14
+                    o10 o11 o12 o13 o14
+         )
+      )
+      (zone
+         (name east-flank)
+         (players North)
+         (positions m1 m2 m3 m4 m5
+                    n1 n2 n3 n4 n5
+                    o1 o2 o3 o4 o5
+         )
+      )
+      (zone
+         (name east-flank)
+         (players South)
+         (positions a10 a11 a12 a13 a14
+                    b10 b11 b12 b13 b14
+                    c10 c11 c12 c13 c14
+         )
+      )
+   )
+
+   (piece
+      (name Pawn)
+      (description "The Pawn can move and capture one point either straight forward or sideways.\
+                    While inside the enemy fortress, it can also move diagonally along the lines.")
+      (help "Pawn: 1 step forward, left, or right")
+      (image South "images/Gwangsanghui/PawnWhite.bmp"
+                   "images/kanji/rpawn.bmp"
+             North "images/Gwangsanghui/PawnBlack.bmp"
+                   "images/kanji/bpawn.bmp")
+      (moves
+         (step n) (step w) (step e)
+      )
+   )
+   (piece
+      (name Soldier)
+      (description "The Soldier can move forward one step diagonally or sideways.")
+      (help "Soldier: move forward 1 step diagonally or sideways")
+      (image South "images/Gwangsanghui/SoldierWhite.bmp"
+                   "images/kanji/rsoldier.bmp"
+             North "images/Gwangsanghui/SoldierBlack.bmp"
+                   "images/kanji/bsoldier.bmp")
+      (moves
+         (step nw) (step ne) (step w) (step e)
+      )
+   )
+   (piece
+      (name King)
+      (description "The King must stay confined to the fortress, and can only move\
+                    along the lines shown. The King cannot leave on the same column \
+                    as the opponent's King if the spaces between the Kings are empty.")
+      (help "King: 1 step along lines in fortress")
+      (image South "images/Gwangsanghui/KingWhite.bmp"
+                   "images/kanji/rking.bmp"
+             North "images/Gwangsanghui/KingBlack.bmp"
+                   "images/kanji/bking.bmp")
+      (moves
+         (stepz n fortress) (stepz s fortress) (stepz w fortress) (stepz e fortress)
+         (stepz nw cross) (stepz sw cross) (stepz ne cross) (stepz se cross)
+      )
+   )
+   (piece
+      (name WestGeneral)
+      (description "The General must stay confined to the fortress, and can only move\
+                    along the lines shown.")
+      (help "General: 1 step along lines in fortress")
+      (image South "images/Gwangsanghui/GeneralWhite.bmp"
+                   "images/kanji/rgeneral.bmp"
+             North "images/Gwangsanghui/GeneralBlack.bmp"
+                   "images/kanji/bgeneral.bmp")
+      (moves
+         (stepz n fortress) (stepz s fortress) (stepz w fortress) (stepz e fortress)
+         (stepz nw cross) (stepz sw cross) (stepz ne cross) (stepz se cross)
+      )
+   )
+   (piece
+      (name EastGeneral)
+      (description "The General must stay confined to the fortress, and can only move\
+                    along the lines shown.")
+      (help "General: 1 step along lines in fortress")
+      (image South "images/Gwangsanghui/GeneralWhite.bmp"
+                   "images/kanji/rgeneral.bmp"
+             North "images/Gwangsanghui/GeneralBlack.bmp"
+                   "images/kanji/bgeneral.bmp")
+      (moves
+         (stepz n fortress) (stepz s fortress) (stepz w fortress) (stepz e fortress)
+         (stepz nw cross) (stepz sw cross) (stepz ne cross) (stepz se cross)
+      )
+   )
+   (piece
+      (name Guard)
+      (description "The Guard must stay confined to the fortress, and can only move\
+                    along the lines shown.")
+      (help "Guard: 1 step along lines in fortress")
+      (image South "images/Gwangsanghui/GuardWhite.bmp"
+                   "images/kanji/rguard.bmp"
+             North "images/Gwangsanghui/GuardBlack.bmp"
+                   "images/kanji/bguard.bmp")
+      (moves
+         (stepz n fortress) (stepz s fortress) (stepz w fortress) (stepz e fortress)
+         (stepz nw cross) (stepz sw cross) (stepz ne cross) (stepz se cross)
+      )
+   )
+   (piece
+      (name Elephant)
+      (description "The Elephant move one step orthogonally, then two steps diagonally outward.\
+                    All the intervening points must be empty.")
+      (help "Elephant: moves 1 step orthogonally plus 2 diagonally outward")
+      (image South "images/Gwangsanghui/ElephantWhite.bmp"
+                   "images/kanji/relephant.bmp"
+             North "images/Gwangsanghui/ElephantBlack.bmp"
+                   "images/kanji/belephant.bmp")
+      (moves
+         (step-elephant n nw) (step-elephant n ne) (step-elephant s sw) (step-elephant s se)
+         (step-elephant w nw) (step-elephant e ne) (step-elephant w sw) (step-elephant e se)
+      )
+   )
+   (piece
+      (name Chariot)
+      (description "The Chariot move like the Rook in Chess, along any row or column.\
+                    While inside the opponent's fortress, Chariots can move along the lines.")
+      (help "Chariot: slides along any row or column")
+      (image South "images/Gwangsanghui/ChariotWhite.bmp"
+                   "images/kanji/rrook.bmp"
+             North "images/Gwangsanghui/ChariotBlack.bmp"
+                   "images/kanji/brook.bmp")
+      (moves
+         (slide n) (slide s) (slide w) (slide e)
+      )
+   )
+   (piece
+      (name Cannon)
+      (description "The Cannon move like Chariots, but can only move by leaping over\
+                    an intervening piece, called a `screen`. Cannons may neither capture other\
+                    Cannons nor use other Cannons as screens. While inside the opponent's fortress, \
+                    Cannons can move along the lines.")
+      (help "Cannon: jumps over a non-Cannon piece along any row or column")
+      (image South "images/Gwangsanghui/CannonWhite.bmp"
+                   "images/kanji/rcannon.bmp"
+             North "images/Gwangsanghui/CannonBlack.bmp"
+                   "images/kanji/bcannon.bmp")
+      (moves
+         (shoot n) (shoot s) (shoot w) (shoot e)
+      )
+   )
+   (piece
+      (name Horse)
+      (description "The Horse move a little like the Knight in chess: one move up or down\
+                    a row or column, then diagonally outward one step.  However, Horses \
+                    cannot jump over other pieces.")
+      (help "Horse: moves 1 step orthogonally plus 1 diagonally outward")
+      (image South "images/Gwangsanghui/HorseWhite.bmp"
+                   "images/kanji/rhorse.bmp"
+             North "images/Gwangsanghui/HorseBlack.bmp"
+                   "images/kanji/bhorse.bmp")
+      (moves
+         (step-horse n nw) (step-horse n ne) (step-horse s sw) (step-horse s se)
+         (step-horse w nw) (step-horse e ne) (step-horse w sw) (step-horse e se)
+      )
+   )
+   (piece
+      (name Warrior)
+      (description "The Warrior can move horizontally or vertically like Chariot.")
+      (help "Warrior: slides along any row or column")
+      (image South "images/Gwangsanghui/WarriorWhite.bmp"
+                   "images/kanji/rwarrior.bmp"
+             North "images/Gwangsanghui/WarriorBlack.bmp"
+                   "images/kanji/rwarrior.bmp")
+      (moves
+         (slidez n middle) (slidez s middle) (slidez w middle) (slidez e middle)
+      )
+   )
+   (piece
+      (name Knight)
+      (description "The Knight moves two steps diagonally.")
+      (help "Knight: moves 2 step diagonally")
+      (image South "images/Gwangsanghui/KnightWhite.bmp"
+                   "images/kanji/rknight.bmp"
+             North "images/Gwangsanghui/KnightBlack.bmp"
+                   "images/kanji/bknight.bmp")
+      (moves
+         (step-knight nw) (step-knight ne) (step-knight sw) (step-knight se)
+      )
+   )
+   (piece
+      (name Killer)
+      (description "The Killer can move two steps orthogonally, then one step diagonally outward.")
+      (help "Killer: moves 2 steps orthogonally plus 1 diagonally outward")
+      (image South "images/Gwangsanghui/KillerWhite.bmp"
+                   "images/kanji/rkiller.bmp"
+             North "images/Gwangsanghui/KillerBlack.bmp"
+                   "images/kanji/bkiller.bmp")
+      (moves
+         (step-killer n nw) (step-killer n ne) (step-killer s sw) (step-killer s se)
+         (step-killer w nw) (step-killer e ne) (step-killer w sw) (step-killer e se)
+      )
+   )
+   (piece
+      (name Forward)
+      (description "The Forward move like the Rook in Chess, along any row or column.")
+      (help "Forward: slides along any row or column")
+      (image South "images/Gwangsanghui/ForwardWhite.bmp"
+                   "images/kanji/rforward.bmp"
+             North "images/Gwangsanghui/ForwardBlack.bmp"
+                   "images/kanji/bforward.bmp")
+      (moves
+         (slidef n outer) (slidef s outer) (slidef w outer) (slidef e outer)
+      )
+   )
+   (piece
+      (name Backward)
+      (description "The Backward move like the Rook in Chess, along any row or column.")
+      (help "Backward: slides along any row or column")
+      (image South "images/Gwangsanghui/BackwardWhite.bmp"
+                   "images/kanji/rbackward.bmp"
+             North "images/Gwangsanghui/BackwardBlack.bmp"
+                   "images/kanji/bbackward.bmp")
+      (moves
+         (slidez n inner) (slidez s inner) (slidez w inner) (slidez e inner)
+      )
+   )
+
+   (board-setup
+      (South
+         (King h3)
+         (WestGeneral b3)
+         (EastGeneral n3)
+         (Guard g2 i2 b2 n2)
+         (Elephant f2 j2 c2 m2)
+         (Chariot e2 k2 a2 o2)
+         (Cannon g4 i4 c4 m4)
+         (Horse f4 j4 a4 o4)
+         (Warrior d3 l3)
+         (Knight d5 l5)
+         (Killer d1 l1)
+         (Forward h5)
+         (Backward h1)
+         (Pawn a6 b6 c6 i6 j6 k6)
+         (Soldier e6 f6 g6 m6 n6 o6)
+      )
+      (North
+         (King h12)
+         (WestGeneral n12)
+         (EastGeneral b12)
+         (Guard g13 i13 b13 n13)
+         (Elephant f13 j13)
+         (Elephant c13)
+         (Elephant m13)
+         (Chariot e13 k13)
+         (Chariot a13)
+         (Chariot o13)
+         (Cannon g11 i11)
+         (Cannon c11)
+         (Cannon m11)
+         (Horse f11 j11)
+         (Horse a11)
+         (Horse o11)
+         (Warrior d12 l12)
+         (Knight d10 l10)
+         (Killer d14 l14)
+         (Forward h10)
+         (Backward h14)
+         (Pawn e9 f9 g9 m9 n9 o9)
+         (Soldier a9 b9 c9 i9 j9 k9)
+      )
+   )
+
+   (loss-condition (South North) (captured King))
+)

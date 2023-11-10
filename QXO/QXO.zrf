@@ -1,0 +1,126 @@
+(define def-piece
+  (piece
+     (name $1$2)
+     (notation " ")
+     (image $4 "images/QXO/$3_$2.bmp")
+  )
+)
+
+(game
+  (title "Quantum tic-tac-toe (variant 1)")
+  (engine "Axiom/QXO/axiom.dll")
+
+  (move-sound "Audio/Pickup.wav")
+  (drop-sound "Audio/Pickup.wav")
+  (release-sound "Audio/Pickup.wav")
+  (capture-sound "")
+
+  (option "show moves list" false)
+  (option "prevent flipping" true)
+  (option "animate captures" false)
+  (option "animate drops" false)
+  (option "pass turn" forced)
+
+  (players X O)
+  (turn-order X O)
+
+  (board
+        (image "images/QXO/board.bmp")
+        (grid
+            (start-rectangle 16 10 53 47)
+            (dimensions
+                ("a/b/c/d/e/f/g/h/i" (37 0))
+                ("9/8/7/6/5/4/3/2/1" (0 37))
+            )
+        )
+        (grid
+            (start-rectangle 16 16 112 112)
+            (dimensions
+                ("3/2/1" (0 112))
+                ("A/B/C" (112 0))
+            )
+        )
+        (positions 
+            (PF -100 -100 0 0) 
+            (CT -200 -100 0 0) 
+        )
+  )
+  (piece
+     (name M)
+     (notation " ")
+     (image X  "images/QXO/invisible.bmp"
+            O "images/QXO/invisible.bmp")
+  )
+  (def-piece x 1 X  X)
+  (def-piece o 1 O  O)
+  (def-piece x 2 X  X)
+  (def-piece o 2 O  O)
+  (def-piece x 3 X  X)
+  (def-piece o 3 O  O)
+  (def-piece x 4 X  X)
+  (def-piece o 4 O  O)
+  (def-piece x 5 X  X)
+  (def-piece X 1 XX X)
+  (def-piece O 1 OO O)
+  (def-piece X 2 XX X)
+  (def-piece O 2 OO O)
+  (def-piece X 3 XX X)
+  (def-piece O 3 OO O)
+  (def-piece X 4 XX X)
+  (def-piece O 4 OO O)
+  (def-piece X 5 XX X)
+
+  ; The following dummy piece is required in order to placate the Zillions engine.
+  ; It appears as though Zillions must find at least one "moves" keyword somewhere
+  ; in the zrf in order for it to be happy and thus allow "moves" to work correctly.
+  (piece (name Dummy) (dummy) (moves (from)))
+)
+
+(variant
+  (title "Quantum tic-tac-toe (variant 2)")
+)
+
+(variant
+  (title "-")
+)
+
+(variant
+  (title "Loosing game (variant 1)")
+)
+
+(variant
+  (title "Loosing game (variant 2)")
+)
+
+(variant
+  (title "-")
+)
+
+(variant
+  (title "Three Men's Morris (variant 1)")
+)
+
+(variant
+  (title "Three Men's Morris (variant 2)")
+)
+
+(variant
+  (title "Three Men's Morris (variant 3)")
+  (default)
+)
+
+(variant
+  (title "-")
+)
+
+(variant
+  (title "Three Men's Morris (variant 4)")
+)
+
+(variant
+  (title "Three Men's Morris (variant 5)")
+)
+
+(variant
+  (title "Three Men's Morris (variant 6)")
+)

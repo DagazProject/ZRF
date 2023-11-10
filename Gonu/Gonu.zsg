@@ -1,0 +1,51 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=Gonu.zrf
+VariantName=4-line Gonu
+1. Ball d2 - c2
+1. Ball c4 - c3
+2. Ball d1 - d2
+2. Ball a3 - b3
+3. Ball a2 - b2
+3. Ball a4 - a3
+4. Ball b2 - a2 x a3
+4. Ball b3 - b2
+5. Ball a2 - a3
+5. Ball d4 - c4
+6. Ball a3 - b3
+6. Ball c4 - d4 x d2
+7. Ball a1 - a2
+7. Ball b4 - a4
+8. Ball b3 - a3 x a4
+8. Ball d3 - d2
+9. Ball a2 - a1
+9. Ball d4 - c4
+10. Ball c1 - d1
+10. Ball c3 - b3 x b1
+11. Ball c2 - c3
+11. Ball b2 - b1
+12. Ball d1 - c1
+12. Ball d2 - c2
+13. Ball c1 - d1
+13. Ball b1 - c1
+14. Ball a1 - a2
+14. Ball b3 - b2 x a2
+15. Ball d1 - d2
+15. Ball b2 - b3
+16. Ball a3 - a2
+16. Ball b3 - b2
+17. Ball d2 - d1
+17. Ball b2 - b1 x d1
+18. Ball a2 - a3
+18. Ball b1 - b2
+19. Ball a3 - a4
+19. Ball b2 - b3
+20. Ball a4 - a3
+20. Ball c2 - b2
+21. Ball c3 - d3
+21. Ball b2 - c2
+22. Ball d3 - d2
+22. Ball c4 - c3 x a3
+23. Ball d2 - d3
+23. Ball c2 - d2
+24. Ball d3 - d4
+24. Ball c3 - d3 x d4

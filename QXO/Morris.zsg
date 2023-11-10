@@ -1,0 +1,79 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=QXO.zrf
+VariantName=Three Men's Morris (variant 3)
+1. X M g7 X x1 PF X x1 g9
+1. Pass
+2. X M a3 x PF x g7 X M c1 O o1 CT X x1 a3
+2. O M d9 O o1 PF O o1 d9
+3. Pass
+3. O M g3 x PF x c1 O M i1 X x2 CT O o1 g3
+4. X M g9 X x2 PF X x2 g8 X x1 g9
+4. Pass
+5. X M f8 x PF x i1 X M f7 O o2 CT X x2 d8
+5. O M a3 O o2 PF O o2 a2 X x1 a3
+6. Pass
+6. O M e7 x PF x f8 x f7 O M f7 X x3 CT O o2 d7
+7. X M a3 X M PF X M c1 X M a3 X M a2 X M a1 X M b3 X M b2 X M b1 X M c3 X M c2 X X1 1A X M c1 X M a3 X M a2 X M a1 X M b3 X M b2 X M b1 X M c3 X M c2 X X1 1A O M f7 O M d9 O M d8 O M d7 O M e9 O M e8 O M e7 O M f9 O M f8 O O2 3B O M i1 O M g3 O M g2 O M g1 O M h3 O M h2 O M h1 O M i3 O M i2 O O1 1C X M i7 X M g9 X M g8 X M g7 X M h9 X M h8 X M h7 X M i9 X M i8 X X2 3C
+7. Pass
+8. X M d3 X x3 PF X x3 d3
+8. Pass
+9. X M a7 x PF X M c7 O o3 CT X x3 a9
+9. O M a9 O o3 PF O o3 a8 X x3 a9
+10. Pass
+10. O M d6 x PF x a7 x c7 O M f4 X x4 CT O o3 d6
+11. x3 d3 - d5 x f4 X M f4
+11. O M d6 O M PF O M f4 O M d6 O M d5 O M d4 O M e6 O M e5 O M e4 O M f6 O M f5 O O3 2B O M f4 O M d6 O M d5 O M d4 O M e6 O M e5 O M e4 O M f6 O M f5 O O3 2B X M c7 X M a9 X M a8 X M a7 X M b9 X M b8 X M b7 X M c9 X M c8 X X3 3A
+12. Pass
+12. M g3 - d3 x 1C O o1 g3 x g2 x g1 x h3 x h2 x h1 x i3 x i2 O o1 d3 x i1 O M f1 x PF
+13. M g7 - g6 x 3C X x2 g9 x g8 x g7 x h9 x h8 x h7 x i9 x i8 X x2 g6 x i7 x f1 X M i4
+13. o1 g3 - g5 x i4 O M i4
+14. M c3 - d2 x 1A X x1 a3 x a2 x a1 x b3 x b2 x b1 x c3 x c2 X x1 d2 x c1 x i4 X M f1
+14. o1 g5 - g3 x f1 O M i1
+15. x2 g6 - g2 x i1 X M i1
+15. M f6 - d1 x 2B O o3 d6 x d5 x d4 x e6 x e5 x e4 x f6 x f5 O o3 d1 x f4 x i1 O M f1
+16. x1 d2 - d5 x f1 X M f4
+16. o1 g3 - g6 x f4 O M i4
+17. x2 g9 - g5 x i4 X M i4
+17. o3 d1 - g3 x i4 O M i1
+18. M a9 - a6 x 3A X x3 a9 x a8 x a7 x b9 x b8 x b7 x c9 x c8 X x3 a6 x c7 x i1 X M c4
+18. o3 g3 - d2 x c4 O M f1
+19. x1 a3 - d1 x f1 X M f1
+19. O M d6 O M PF O M f4 O M d6 O M d5 O M d4 O M e6 O M e5 O M e4 O M f6 O M f5 O O3 2B O M f4 O M d6 O M d5 O M d4 O M e6 O M e5 O M e4 O M f6 O M f5 O O3 2B X M f1 X M d3 X M d2 X M d1 X M e3 X M e2 X M e1 X M f3 X M f2 X X1 1B O M i4 O M g6 O M g5 O M g4 O M h6 O M h5 O M h4 O M i6 O M i5 O O1 2C X M i1 X M g3 X M g2 X M g1 X M h3 X M h2 X M h1 X M i3 X M i2 X X2 1C
+20. Pass
+20. M d9 - a8 x 3B O o2 d9 x d8 x d7 x e9 x e8 x e7 x f9 x f8 O o2 a8 x f7 O M c7 x PF
+21. M f3 - a3 x 1B X x1 d3 x d2 x d1 x e3 x e2 x e1 x f3 x f2 X x1 a3 x f1 x c7 X M c1
+21. o2 d9 - g9 x c1 O M i7
+22. x3 a6 - a2 x i7 X M c1
+22. M g6 - g8 x 2C O o1 g6 x g5 x g4 x h6 x h5 x h4 x i6 x i5 O o1 g8 x i4 x c1 O M i7
+23. x1 a3 - a6 x i7 X M c4
+23. o2 g9 - g5 x c4 O M i4
+24. x3 a9 - d9 x i4 X M f7
+24. o1 g8 - d8 x f7 O M f7
+25. M g3 - g4 x 1C X x2 g3 x g2 x g1 x h3 x h2 x h1 x i3 x i2 X x2 g4 x i1 x f7 X M i4
+25. M d6 - d7 x 2B O o3 d6 x d5 x d4 x e6 x e5 x e4 x f6 x f5 O o3 d7 x f4 x i4 O M f7
+26. x2 g4 - d5 x f7 X M f4
+26. o3 d7 - a9 x f4 O M c7
+27. x1 a6 - a7 x c7 X M c7
+27. o1 g6 - g2 x c7 O M i1
+28. x1 a7 - d7 x i1 X M f7
+28. o1 d8 - g9 x f7 O M i7
+29. x2 d5 - d8 x i7 X M f7
+29. o3 a9 - e9 x f7 O M f7
+30. x1 d7 - g8 x f7 X M i7
+30. o2 a8 - a6 x i7 O M c4
+31. x2 d8 - d5 x c4 X M f4
+31. o2 a6 - a3 x f4 O M c1
+32. x2 g3 - d2 x c1 X M f1
+32. o2 a3 - d1 x f1 O M f1
+33. x2 d5 - d8 x f1 X M f7
+33. o3 d6 - g6 x f7 O M i4
+34. x3 d9 - d6 x i4 X M f4
+34. o3 g6 - g3 x f4 O M i1
+35. x2 d8 - g7 x i1 X M i7
+35. o3 g3 - e3 x i7 O M f1
+36. X M d3 X M PF X M f1 X M d3 X M d2 X M d1 X M e3 X M e2 X M e1 X M f3 X M f2 X X1 1B X M f1 X M d3 X M d2 X M d1 X M e3 X M e2 X M e1 X M f3 X M f2 X X1 1B X M i7 X M g9 X M g8 X M g7 X M h9 X M h8 X M h7 X M i9 X M i8 X X2 3C O M i4 O M g6 O M g5 O M g4 O M h6 O M h5 O M h4 O M i6 O M i5 O O2 2C O M f7 O M d9 O M d8 O M d7 O M e9 O M e8 O M e7 O M f9 O M f8 O O3 3B O M i1 O M g3 O M g2 O M g1 O M h3 O M h2 O M h1 O M i3 O M i2 O O1 1C
+36. Pass
+37. M f1 - d5 x 1B X x1 d3 x d2 x d1 x e3 x e2 x e1 x f3 x f2 X x1 d5 x f1 X M f4 x PF
+37. M d8 - d4 x 3B O o3 d9 x d8 x d7 x e9 x e8 x e7 x f9 x f8 O o3 d4 x f7 x f4 O M f4
+38. x1 d3 - a3 x f4 X M c1
+38. O M d6 O M PF X M f4 X M d6 X M d5 X M d4 X M e6 X M e5 X M e4 X M f6 X M f5 X X3 2B X M f4 X M d6 X M d5 X M d4 X M e6 X M e5 X M e4 X M f6 X M f5 X X3 2B X M c1 X M a3 X M a2 X M a1 X M b3 X M b2 X M b1 X M c3 X M c2 X X1 1A O M f7 O M d9 O M d8 O M d7 O M e9 O M e8 O M e7 O M f9 O M f8 O O3 3B

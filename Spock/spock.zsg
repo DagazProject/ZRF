@@ -1,0 +1,26 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=spock.zrf
+VariantName=Spock
+1. Paper e1 - e3
+1. Rock a4 - b3
+2. Spock c1 x e2 Blue Scissors c1
+2. Rock d4 - d3
+3. Paper a1 - a3
+3. Scissors b5 - a4
+4. Rock b2 - c3
+4. Rock b4 - b2
+5. Spock e2 x c1 Blue Lizard e2
+5. Rock b2 x b1
+6. Spock c1 x e2 Blue Paper c1
+6. Rock d3 - b5
+7. Paper c1 x b1
+7. Rock b5 - b4
+8. Paper b1 - c1
+8. Paper e5 - b5
+9. Spock e2 x c1 Blue Spock e2
+9. Rock b3 - b2
+10. Rock c3 - d3
+10. Paper b5 - b1
+11. Spock c1 x d3 Blue Scissors c1
+11. Spock c5 x d3 Red Rock c5
+12. Paper a3 x d3

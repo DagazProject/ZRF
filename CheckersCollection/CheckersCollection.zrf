@@ -1,0 +1,4753 @@
+(version "2.0")
+
+(define checker-shift (
+  $1
+  (verify empty?)
+  (if (in-zone? promotion)
+      (add King)
+   else
+      add
+  )
+))
+
+(define damone-shift (
+  $1
+  (verify empty?)
+  add
+))
+
+(define checker-jump (
+  $1
+  (verify enemy?)
+  capture
+  $1
+  (verify empty?)
+  (if (in-zone? promotion)
+      (add-partial King notype)
+   else
+      (add-partial jumptype)
+  )
+))
+
+(define damone-jump (
+  $1
+  (verify enemy?)
+  capture
+  $1
+  (verify empty?)
+  (add-partial $2)
+))
+
+(define dama-checker-jump (
+  $1
+  (verify enemy?)
+  capture
+  $1
+  (verify empty?)
+  (if (in-zone? promotion)
+      (if (or (and (enemy? e) (empty? ee))
+              (and (enemy? w) (empty? ww)))
+          (add-partial continuetype)
+       else
+          (add-partial King notype)
+      )
+   else
+      (add-partial continuetype)
+  )
+))
+
+(define king-shift (
+  (while (empty? $1)
+      $1
+      add
+  )
+))
+
+(define king-jump (
+  (while (empty? $1)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (empty? $1))
+  $1
+  (while empty?
+      mark
+      (while empty? 
+        (opposite $1)
+      ) 
+      capture
+      back
+      (add-partial continuetype)
+      $1
+  )
+))
+
+(define dama-king-continue (
+  (while (empty? $1)
+      $1
+      (verify not-last-from?)
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (empty? $1))
+  $1
+  (while empty?
+      mark
+      (while empty? 
+        (opposite $1)
+      ) 
+      capture
+      back
+      (add-partial continuetype)
+      $1
+  )
+))
+
+(game
+  (title "Turkish Dama")
+  (description "")
+  (history  "Traditional game.")
+
+  (move-sound "Audio/Pickup.wav")
+  (release-sound "Audio/Pickup.wav")
+  (capture-sound "")
+
+  (option "maximal captures" true)
+  (option "prevent flipping" 2)
+  (option "animate captures" false)
+
+  (players    White Black)
+  (turn-order White Black)
+  (move-priorities jumptype normaltype)
+
+  (board
+    (image "images/sultan/chess8x8.bmp" "images/wiedem/chess8x8.bmp")
+    (grid
+      (start-rectangle 5 5 54 54)
+      (dimensions
+        ("a/b/c/d/e/f/g/h" (49 0)) ; files
+        ("8/7/6/5/4/3/2/1" (0 49)) ; ranks
+      )
+      (directions (n 0 -1) (s 0 1) (e 1 0) (w -1 0)
+                  (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)
+                  (ee 2 0) (ww -2 0) (nn 0 -2) (ss 0 2)
+                  (next 0 -1)
+      ) 
+    )
+    (dummy a0)
+    (links next (a0 a1) (a8 b1) (b8 c1) (c8 d1) (d8 e1) (e8 f1) (f8 g1) (g8 h1))
+    (symmetry Black (n s) (s n) (nn ss) (ss nn) (nw sw) (sw nw) (ne se) (se ne))
+    (zone (name promotion) (players White)
+          (positions a8 b8 c8 d8 e8 f8 g8 h8)
+    )
+    (zone (name promotion) (players Black)
+          (positions a1 b1 c1 d1 e1 f1 g1 h1)
+    )
+  )
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (dama-checker-jump n)
+           (dama-checker-jump e)
+           (dama-checker-jump w)
+
+        (move-type normaltype)
+           (checker-shift n)
+           (checker-shift e)
+           (checker-shift w)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (king-jump n)
+           (king-jump e)
+           (king-jump w)
+           (king-jump s)
+
+        (move-type continuetype)
+           (dama-king-continue n)
+           (dama-king-continue e)
+           (dama-king-continue w)
+           (dama-king-continue s)
+
+        (move-type normaltype)
+           (king-shift n)
+           (king-shift e)
+           (king-shift w)
+           (king-shift s)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a2 b2 c2 d2 e2 f2 g2 h2  a3 b3 c3 d3 e3 f3 g3 h3) )
+    (Black (Checker a7 b7 c7 d7 e7 f7 g7 h7  a6 b6 c6 d6 e6 f6 g6 h6) )
+  )
+
+  (loss-condition (White Black) (pieces-remaining 0) )
+  (loss-condition (White Black) stalemated )
+)
+
+(define check-attacked-man
+  (if (and (on-board? $1) (on-board? $2) (enemy? $1) (empty? $2))
+      (set-flag is-attacked? true)
+  )
+)
+
+(define check-attacked-king
+  (if (and (on-board? $2) (on-board? $1) (empty? $2))
+      $1
+      (while (and (on-board? $1) empty?) $1)
+      (if (and enemy? (piece? King))
+          (set-flag is-attacked? true)
+      )
+      $2
+      (while empty? $2)
+  )
+)
+
+(define check-attacked
+  (set-position-flag is-from true)
+  (set-flag is-attacked? false)
+  mark a0
+  (while (on-board? next)
+     (if (and friend? (not-position-flag? is-from))
+         (check-attacked-man  n s)
+         (check-attacked-man  w e)
+         (check-attacked-man  e w)
+         (check-attacked-king n s)
+         (check-attacked-king w e)
+         (check-attacked-king e w)
+         (check-attacked-king s n)
+     )
+     next
+  )
+  back
+)
+
+(define man-attacking-dir
+  (verify (or (not-enemy? $1) (not-empty? $2)))
+)
+
+(define man-attacking
+  (if (flag? is-attacked?)
+      (man-attacking-dir n nn)
+      (man-attacking-dir w ww)
+      (man-attacking-dir e ee)
+  )
+)
+
+(define king-attacking
+  (if (flag? is-attacked?)
+      mark $1
+      (while (and (on-board? $1) empty?) $1)
+      (if (and enemy? (on-board? $1))
+          (verify (not-empty? $1))
+      )
+      back
+  )
+)
+
+(define bahrain-checker-shift (
+  (check-attacked)
+  $1
+  (verify empty?)
+  (man-attacking)
+  (if (in-zone? promotion)
+      (add King)
+   else
+      add
+  )
+))
+
+(define bahrain-king-shift-1 (
+  (check-attacked)
+  $1 (verify empty?)
+  (king-attacking $2) 
+  (king-attacking $3) 
+  (king-attacking $4) 
+  add
+))
+
+(define bahrain-king-shift-2 (
+  (check-attacked)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  (king-attacking $2) 
+  (king-attacking $3) 
+  (king-attacking $4) 
+  add
+))
+
+(define bahrain-king-shift-3 (
+  (check-attacked)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  (king-attacking $2) 
+  (king-attacking $3) 
+  (king-attacking $4) 
+  add
+))
+
+(define bahrain-king-shift-4 (
+  (check-attacked)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  (king-attacking $2) 
+  (king-attacking $3) 
+  (king-attacking $4) 
+  add
+))
+
+(define bahrain-king-shift-5 (
+  (check-attacked)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  (king-attacking $2) 
+  (king-attacking $3) 
+  (king-attacking $4) 
+  add
+))
+
+(define bahrain-king-shift-6 (
+  (check-attacked)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  (king-attacking $2) 
+  (king-attacking $3) 
+  (king-attacking $4) 
+  add
+))
+
+(define bahrain-king-shift-7 (
+  (check-attacked)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  $1 (verify empty?)
+  (king-attacking $2) 
+  (king-attacking $3) 
+  (king-attacking $4) 
+  add
+))
+
+(variant
+  (title "Bahrain Dama")
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+;    (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (dama-checker-jump n)
+           (dama-checker-jump e)
+           (dama-checker-jump w)
+
+        (move-type normaltype)
+           (bahrain-checker-shift n)
+           (bahrain-checker-shift e)
+           (bahrain-checker-shift w)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+;    (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (king-jump n)
+           (king-jump e)
+           (king-jump w)
+           (king-jump s)
+
+        (move-type continuetype)
+           (dama-king-continue n)
+           (dama-king-continue e)
+           (dama-king-continue w)
+           (dama-king-continue s)
+
+        (move-type normaltype)
+           (bahrain-king-shift-1 n e w s) (bahrain-king-shift-1 e w s n) (bahrain-king-shift-1 w s n e) (bahrain-king-shift-1 s n e w)
+           (bahrain-king-shift-2 n e w s) (bahrain-king-shift-2 e w s n) (bahrain-king-shift-2 w s n e) (bahrain-king-shift-2 s n e w)
+           (bahrain-king-shift-3 n e w s) (bahrain-king-shift-3 e w s n) (bahrain-king-shift-3 w s n e) (bahrain-king-shift-3 s n e w)
+           (bahrain-king-shift-4 n e w s) (bahrain-king-shift-4 e w s n) (bahrain-king-shift-4 w s n e) (bahrain-king-shift-4 s n e w)
+           (bahrain-king-shift-5 n e w s) (bahrain-king-shift-5 e w s n) (bahrain-king-shift-5 w s n e) (bahrain-king-shift-5 s n e w)
+           (bahrain-king-shift-6 n e w s) (bahrain-king-shift-6 e w s n) (bahrain-king-shift-6 w s n e) (bahrain-king-shift-6 s n e w)
+           (bahrain-king-shift-7 n e w s) (bahrain-king-shift-7 e w s n) (bahrain-king-shift-7 w s n e) (bahrain-king-shift-7 s n e w)
+
+        (move-type notype)
+     )
+  )
+
+  (loss-condition (White Black) (pieces-remaining 0) )
+  (loss-condition (White Black) stalemated )
+  (loss-condition (White Black) repetition )
+)
+ 
+(define short-king-jump (
+  (while (empty? $1)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (empty? $1))
+  capture
+  $1
+  (add-partial continuetype)
+))
+
+(define short-king-continue (
+  (while (empty? $1)
+      $1
+      (verify not-last-from?)
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (empty? $1))
+  capture
+  $1
+  (add-partial continuetype)
+))
+
+(define greek-king-jump (
+  (while (empty? $1)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (empty? $1))
+  capture
+  $1
+  (add-partial continuetype)
+))
+
+(define greek-king-continue (
+  (while (empty? $1)
+      $1
+      (verify not-last-from?)
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (empty? $1))
+  capture
+  $1
+  (add-partial continuetype)
+))
+
+(variant
+  (title "Greek Checkers")
+  (description "")
+  (history  "Traditional game.")
+
+  (option "maximal captures" false)
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (greek-king-jump n)
+           (greek-king-jump e)
+           (greek-king-jump w)
+           (greek-king-jump s)
+
+        (move-type continuetype)
+           (greek-king-continue n)
+           (greek-king-continue e)
+           (greek-king-continue w)
+           (greek-king-continue s)
+
+        (move-type normaltype)
+           (king-shift n)
+           (king-shift e)
+           (king-shift w)
+           (king-shift s)
+
+        (move-type notype)
+     )
+  )
+)
+
+(variant
+  (title "Greek Checkers (variant)")
+  (description "")
+  (history  "Variant of the traditional game.")
+
+  (option "maximal captures" true)
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (moves
+        (move-type jumptype)
+           (short-king-jump n)
+           (short-king-jump e)
+           (short-king-jump w)
+           (short-king-jump s)
+
+        (move-type continuetype)
+           (short-king-continue n)
+           (short-king-continue e)
+           (short-king-continue w)
+           (short-king-continue s)
+
+        (move-type normaltype)
+           (king-shift n)
+           (king-shift e)
+           (king-shift w)
+           (king-shift s)
+
+        (move-type notype)
+     )
+  )
+)
+
+(define ken-capture (
+  $1
+  (verify enemy?)
+  capture
+  $1
+  (verify empty?)
+  (if (in-zone? promotion)
+      (add-partial King notype)
+   else
+      (add-partial continuetype)
+  )
+))
+
+(define ken-jump (
+  $1
+  (verify friend?)
+  $1
+  (verify empty?)
+  (if (in-zone? promotion)
+      (add-partial King notype)
+   else
+      (add-partial continuetype)
+  )
+))
+
+(define ken-jump (
+  $1
+  (verify friend?)
+  (verify (piece? Checker))
+  $1
+  (verify empty?)
+  (if (in-zone? promotion)
+      (add-partial King notype)
+   else
+      (add-partial notype)
+  )
+))
+
+(variant
+  (title "Ossetian Kena")
+  (description "")
+  (history  "Traditional game.")
+
+  (option "maximal captures" false)
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (moves
+        (move-type jumptype)
+           (checker-jump n)
+           (checker-jump e)
+           (checker-jump w)
+;          (checker-jump s)
+
+        (move-type normaltype)
+           (checker-shift n)
+           (checker-shift e)
+           (checker-shift w)
+           (ken-jump n)
+           (ken-jump e)
+           (ken-jump w)
+;          (ken-jump s)
+
+        (move-type notype)
+     )
+  )
+)
+
+(define ken-jump-variant (
+  (create Mark)
+  $1
+  (verify friend?)
+  (verify (piece? Checker))
+  $1
+  (verify empty?)
+  (if (in-zone? promotion)
+      (add-partial King notype)
+   else
+      (add-partial continuetype)
+  )
+))
+
+(define clear-mark
+   mark a0
+   (while (on-board? next) 
+      next
+      (if (and enemy? (piece? Mark))
+          capture
+      )
+   )
+   back
+)
+
+(define ken-checker-jump (
+  (clear-mark)
+  $1
+  (verify enemy?)
+  capture
+  $1
+  (verify empty?)
+  (if (in-zone? promotion)
+      (add-partial King notype)
+   else
+      (add-partial jumptype)
+  )
+))
+
+(define ken-checker-shift (
+  (clear-mark)
+  $1
+  (verify empty?)
+  (if (in-zone? promotion)
+      (add King)
+   else
+      add
+  )
+))
+
+(define ken-king-jump (
+  (clear-mark)
+  (while (empty? $1)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (empty? $1))
+  $1
+  (while empty?
+      mark
+      (while empty? 
+        (opposite $1)
+      ) 
+      capture
+      back
+      (add-partial continuetype)
+      $1
+  )
+))
+
+(define ken-king-continue (
+  (clear-mark)
+  (while (empty? $1)
+      $1
+      (verify not-last-from?)
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (empty? $1))
+  $1
+  (while empty?
+      mark
+      (while empty? 
+        (opposite $1)
+      ) 
+      capture
+      back
+      (add-partial continuetype)
+      $1
+  )
+))
+
+(define ken-king-shift (
+  (clear-mark)
+  (while (empty? $1)
+      $1
+      add
+  )
+))
+
+(variant
+  (title "Ossetian Kena (variant)")
+  (description "")
+  (history  "Variant of the traditional game.")
+
+  (option "maximal captures" false)
+
+  (piece
+     (name Mark)
+     (image White "images/other/i.bmp"
+            Black "images/other/i.bmp")
+  )
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (moves
+        (move-type jumptype)
+           (ken-checker-jump n)
+           (ken-checker-jump e)
+           (ken-checker-jump w)
+
+        (move-type continuetype)
+           (ken-checker-jump n)
+           (ken-checker-jump e)
+           (ken-checker-jump w)
+           (ken-jump-variant n)
+           (ken-jump-variant e)
+           (ken-jump-variant w)
+
+        (move-type normaltype)
+           (ken-checker-shift n)
+           (ken-checker-shift e)
+           (ken-checker-shift w)
+           (ken-jump-variant n)
+           (ken-jump-variant e)
+           (ken-jump-variant w)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (ken-king-jump n)
+           (ken-king-jump e)
+           (ken-king-jump w)
+           (ken-king-jump s)
+
+        (move-type continuetype)
+           (ken-king-continue n)
+           (ken-king-continue e)
+           (ken-king-continue w)
+           (ken-king-continue s)
+
+        (move-type normaltype)
+           (ken-king-shift n)
+           (ken-king-shift e)
+           (ken-king-shift w)
+           (ken-king-shift s)
+
+        (move-type notype)
+     )
+  )
+)
+
+(variant
+  (title "Harzdame")
+  (description "")
+  (history  "Invented by Benedikt Rosenau in 2009.")
+
+  (option "maximal captures" true)
+
+  (board
+    (image "images/sultan/chess8x8.bmp" "images/wiedem/chess8x8.bmp")
+    (grid
+      (start-rectangle 5 5 54 54)
+      (dimensions
+        ("a/b/c/d/e/f/g/h" (49 0)) ; files
+        ("8/7/6/5/4/3/2/1" (0 49)) ; ranks
+      )
+      (directions (n 0 -1) (s 0 1) (e 1 0) (w -1 0)
+                  (next 0 -1)
+      ) 
+    )
+    (dummy a0)
+    (links next (a0 a1) (a8 b1) (b8 c1) (c8 d1) (d8 e1) (e8 f1) (f8 g1) (g8 h1))
+    (symmetry Black (n s) (s n) (e w) (w e))
+    (zone (name promotion) (players White)
+          (positions c8 d8 e8 f8 g8 h8 h7 h6 h5 h4 h3)
+    )
+    (zone (name promotion) (players Black)
+          (positions a6 a5 a4 a3 a2 a1 b1 c1 d1 e1 f1)
+    )
+  )
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (international-checker-jump n e w)
+           (international-checker-jump e n s)
+           (international-checker-jump w n s)
+           (international-checker-jump s e w)
+
+        (move-type normaltype)
+           (checker-shift n)
+           (checker-shift e)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (long-king-jump n e w)
+           (long-king-jump e n s)
+           (long-king-jump w n s)
+           (long-king-jump s e w)
+
+        (move-type continuetype)
+           (long-king-continue n e w)
+           (long-king-continue e n s)
+           (long-king-continue w n s)
+           (long-king-continue s e w)
+
+        (move-type normaltype)
+           (king-shift n)
+           (king-shift w)
+           (king-shift e)
+           (king-shift s)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 b1 c1 d1 e1 f1  a2 b2 c2 d2 e2  a3 b3 c3 d3  a4 b4 c4  a5 b5  a6) )
+    (Black (Checker c8 d8 e8 f8 g8 h8  d7 e7 f7 g7 h7  e6 f6 g6 h6  f5 g5 h5  g4 h4  h3) )
+  )
+)
+
+(define capture-all
+   mark  
+   a0 
+   (while (on-board? next) 
+      next
+      (if captured? capture)
+   )
+   back  
+)
+
+(define checker-captured-find
+   mark
+   (if (on-board? $1)  
+      $1    
+      (if (and enemy? (on-board? $1) (empty? $1) (not captured?)) 
+          (set-flag more-captures true)
+      )
+   )
+   back
+)
+
+(define king-captured-find
+   mark
+   (while (and (on-board? $1) (empty? $1))
+      $1
+   )
+   (if (on-board? $1)  
+      $1    
+      (if (and enemy? (empty? $1) (not captured?)) 
+          (set-flag more-captures true)
+      )
+   )
+   back
+)
+
+(define markit 
+  (set-attribute captured? true)
+)
+
+(define long-checker-jump (
+  (verify (not captured?))    
+  $1
+  (verify enemy?)
+  (verify (not captured?))
+  $1
+  (verify empty?)
+  (set-flag more-captures false)
+  (if (in-zone? promotion)
+      (king-captured-find $1)
+      (king-captured-find $2)
+      (king-captured-find $3)
+   else
+      (checker-captured-find $1)
+      (checker-captured-find $2)
+      (checker-captured-find $3)
+  )
+  (if (flag? more-captures)
+      (opposite $1)
+      (markit)
+      $1
+  )
+  (if (not (flag? more-captures))
+      (opposite $1) 
+      (if enemy?
+          capture
+      )
+      $1
+      (capture-all)
+  )
+  (if (in-zone? promotion)
+      (if (flag? more-captures)
+          (add-partial King continuetype)
+       else
+          (add-partial King notype)
+      )
+   else
+      (if (flag? more-captures)
+          (add-partial jumptype)
+       else
+          (add-partial notype)
+      )
+  )
+))
+
+(define lng-checker-jump (
+  (verify (not captured?))    
+  $1
+  (verify enemy?)
+  capture
+  $1
+  (verify empty?)
+  (set-flag more-captures false)
+  (if (in-zone? promotion)
+      (king-captured-find $1)
+      (king-captured-find $2)
+      (king-captured-find $3)
+   else
+      (checker-captured-find $1)
+      (checker-captured-find $2)
+      (checker-captured-find $3)
+  )
+  (if (in-zone? promotion)
+      (if (flag? more-captures)
+          (add-partial King jumptype)
+       else
+          (add-partial King notype)
+      )
+   else
+      (if (flag? more-captures)
+          (add-partial jumptype)
+       else
+          (add-partial notype)
+      )
+  )
+))
+
+(define long-king-jump (
+  (while (or (empty? $1) captured?)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (empty? $1))
+  $1
+  (while empty?
+      (set-flag more-captures false)
+      (king-captured-find $1)
+      (king-captured-find $2)
+      (king-captured-find $3)
+      mark
+      (while empty? 
+          (opposite $1)
+      ) 
+      (if (flag? more-captures)
+          (markit)
+      )
+      back
+      (if (flag? more-captures)
+          (add-partial continuetype)
+       else
+          mark
+          (opposite $1)
+          (while empty?
+             (opposite $1)
+          )
+          (if enemy?
+              capture
+          )
+          back
+          (capture-all)
+          (add-partial notype)
+      )
+      $1
+  )
+))
+
+(define long-king-continue (
+  (verify (not captured?))    
+  (while (or (empty? $1) captured?)
+      $1
+      (verify not-last-from?)
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (not captured?))    
+  (verify (empty? $1))
+  $1
+  (while empty?
+      (set-flag more-captures false)
+      (king-captured-find $1)
+      (king-captured-find $2)
+      (king-captured-find $3)
+      mark
+      (while empty? 
+          (opposite $1)
+      ) 
+      (if (flag? more-captures)
+          (markit)
+      )
+      back
+      (if (flag? more-captures)
+          (add-partial continuetype)
+       else
+          mark
+          (opposite $1)
+          (while empty?
+             (opposite $1)
+          )
+          (if enemy?
+              capture
+          )
+          back
+          (capture-all)
+          (add-partial notype)
+      )
+      $1
+  )
+))
+
+(define lng-king-jump (
+  (while (empty? $1)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (empty? $1))
+  $1
+  (while empty?
+      (set-flag more-captures false)
+      (king-captured-find $1)
+      (king-captured-find $2)
+      (king-captured-find $3)
+      mark
+      (while empty? 
+          (opposite $1)
+      ) 
+      capture
+      back
+      (if (flag? more-captures)
+          (add-partial jumptype)
+       else
+          (add-partial notype)
+      )
+      $1
+  )
+))
+
+(define long-jump (
+  $1
+  (verify enemy?)
+  capture
+  $1
+  (verify empty?)
+  (if (in-zone? promotion)
+      (add-partial King jumptype)
+   else
+      (add-partial jumptype)
+  )
+))
+
+(define senegal-checker-shift (
+  $1
+  (verify empty?)
+  (if (in-zone? promotion)
+      capture
+  )
+  add
+))
+
+(define senegal-checker-jump (
+  $1
+  (verify enemy?)
+  capture
+  $1
+  (verify empty?)
+  (if (in-zone? promotion)
+      (if (or (and (enemy? e) (empty? ee))
+              (and (enemy? w) (empty? ww)))
+          (add-partial jumptype)
+       else
+          capture
+          (add-partial notype)
+      )
+   else
+      (add-partial jumptype)
+  )
+))
+
+(variant
+  (title "Senegalese Checkers")
+  (description "")
+  (history  "Traditional game.")
+
+  (option "maximal captures" false)
+
+  (board
+    (image "images/sultan/chess6x5.bmp" "images/wiedem/chess6x5.bmp")
+    (grid
+      (start-rectangle 5 5 54 54)
+      (dimensions
+        ("a/b/c/d/e/f" (49 0)) ; files
+        ("5/4/3/2/1" (0 49)) ; ranks
+      )
+      (directions (n 0 -1) (s  0 1) (e 1 0) (w -1 0)
+                  (ee 2 0) (ww -2 0)
+      ) 
+    )
+    (symmetry Black (n s) (s n))
+    (zone (name promotion) (players White)
+          (positions a5 b5 c5 d5 e5 f5)
+    )
+    (zone (name promotion) (players Black)
+          (positions a1 b1 c1 d1 e1 f1)
+    )
+  )
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (moves
+        (move-type jumptype)
+           (senegal-checker-jump n)
+           (senegal-checker-jump e)
+           (senegal-checker-jump w)
+
+        (move-type normaltype)
+           (senegal-checker-shift n)
+           (senegal-checker-shift e)
+           (senegal-checker-shift w)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 b1 c1 d1 e1 f1  a2 b2 c2 d2 e2 f2  e3 f3) )
+    (Black (Checker a5 b5 c5 d5 e5 f5  a4 b4 c4 d4 e4 f4  a3 b3) )
+  )
+
+  (loss-condition (White Black) (pieces-remaining 0) )
+  (count-condition (White Black) stalemated )
+  (count-condition (White Black) repetition )
+)
+
+(variant
+  (title "Khakass Tobit")
+  (description "")
+  (history  "Traditional game.")
+
+  (option "maximal captures" false)
+
+  (board
+    (image "images/wiedem/tobit.bmp")
+    (grid
+      (start-rectangle 5 5 54 54)
+      (dimensions
+        ("a/b/c/d/e/f/g" (49 0)) ; files
+        ("6/5/4/3/2/1" (0 49)) ; ranks
+      )
+      (directions (n 0 -1) (s  0 1) (e 1 0) (w -1 0)
+      ) 
+    )
+    (kill-positions a1 a6 g1 g6)
+    (unlink (a2 a3) (a3 a4) (a4 a5) (g2 g3) (g3 g4) (g4 g5)
+            (b1 c1) (c1 d1) (d1 e1) (e1 f1)
+            (b6 c6) (c6 d6) (d6 e6) (e6 f6)
+    )
+    (symmetry Black (n s) (s n))
+    (zone (name promotion) (players White)
+          (positions b6 c6 d6 e6 f6)
+    )
+    (zone (name promotion) (players Black)
+          (positions b1 c1 d1 e1 f1)
+    )
+  )
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (moves
+        (move-type jumptype)
+           (checker-jump n)
+           (checker-jump e)
+           (checker-jump w)
+           (checker-jump s)
+
+        (move-type normaltype)
+           (checker-shift n)
+           (checker-shift e)
+           (checker-shift w)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (moves
+        (move-type jumptype)
+           (damone-jump n jumptype)
+           (damone-jump e jumptype)
+           (damone-jump w jumptype)
+           (damone-jump s jumptype)
+
+        (move-type normaltype)
+           (damone-shift n)
+           (damone-shift e)
+           (damone-shift w)
+           (damone-shift s)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker b1 c1 d1 e1 f1  a2 b2 c2 d2 e2 f2 g2) )
+    (Black (Checker b6 c6 d6 e6 f6  a5 b5 c5 d5 e5 f5 g5) )
+  )
+)
+
+(variant
+  (title "-")
+)
+
+(variant
+  (title "Armenian Tama")
+  (description "")
+  (history  "Traditional game.")
+
+  (option "maximal captures" true)
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (long-checker-jump n w e)
+           (long-checker-jump e n n)
+           (long-checker-jump w n n)
+
+        (move-type normaltype)
+           (checker-shift n)
+           (checker-shift e)
+           (checker-shift w)
+           (checker-shift ne)
+           (checker-shift nw)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (long-king-jump n w e)
+           (long-king-jump e n s)
+           (long-king-jump w n s)
+           (long-king-jump s w e)
+
+        (move-type continuetype)
+           (long-king-continue n w e)
+           (long-king-continue e n s)
+           (long-king-continue w n s)
+           (long-king-continue s w e)
+
+        (move-type normaltype)
+           (king-shift n)
+           (king-shift e)
+           (king-shift w)
+           (king-shift s)
+           (king-shift ne)
+           (king-shift nw)
+           (king-shift se)
+           (king-shift sw)
+
+        (move-type notype)
+     )
+  )
+)
+
+(variant
+  (title "Armenian Tama (variant)")
+  (description "")
+  (history  "Variant of the traditional game.")
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (moves
+        (move-type jumptype)
+           (long-jump n)
+           (long-jump e)
+           (long-jump w)
+
+        (move-type normaltype)
+           (checker-shift n)
+           (checker-shift e)
+           (checker-shift w)
+           (checker-shift ne)
+           (checker-shift nw)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (moves
+        (move-type jumptype)
+           (king-jump n)
+           (king-jump e)
+           (king-jump w)
+           (king-jump s)
+
+        (move-type continuetype)
+           (king-jump n)
+           (king-jump e)
+           (king-jump w)
+           (king-jump s)
+
+        (move-type normaltype)
+           (king-shift n)
+           (king-shift e)
+           (king-shift w)
+           (king-shift s)
+           (king-shift ne)
+           (king-shift nw)
+           (king-shift se)
+           (king-shift sw)
+
+        (move-type notype)
+     )
+  )
+)
+
+(define oc-shift (
+  $1
+  (verify empty?)
+  add
+))
+
+(define oc-jump (
+  $1
+  (verify enemy?)
+  capture
+  $1
+  (verify empty?)
+  (add-partial jumptype)
+))
+
+(variant
+  (title "Ossetian Checkers")
+  (description "")
+  (history  "Traditional game.")
+
+  (board
+    (image "images/wiedem/ossetian7x7.bmp")
+    (grid
+      (start-rectangle 6 6 55 55)
+      (dimensions
+        ("a/b/c/d/e/f/g" (56 0)) ; files
+        ("7/6/5/4/3/2/1" (0 56)) ; ranks
+      )
+      (directions (n 0 -1) (s 0 1) (e 1 0) (w -1 0)
+                  (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)
+                  (ee 2 0) (ww -2 0)
+      ) 
+    )
+    (symmetry Black (n s) (s n) (nw sw) (sw nw) (ne se) (se ne))
+    (zone (name promotion) (players White Black)
+          (positions a1)
+    )
+  )
+
+  (move-priorities normaltype)
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (oc-jump n)
+           (oc-jump s)
+           (oc-jump w)
+           (oc-jump e)
+           (oc-jump nw)
+           (oc-jump sw)
+           (oc-jump ne)
+           (oc-jump se)
+
+        (move-type normaltype)
+           (oc-shift n)
+           (oc-shift nw)
+           (oc-shift ne)
+           (oc-jump n)
+           (oc-jump s)
+           (oc-jump w)
+           (oc-jump e)
+           (oc-jump nw)
+           (oc-jump sw)
+           (oc-jump ne)
+           (oc-jump se)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 b1 c1 d1 e1 f1 g1  a2 b2 c2 d2 e2 f2 g2 a3 b3 c3 d3 e3 f3 g3) )
+    (Black (Checker a5 b5 c5 d5 e5 f5 g5  a6 b6 c6 d6 e6 f6 g6 a7 b7 c7 d7 e7 f7 g7) )
+  )
+)
+
+(variant
+  (title "Gothic Checkers")
+  (description "")
+  (history  "Traditional game.")
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (checker-jump n)
+           (checker-jump e)
+           (checker-jump w)
+           (checker-jump nw)
+           (checker-jump ne)
+
+        (move-type normaltype)
+           (checker-shift ne)
+           (checker-shift nw)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (king-jump n)
+           (king-jump e)
+           (king-jump w)
+           (king-jump s)
+           (king-jump nw)
+           (king-jump ne)
+           (king-jump sw)
+           (king-jump se)
+
+        (move-type continuetype)
+           (dama-king-continue n)
+           (dama-king-continue e)
+           (dama-king-continue w)
+           (dama-king-continue s)
+           (dama-king-continue nw)
+           (dama-king-continue ne)
+           (dama-king-continue sw)
+           (dama-king-continue se)
+
+        (move-type normaltype)
+           (king-shift n)
+           (king-shift e)
+           (king-shift w)
+           (king-shift s)
+           (king-shift nw)
+           (king-shift ne)
+           (king-shift sw)
+           (king-shift se)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 b1 c1 d1 e1 f1 g1 h1  a2 b2 c2 d2 e2 f2 g2 h2) )
+    (Black (Checker a8 b8 c8 d8 e8 f8 g8 h8  a7 b7 c7 d7 e7 f7 g7 h7) )
+  )
+)
+
+(define turkthic-checker-jump (
+  $1
+  (verify enemy?)
+  capture
+  $1
+  (verify empty?)
+  (set-flag more-captures false)
+  (if (in-zone? promotion)
+      (king-captured-find $1)
+      (king-captured-find $2)
+      (king-captured-find $3)
+      (king-captured-find $4)
+      (king-captured-find $5)
+      (king-captured-find $6)
+      (king-captured-find $7)
+   else
+      (checker-captured-find $1)
+      (checker-captured-find $2)
+      (checker-captured-find $3)
+      (checker-captured-find $4)
+      (checker-captured-find $5)
+      (checker-captured-find $6)
+      (checker-captured-find $7)
+  )
+  (if (in-zone? promotion)
+      (if (flag? more-captures)
+          (add-partial King jumptype)
+       else
+          (add-partial King notype)
+      )
+   else
+      (if (flag? more-captures)
+          (add-partial jumptype)
+       else
+          (add-partial notype)
+      )
+  )
+))
+
+(define turkthic-king-jump (
+  (while (empty? $1)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (empty? $1))
+  capture
+  $1
+  (add-partial continuetype)
+))
+
+(define turkthic-king-continue (
+  (while (empty? $1)
+      $1
+      (verify not-last-from?)
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (empty? $1))
+  capture
+  $1
+  (add-partial continuetype)
+))
+
+(variant
+  (title "Turkthic Checkers (Turkish+Gothic)")
+
+  (option "maximal captures" false)
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (turkthic-checker-jump n e w ne nw se sw)
+           (turkthic-checker-jump e n s ne nw se sw)
+           (turkthic-checker-jump w n s ne nw se sw)
+           (turkthic-checker-jump nw sw ne n e s w)
+           (turkthic-checker-jump ne nw se n e s w)
+
+        (move-type normaltype)
+           (checker-shift n)
+           (checker-shift e)
+           (checker-shift w)
+           (checker-shift nw)
+           (checker-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (turkthic-king-jump n)
+           (turkthic-king-jump e)
+           (turkthic-king-jump w)
+           (turkthic-king-jump s)
+           (turkthic-king-jump nw)
+           (turkthic-king-jump ne)
+           (turkthic-king-jump se)
+           (turkthic-king-jump sw)
+
+        (move-type continuetype)
+           (turkthic-king-continue n)
+           (turkthic-king-continue e)
+           (turkthic-king-continue w)
+           (turkthic-king-continue s)
+           (turkthic-king-continue nw)
+           (turkthic-king-continue ne)
+           (turkthic-king-continue se)
+           (turkthic-king-continue sw)
+
+        (move-type normaltype)
+           (king-shift n) (king-shift nw)
+           (king-shift e) (king-shift ne)
+           (king-shift w) (king-shift sw)
+           (king-shift s) (king-shift se)
+
+        (move-type notype)
+     )
+  )
+)
+
+(variant
+  (title "Universal Checkers")
+  (description "")
+  (history  "Unknown Inventor.")
+
+  (option "maximal captures" false)
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (checker-jump n)
+           (checker-jump e)
+           (checker-jump w)
+           (checker-jump s)
+           (checker-jump ne)
+           (checker-jump nw)
+           (checker-jump se)
+           (checker-jump sw)
+
+        (move-type normaltype)
+           (checker-shift n)
+           (checker-shift e)
+           (checker-shift w)
+           (checker-shift nw)
+           (checker-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (king-jump n)
+           (king-jump e)
+           (king-jump w)
+           (king-jump s)
+           (king-jump nw)
+           (king-jump ne)
+           (king-jump sw)
+           (king-jump se)
+
+        (move-type continuetype)
+           (king-jump n)
+           (king-jump e)
+           (king-jump w)
+           (king-jump s)
+           (king-jump nw)
+           (king-jump ne)
+           (king-jump sw)
+           (king-jump se)
+
+        (move-type normaltype)
+           (king-shift n)
+           (king-shift w)
+           (king-shift e)
+           (king-shift s)
+           (king-shift ne)
+           (king-shift nw)
+           (king-shift se)
+           (king-shift sw)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 b1 c1 d1 e1 f1 g1 h1  a2 b2 c2 d2 e2 f2 g2 h2  a3 b3 c3 d3 e3 f3 g3 h3) )
+    (Black (Checker a8 b8 c8 d8 e8 f8 g8 h8  a7 b7 c7 d7 e7 f7 g7 h7  a6 b6 c6 d6 e6 f6 g6 h6) )
+  )
+)
+
+(variant
+  (title "Croda")
+  (description "")
+  (history  "Croda was invented by the Croation mathematics professor and Draughts master Ljuban Dedic \
+             in order to create a draughts game with a smaller margin of draws.")
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (checker-jump n)
+           (checker-jump e)
+           (checker-jump w)
+           (checker-jump s)
+
+        (move-type normaltype)
+           (checker-shift n)
+           (checker-shift ne)
+           (checker-shift nw)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 b1 c1 d1 e1 f1 g1 h1  a2 b2 c2 d2 e2 f2 g2 h2  a3 b3 c3 d3 e3 f3 g3 h3) )
+    (Black (Checker a8 b8 c8 d8 e8 f8 g8 h8  a7 b7 c7 d7 e7 f7 g7 h7  a6 b6 c6 d6 e6 f6 g6 h6) )
+  )
+)
+
+(define dameo-shift (
+  $1
+  (while (and friend? (piece? Checker))
+      $1
+  )
+  (verify empty?)
+  (if (in-zone? promotion)
+      (add King)
+   else
+      add
+  )
+))
+
+(variant
+  (title "Dameo")
+  (description "")
+  (history  "Invented by Christian Freeling in 2000.")
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (checker-jump n)
+           (checker-jump e)
+           (checker-jump w)
+           (checker-jump s)
+
+        (move-type normaltype)
+           (dameo-shift n)
+           (dameo-shift ne)
+           (dameo-shift nw)
+
+        (move-type notype)
+     )
+  )
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (king-jump n)
+           (king-jump e)
+           (king-jump w)
+           (king-jump s)
+
+        (move-type continuetype)
+           (dama-king-continue n)
+           (dama-king-continue e)
+           (dama-king-continue w)
+           (dama-king-continue s)
+
+        (move-type normaltype)
+           (king-shift n) (king-shift nw)
+           (king-shift e) (king-shift ne)
+           (king-shift w) (king-shift sw)
+           (king-shift s) (king-shift se)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 b1 c1 d1 e1 f1 g1 h1  b2 c2 d2 e2 f2 g2  c3 d3 e3 f3) )
+    (Black (Checker a8 b8 c8 d8 e8 f8 g8 h8  b7 c7 d7 e7 f7 g7  c6 d6 e6 f6) )
+  )
+)
+
+(define persian-shift (
+  (set-flag is-side (in-zone? side))
+  $1
+  (verify empty?)
+  (verify (or (flag? is-side) (in-zone? side)))
+  (if (in-zone? promotion)
+      (add King)
+   else
+      add
+  )
+))
+
+(define persian-king-shift (
+  (set-flag is-side (in-zone? side))
+  $1
+  (verify empty?)
+  (verify (or (flag? is-side) (in-zone? side)))
+  add
+))
+
+(variant
+  (title "Persian Checkers")
+  (description "")
+  (history  "Traditional game.")
+
+  (board
+    (image "images/sultan/chess8x8.bmp" "images/wiedem/chess8x8.bmp")
+    (grid
+      (start-rectangle 5 5 54 54)
+      (dimensions
+        ("a/b/c/d/e/f/g/h" (49 0)) ; files
+        ("8/7/6/5/4/3/2/1" (0 49)) ; ranks
+      )
+      (directions (n 0 -2) (s 0 2) (e 2 0) (w -2 0)
+                  (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)
+      ) 
+    )
+    (symmetry Black (n s) (s n) (nw sw) (sw nw) (ne se) (se ne))
+    (zone (name promotion) (players White)
+          (positions a8 b8 c8 d8 e8 f8 g8 h8)
+    )
+    (zone (name promotion) (players Black)
+          (positions a1 b1 c1 d1 e1 f1 g1 h1)
+    )
+    (zone (name side) (players White Black)
+          (positions a1 a3 a5 a7 h2 h4 h6 h8 c1 e1 g1 b8 d8 f8)
+    )
+  )
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (moves
+        (move-type jumptype)
+           (long-jump nw)
+           (long-jump ne)
+           (long-jump sw)
+           (long-jump se)
+
+        (move-type normaltype)
+           (checker-shift n)
+           (persian-shift nw)
+           (persian-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (moves
+        (move-type jumptype)
+           (king-jump nw)
+           (king-jump ne)
+           (king-jump sw)
+           (king-jump se)
+
+        (move-type continuetype)
+           (king-jump nw)
+           (king-jump ne)
+           (king-jump sw)
+           (king-jump se)
+
+        (move-type normaltype)
+           (king-shift n)
+           (king-shift s)
+           (persian-king-shift nw)
+           (persian-king-shift sw)
+           (persian-king-shift ne)
+           (persian-king-shift se)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 c1 e1 g1  b2 d2 f2 h2  a3 c3 e3 g3) )
+    (Black (Checker b8 d8 f8 h8  a7 c7 e7 g7  b6 d6 f6 h6) )
+  )
+)
+
+(variant
+  (title "-")
+)
+
+(variant
+  (title "Checkers (English draughts)")
+  (description "")
+  (history  "Traditional game.")
+
+  (turn-order Black White)
+  (option "maximal captures" false)
+
+  (board
+    (image "images/sultan/chess8x8.bmp" "images/wiedem/chess8x8.bmp")
+    (grid
+      (start-rectangle 5 5 54 54)
+      (dimensions
+        ("a/b/c/d/e/f/g/h" (49 0)) ; files
+        ("8/7/6/5/4/3/2/1" (0 49)) ; ranks
+      )
+      (directions (n 0 -1) (s 0 1) (e 1 0) (w -1 0)
+                  (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)
+                  (ee 2 0) (ww -2 0) (nn 0 -2) (ss 0 2)
+                  (next 0 -1)
+      ) 
+    )
+    (dummy a0)
+    (links next (a0 a1) (a8 b1) (b8 c1) (c8 d1) (d8 e1) (e8 f1) (f8 g1) (g8 h1))
+    (symmetry White (n s) (s n) (nn ss) (ss nn) (nw sw) (sw nw) (ne se) (se ne))
+    (zone (name promotion) (players Black)
+          (positions a8 b8 c8 d8 e8 f8 g8 h8)
+    )
+    (zone (name promotion) (players White)
+          (positions a1 b1 c1 d1 e1 f1 g1 h1)
+    )
+  )
+
+  (piece
+     (name Checker)
+     (image Black "images/wiedem/CheckerBlack.bmp"
+            White "images/wiedem/CheckerWhite.bmp")
+     (moves
+        (move-type jumptype)
+           (checker-jump nw)
+           (checker-jump ne)
+
+        (move-type normaltype)
+           (checker-shift nw)
+           (checker-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image Black "images/wiedem/CheckerKingBlack.bmp"
+            White "images/wiedem/CheckerKingWhite.bmp")
+     (moves
+        (move-type jumptype)
+           (damone-jump nw jumptype)
+           (damone-jump ne jumptype)
+           (damone-jump sw jumptype)
+           (damone-jump se jumptype)
+
+        (move-type normaltype)
+           (damone-shift nw)
+           (damone-shift ne)
+           (damone-shift sw)
+           (damone-shift se)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (Black (Checker a1 c1 e1 g1  b2 d2 f2 h2  a3 c3 e3 g3) )
+    (White (Checker b8 d8 f8 h8  a7 c7 e7 g7  b6 d6 f6 h6) )
+  )
+)
+
+(define italian-jump (
+  $1
+  (verify enemy?)
+  (verify (piece? Checker))
+  capture
+  $1
+  (verify empty?)
+  (if (in-zone? promotion)
+      (add-partial Dama notype)
+   else
+      (add-partial jumptype)
+  )
+))
+
+(define italian-shift (
+  $1
+  (verify empty?)
+  (if (in-zone? promotion)
+      (add Dama)
+   else
+      add
+  )
+))
+
+(variant
+  (title "Italian Checkers")
+  (description "")
+  (history  "Traditional game.")
+
+  (turn-order Black White)
+  (option "maximal captures" 2)
+  (move-priorities prioritytype jumptype normaltype)
+
+  (board
+    (image "images/sultan/italian.bmp" "images/wiedem/italian.bmp")
+    (grid
+      (start-rectangle 5 5 54 54)
+      (dimensions
+        ("a/b/c/d/e/f/g/h" (49 0)) ; files
+        ("8/7/6/5/4/3/2/1" (0 49)) ; ranks
+      )
+      (directions (n 0 -1) (s  0 1) (e 1 0) (w -1 0)
+                  (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)
+      ) 
+    )
+    (symmetry White (nw sw) (sw nw) (ne se) (se ne))
+    (zone (name promotion) (players Black)
+          (positions a8 b8 c8 d8 e8 f8 g8 h8)
+    )
+    (zone (name promotion) (players White)
+          (positions a1 b1 c1 d1 e1 f1 g1 h1)
+    )
+  )
+
+  (piece
+     (name Checker)
+     (image Black "images/wiedem/CheckerBlack.bmp"
+            White "images/wiedem/CheckerWhite.bmp")
+     (moves
+        (move-type jumptype)
+           (italian-jump nw)
+           (italian-jump ne)
+
+        (move-type normaltype)
+           (italian-shift nw)
+           (italian-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name Dama)
+     (image Black "images/wiedem/CheckerKingBlack.bmp"
+            White "images/wiedem/CheckerKingWhite.bmp")
+     (moves
+        (move-type prioritytype)
+           (damone-jump nw prioritytype)
+           (damone-jump ne prioritytype)
+           (damone-jump sw prioritytype)
+           (damone-jump se prioritytype)
+
+        (move-type normaltype)
+           (damone-shift nw)
+           (damone-shift ne)
+           (damone-shift sw)
+           (damone-shift se)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (Black (Checker b1 d1 f1 h1  a2 c2 e2 g2  b3 d3 f3 h3) )
+    (White (Checker a8 c8 e8 g8  b7 d7 f7 h7  a6 c6 e6 g6) )
+  )
+)
+
+(define italian-king-jump (
+  $1
+  (verify enemy?)
+  (verify (not (piece? Damone)))
+  capture
+  $1
+  (verify empty?)
+  (if (in-zone? damone-promotion)
+      (add-partial Damone notype)
+   else
+      (add-partial jumptype)
+  )
+))
+
+(define italian-king-shift (
+  $1
+  (verify empty?)
+  (if (in-zone? damone-promotion)
+      (add Damone)
+   else
+      add
+  )
+))
+
+(variant
+  (title "Italian Damone")
+  (description "")
+  (history  "Traditional game.")
+
+  (turn-order Black White)
+  (option "maximal captures" false)
+
+  (board
+    (image "images/sultan/italian.bmp" "images/wiedem/italian.bmp")
+    (grid
+      (start-rectangle 5 5 54 54)
+      (dimensions
+        ("a/b/c/d/e/f/g/h" (49 0)) ; files
+        ("8/7/6/5/4/3/2/1" (0 49)) ; ranks
+      )
+      (directions (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)) 
+    )
+    (symmetry White (nw se) (se nw))
+    (zone (name promotion) (players Black)
+          (positions a6 c8)
+    )
+    (zone (name promotion) (players White)
+          (positions f1 h3)
+    )
+    (zone (name damone-promotion) (players Black)
+          (positions a8)
+    )
+    (zone (name damone-promotion) (players White)
+          (positions h1)
+    )
+  )
+
+  (piece
+     (name Checker)
+     (image Black "images/wiedem/CheckerBlack.bmp"
+            White "images/wiedem/CheckerWhite.bmp")
+     (moves
+        (move-type jumptype)
+           (italian-jump nw)
+           (italian-jump ne)
+           (italian-jump sw)
+
+        (move-type normaltype)
+           (italian-shift nw)
+           (italian-shift ne)
+           (italian-shift sw)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image Black "images/wiedem/CheckerKingBlack.bmp"
+            White "images/wiedem/CheckerKingWhite.bmp")
+     (moves
+        (move-type jumptype)
+           (italian-king-jump nw)
+           (italian-king-jump ne)
+           (italian-king-jump sw)
+           (italian-king-jump se)
+
+        (move-type normaltype)
+           (italian-king-shift nw)
+           (italian-king-shift ne)
+           (italian-king-shift sw)
+           (italian-king-shift se)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name Dama)
+     (image Black "images/wiedem/CheckerKingBlack.bmp"
+            White "images/wiedem/CheckerKingWhite.bmp")
+     (moves
+        (move-type jumptype)
+           (damone-jump nw jumptype)
+           (damone-jump ne jumptype)
+           (damone-jump sw jumptype)
+           (damone-jump se jumptype)
+
+        (move-type normaltype)
+           (damone-shift nw)
+           (damone-shift ne)
+           (damone-shift sw)
+           (damone-shift se)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name Damone)
+     (image Black "images/wiedem/CheckerDamoneBlack.bmp"
+            White "images/wiedem/CheckerDamoneWhite.bmp")
+     (moves
+        (move-type jumptype)
+           (damone-jump nw jumptype)
+           (damone-jump ne jumptype)
+           (damone-jump sw jumptype)
+           (damone-jump se jumptype)
+
+        (move-type normaltype)
+           (damone-shift nw)
+           (damone-shift ne)
+           (damone-shift sw)
+           (damone-shift se)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (Black
+        (Checker d1 e2 f3 g4 h5) 
+        (King f1 h3) 
+        (Damone h1) 
+    )
+    (White 
+        (Checker a4 b5 c6 d7 e8) 
+        (King a6 c8) 
+        (Damone a8) 
+    )
+  )
+
+  (loss-condition  (White Black) (pieces-remaining 0 Damone))
+)
+
+(define international-checker-jump (
+  (verify (not captured?))    
+  $1
+  (verify enemy?)
+  (verify (not captured?))
+  $1
+  (verify empty?)
+  (set-flag more-captures false)
+  (checker-captured-find $1)
+  (checker-captured-find $2)
+  (checker-captured-find $3)
+  (if (flag? more-captures)
+      (opposite $1)
+      (markit)
+      $1
+   else
+      (opposite $1) 
+      (if enemy?
+          capture
+      )
+      $1
+      (capture-all)
+  )
+  (if (in-zone? promotion)
+      (if (flag? more-captures)
+          (add-partial jumptype)
+       else
+          (add-partial King notype)
+      )
+   else
+      (if (flag? more-captures)
+          (add-partial jumptype)
+       else
+          (add-partial notype)
+      )
+  )
+))
+
+(define int-checker-jump (
+  $1
+  (verify enemy?)
+  capture
+  $1
+  (verify empty?)
+  (set-flag more-captures false)
+  (checker-captured-find $1)
+  (checker-captured-find $2)
+  (checker-captured-find $3)
+  (if (flag? more-captures)
+      (add-partial jumptype)
+   else
+      (if (in-zone? promotion)
+          (add-partial King notype)
+       else
+          (add-partial notype)
+      )
+  )
+))
+
+(variant
+  (title "International Checkers")
+  (description "")
+  (history  "Traditional game.")
+
+  (option "maximal captures" true)
+
+  (board
+    (image "images/sultan/chess10x10.bmp" "images/wiedem/chess10x10.bmp")
+    (grid
+      (start-rectangle 5 5 54 54)
+      (dimensions
+        ("a/b/c/d/e/f/g/h/i/j" (49 0)) ; files
+        ("10/9/8/7/6/5/4/3/2/1" (0 49)) ; ranks
+      )
+      (directions (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)
+                  (next 0 -1)
+      ) 
+    )
+    (dummy a0)
+    (links next (a0 a1) (a10 b1) (b10 c1) (c10 d1) (d10 e1) (e10 f1) (f10 g1) (g10 h1) (h10 i1) (i10 j1))
+    (symmetry Black (nw sw) (sw nw) (ne se) (se ne))
+    (zone (name promotion) (players White)
+          (positions a10 b10 c10 d10 e10 f10 g10 h10 i10 j10)
+    )
+    (zone (name promotion) (players Black)
+          (positions a1 b1 c1 d1 e1 f1 g1 h1 i1 j1)
+    )
+  )
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (international-checker-jump nw sw ne)
+           (international-checker-jump ne se nw)
+           (international-checker-jump sw se nw)
+           (international-checker-jump se ne sw)
+
+        (move-type normaltype)
+           (checker-shift nw)
+           (checker-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (long-king-jump nw sw ne)
+           (long-king-jump ne se nw)
+           (long-king-jump sw se nw)
+           (long-king-jump se ne sw)
+
+        (move-type continuetype)
+           (long-king-continue nw sw ne)
+           (long-king-continue ne se nw)
+           (long-king-continue sw se nw)
+           (long-king-continue se ne sw)
+
+        (move-type normaltype)
+           (king-shift ne)
+           (king-shift nw)
+           (king-shift se)
+           (king-shift sw)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 c1 e1 g1 i1  b2 d2 f2 h2 j2  a3 c3 e3 g3 i3  b4 d4 f4 h4 j4) )
+    (Black (Checker b10 d10 f10 h10 j10  a9 c9 e9 g9 i9  b8 d8 f8 h8 j8  a7 c7 e7 g7 i7) )
+  )
+)
+
+(variant
+  (title "Pool Checkers")
+  (description "")
+  (history  "Traditional game.")
+
+  (option "maximal captures" false)
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (international-checker-jump nw sw ne)
+           (international-checker-jump ne se nw)
+           (international-checker-jump sw se nw)
+           (international-checker-jump se ne sw)
+
+        (move-type normaltype)
+           (checker-shift nw)
+           (checker-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (long-king-jump nw sw ne)
+           (long-king-jump ne se nw)
+           (long-king-jump sw se nw)
+           (long-king-jump se ne sw)
+
+        (move-type continuetype)
+           (long-king-continue nw sw ne)
+           (long-king-continue ne se nw)
+           (long-king-continue sw se nw)
+           (long-king-continue se ne sw)
+
+        (move-type normaltype)
+           (king-shift ne)
+           (king-shift nw)
+           (king-shift se)
+           (king-shift sw)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 c1 e1 g1  b2 d2 f2 h2  a3 c3 e3 g3) )
+    (Black (Checker b8 d8 f8 h8  a7 c7 e7 g7  b6 d6 f6 h6) )
+  )
+)
+
+(variant
+  (title "Russian Checkers")
+  (description "")
+  (history  "Traditional game.")
+
+  (option "maximal captures" false)
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (long-checker-jump nw sw ne)
+           (long-checker-jump ne se nw)
+           (long-checker-jump sw se nw)
+           (long-checker-jump se ne sw)
+
+        (move-type normaltype)
+           (checker-shift nw)
+           (checker-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (long-king-jump nw sw ne)
+           (long-king-jump ne se nw)
+           (long-king-jump sw se nw)
+           (long-king-jump se ne sw)
+
+        (move-type continuetype)
+           (long-king-continue nw sw ne)
+           (long-king-continue ne se nw)
+           (long-king-continue sw se nw)
+           (long-king-continue se ne sw)
+
+        (move-type normaltype)
+           (king-shift ne)
+           (king-shift nw)
+           (king-shift se)
+           (king-shift sw)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 c1 e1 g1  b2 d2 f2 h2  a3 c3 e3 g3) )
+    (Black (Checker b8 d8 f8 h8  a7 c7 e7 g7  b6 d6 f6 h6) )
+  )
+)
+
+(variant
+  (title "Brazilian Checkers")
+  (description "")
+  (history  "Traditional game.")
+
+  (option "maximal captures" true)
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (international-checker-jump nw sw ne)
+           (international-checker-jump ne se nw)
+           (international-checker-jump sw se nw)
+           (international-checker-jump se ne sw)
+
+        (move-type normaltype)
+           (checker-shift nw)
+           (checker-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (long-king-jump nw sw ne)
+           (long-king-jump ne se nw)
+           (long-king-jump sw se nw)
+           (long-king-jump se ne sw)
+
+        (move-type continuetype)
+           (long-king-continue nw sw ne)
+           (long-king-continue ne se nw)
+           (long-king-continue sw se nw)
+           (long-king-continue se ne sw)
+
+        (move-type normaltype)
+           (king-shift ne)
+           (king-shift nw)
+           (king-shift se)
+           (king-shift sw)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 c1 e1 g1  b2 d2 f2 h2  a3 c3 e3 g3) )
+    (Black (Checker b8 d8 f8 h8  a7 c7 e7 g7  b6 d6 f6 h6) )
+  )
+)
+
+(variant
+  (title "80 Cells Checkers")
+  (description "")
+  (history  "Invented by Nikolay Spancireti (1916-1991).")
+
+  (option "maximal captures" false)
+
+  (board
+    (image "images/sultan/chess10x8.bmp" "images/wiedem/chess10x8.bmp")
+    (grid
+      (start-rectangle 5 5 54 54)
+      (dimensions
+        ("a/b/c/d/e/f/g/h/i/j" (49 0)) ; files
+        ("8/7/6/5/4/3/2/1" (0 49)) ; ranks
+      )
+      (directions (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)
+                  (next 0 -1)
+      ) 
+    )
+    (dummy a0)
+    (links next (a0 a1) (a8 b1) (b8 c1) (c8 d1) (d8 e1) (e8 f1) (f8 g1) (g8 h1) (h8 i1) (i8 j1))
+    (symmetry Black (nw sw) (sw nw) (ne se) (se ne))
+    (zone (name promotion) (players White)
+          (positions a8 b8 c8 d8 e8 f8 g8 h8 i8 j8)
+    )
+    (zone (name promotion) (players Black)
+          (positions a1 b1 c1 d1 e1 f1 g1 h1 i1 j1)
+    )
+  )
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (long-checker-jump nw sw ne)
+           (long-checker-jump ne se nw)
+           (long-checker-jump sw se nw)
+           (long-checker-jump se ne sw)
+
+        (move-type normaltype)
+           (checker-shift nw)
+           (checker-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (long-king-jump nw sw ne)
+           (long-king-jump ne se nw)
+           (long-king-jump sw se nw)
+           (long-king-jump se ne sw)
+
+        (move-type continuetype)
+           (long-king-continue nw sw ne)
+           (long-king-continue ne se nw)
+           (long-king-continue sw se nw)
+           (long-king-continue se ne sw)
+
+        (move-type normaltype)
+           (king-shift ne)
+           (king-shift nw)
+           (king-shift se)
+           (king-shift sw)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 c1 e1 g1 i1  b2 d2 f2 h2 j2  a3 c3 e3 g3 i3) )
+    (Black (Checker b8 d8 f8 h8 j8  a7 c7 e7 g7 i7  b6 d6 f6 h6 j6) )
+  )
+)
+
+(define drop-pass (
+   (verify (in-zone? pass-zone))
+   (verify not-empty?)
+   capture
+   add
+))
+
+(define set-lock
+   (create Lock a10)
+)
+
+(define clear-lock
+   (if (not-empty? a10)
+       (capture a10)
+   )
+)
+
+(define check-lock
+   (verify (not-enemy? a10))
+)
+
+(define check-empty-lock
+   (verify (empty? a10))
+)
+
+(define capture-huff (
+   (check-empty-lock)
+   (verify enemy?)
+   (verify is-huff?)
+   (set-position-flag from? true)
+   (clear-enemy-huffs)
+   (set-lock)
+   capture
+   add
+))
+
+(define my-friend?
+  (and 
+       (not (position-flag? from? $1))
+       (or (position-flag? to? $1)
+           (friend? $1)
+       )
+  )
+)
+
+(define my-empty?
+  (and (not (position-flag? to? $1))
+       (or (position-flag? from? $1)
+           (empty? $1)
+       )
+  )
+)
+
+(define check-huff
+  (if (and (on-board? $1) (my-friend? $1) (not (is-huff? $1)))
+      $1
+      (if (and (on-board? $1) (my-empty? $1))
+          (set-flag is-huffing? true)
+      )
+      $2
+  )
+)
+
+(define check-huff-1
+  (set-flag is-huffing? false)
+  (check-huff $1 $2)
+  (if (and (flag? is-huffing?) (not is-huff?))
+      (set-attribute is-huff? true)
+  )
+)
+
+(define check-huff-2
+  (set-flag is-huffing? false)
+  (if (and (on-board? $1) (empty? $1))
+      $1 (check-huff $1 $2) $2
+  )
+  (if (and (flag? is-huffing?) (not is-huff?))
+      (set-attribute is-huff? true)
+  )
+)
+
+(define check-huff-3
+  (set-flag is-huffing? false)
+  (if (and (on-board? $1) (empty? $1))
+      $1 (check-huff-2 $1 $2) $2
+  )
+  (if (and (flag? is-huffing?) (not is-huff?))
+      (set-attribute is-huff? true)
+  )
+)
+
+(define check-huff-4
+  (set-flag is-huffing? false)
+  (if (and (on-board? $1) (empty? $1))
+      $1 (check-huff-3 $1 $2) $2
+  )
+  (if (and (flag? is-huffing?) (not is-huff?))
+      (set-attribute is-huff? true)
+  )
+)
+
+(define check-huff-5
+  (set-flag is-huffing? false)
+  (if (and (on-board? $1) (empty? $1))
+      $1 (check-huff-4 $1 $2) $2
+  )
+  (if (and (flag? is-huffing?) (not is-huff?))
+      (set-attribute is-huff? true)
+  )
+)
+
+(define check-huff-6
+  (set-flag is-huffing? false)
+  (if (and (on-board? $1) (empty? $1))
+      $1 (check-huff-5 $1 $2) $2
+  )
+  (if (and (flag? is-huffing?) (not is-huff?))
+      (set-attribute is-huff? true)
+  )
+)
+
+(define check-huff-7
+  (set-flag is-huffing? false)
+  (if (and (on-board? $1) (empty? $1))
+      $1 (check-huff-6 $1 $2) $2
+  )
+  (if (and (flag? is-huffing?) (not is-huff?))
+      (set-attribute is-huff? true)
+  )
+)
+
+(define check-huff-8
+  (set-flag is-huffing? false)
+  (if (and (on-board? $1) (empty? $1))
+      $1 (check-huff-7 $1 $2) $2
+  )
+  (if (and (flag? is-huffing?) (not is-huff?))
+      (set-attribute is-huff? true)
+  )
+)
+
+(define clear-huffs
+  mark
+  a0
+  (while (on-board? next) 
+     next
+     (if friend?
+         (if is-huff?
+             (set-attribute is-huff? false)
+         )
+     )
+  )
+  back
+)
+
+(define clear-enemy-huffs
+  mark
+  a0
+  (while (on-board? next) 
+     next
+     (if enemy?
+         (if is-huff?
+             (set-attribute is-huff? false)
+         )
+     )
+  )
+  back
+)
+
+(define check-long-enemies
+  (set-position-flag to? true)
+  mark
+  a0
+  (while (on-board? next) 
+     next
+     (if enemy?
+;        (if is-huff?
+;            (set-attribute is-huff? false)
+;        )
+         (check-huff-1 sw ne) (check-huff-1 se nw) 
+         (check-huff-1 ne sw) (check-huff-1 nw se)
+         (if (piece? King)
+             (check-huff-2 sw ne) (check-huff-2 se nw) 
+             (check-huff-2 ne sw) (check-huff-2 nw se)
+             (check-huff-3 sw ne) (check-huff-3 se nw) 
+             (check-huff-3 ne sw) (check-huff-3 nw se)
+             (check-huff-4 sw ne) (check-huff-4 se nw) 
+             (check-huff-4 ne sw) (check-huff-4 nw se)
+             (check-huff-5 sw ne) (check-huff-5 se nw) 
+             (check-huff-5 ne sw) (check-huff-5 nw se)
+             (check-huff-6 sw ne) (check-huff-6 se nw) 
+             (check-huff-6 ne sw) (check-huff-6 nw se)
+             (check-huff-7 sw ne) (check-huff-7 se nw) 
+             (check-huff-7 ne sw) (check-huff-7 nw se)
+             (check-huff-8 sw ne) (check-huff-8 se nw) 
+             (check-huff-8 ne sw) (check-huff-8 nw se)
+         )
+     )
+  )
+  back
+)
+
+(define damii-checker-captured-find
+   mark
+   (if (on-board? $1)  
+      $1    
+      (if (and enemy? (empty? $1)) 
+          (set-flag more-captures true)
+      )
+   )
+   back
+)
+
+(define damii-king-captured-find
+   mark
+   (while (and (on-board? $1) (empty? $1))
+      $1
+   )
+   (if (on-board? $1)  
+      $1    
+      (if (and enemy? (empty? $1)) 
+          (set-flag more-captures true)
+      )
+   )
+   back
+)
+
+(define king-jump-1 (
+  (check-lock)
+  (set-position-flag from? true)
+  (while (empty? $1)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  capture
+  (set-position-flag from? true)
+  $1
+  (verify empty?)
+  (clear-huffs)
+  (clear-lock)
+  (set-flag more-captures false)
+  (damii-king-captured-find $1)
+  (damii-king-captured-find $2)
+  (damii-king-captured-find $3)
+  (if (flag? more-captures)
+      (set-attribute is-huff? true)
+      (add-partial jumptype)
+   else
+      (check-long-enemies)
+      (set-attribute is-huff? false)
+      (add-partial notype)
+  )
+))
+
+(define king-jump-2 (
+  (check-lock)
+  (set-position-flag from? true)
+  (while (empty? $1)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  capture
+  (set-position-flag from? true)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  (clear-huffs)
+  (clear-lock)
+  (set-flag more-captures false)
+  (damii-king-captured-find $1)
+  (damii-king-captured-find $2)
+  (damii-king-captured-find $3)
+  (if (flag? more-captures)
+      (set-attribute is-huff? true)
+      (add-partial jumptype)
+   else
+      (check-long-enemies)
+      (set-attribute is-huff? false)
+      (add-partial notype)
+  )
+))
+
+(define king-jump-3 (
+  (check-lock)
+  (set-position-flag from? true)
+  (while (empty? $1)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  capture
+  (set-position-flag from? true)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  (clear-huffs)
+  (clear-lock)
+  (set-flag more-captures false)
+  (damii-king-captured-find $1)
+  (damii-king-captured-find $2)
+  (damii-king-captured-find $3)
+  (if (flag? more-captures)
+      (set-attribute is-huff? true)
+      (add-partial jumptype)
+   else
+      (check-long-enemies)
+      (set-attribute is-huff? false)
+      (add-partial notype)
+  )
+))
+
+(define king-jump-4 (
+  (check-lock)
+  (set-position-flag from? true)
+  (while (empty? $1)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  capture
+  (set-position-flag from? true)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  (clear-huffs)
+  (clear-lock)
+  (set-flag more-captures false)
+  (damii-king-captured-find $1)
+  (damii-king-captured-find $2)
+  (damii-king-captured-find $3)
+  (if (flag? more-captures)
+      (set-attribute is-huff? true)
+      (add-partial jumptype)
+   else
+      (check-long-enemies)
+      (set-attribute is-huff? false)
+      (add-partial notype)
+  )
+))
+
+(define king-jump-5 (
+  (check-lock)
+  (set-position-flag from? true)
+  (while (empty? $1)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  capture
+  (set-position-flag from? true)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  (clear-huffs)
+  (clear-lock)
+  (set-flag more-captures false)
+  (damii-king-captured-find $1)
+  (damii-king-captured-find $2)
+  (damii-king-captured-find $3)
+  (if (flag? more-captures)
+      (set-attribute is-huff? true)
+      (add-partial jumptype)
+   else
+      (check-long-enemies)
+      (set-attribute is-huff? false)
+      (add-partial notype)
+  )
+))
+
+(define king-jump-6 (
+  (check-lock)
+  (set-position-flag from? true)
+  (while (empty? $1)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  capture
+  (set-position-flag from? true)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  (clear-huffs)
+  (clear-lock)
+  (set-flag more-captures false)
+  (damii-king-captured-find $1)
+  (damii-king-captured-find $2)
+  (damii-king-captured-find $3)
+  (if (flag? more-captures)
+      (set-attribute is-huff? true)
+      (add-partial jumptype)
+   else
+      (check-long-enemies)
+      (set-attribute is-huff? false)
+      (add-partial notype)
+  )
+))
+
+(define king-jump-7 (
+  (check-lock)
+  (set-position-flag from? true)
+  (while (empty? $1)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  capture
+  (set-position-flag from? true)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  (clear-huffs)
+  (clear-lock)
+  (set-flag more-captures false)
+  (damii-king-captured-find $1)
+  (damii-king-captured-find $2)
+  (damii-king-captured-find $3)
+  (if (flag? more-captures)
+      (set-attribute is-huff? true)
+      (add-partial jumptype)
+   else
+      (check-long-enemies)
+      (set-attribute is-huff? false)
+      (add-partial notype)
+  )
+))
+
+(define king-jump-8 (
+  (check-lock)
+  (set-position-flag from? true)
+  (while (empty? $1)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  capture
+  (set-position-flag from? true)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  (clear-huffs)
+  (clear-lock)
+  (set-flag more-captures false)
+  (damii-king-captured-find $1)
+  (damii-king-captured-find $2)
+  (damii-king-captured-find $3)
+  (if (flag? more-captures)
+      (set-attribute is-huff? true)
+      (add-partial jumptype)
+   else
+      (check-long-enemies)
+      (set-attribute is-huff? false)
+      (add-partial notype)
+  )
+))
+
+(define king-shift-1 (
+  (check-lock)
+  (set-position-flag from? true)
+  $1
+  (verify empty?)
+  (check-long-enemies)
+  (clear-lock)
+  add
+))
+
+(define king-shift-2 (
+  (check-lock)
+  (set-position-flag from? true)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  (check-long-enemies)
+  (clear-lock)
+  add
+))
+
+(define king-shift-3 (
+  (check-lock)
+  (set-position-flag from? true)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  (check-long-enemies)
+  (clear-lock)
+  add
+))
+
+(define king-shift-4 (
+  (check-lock)
+  (set-position-flag from? true)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  (check-long-enemies)
+  (clear-lock)
+  add
+))
+
+(define king-shift-5 (
+  (check-lock)
+  (set-position-flag from? true)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  (check-long-enemies)
+  (clear-lock)
+  add
+))
+
+(define king-shift-6 (
+  (check-lock)
+  (set-position-flag from? true)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  (check-long-enemies)
+  (clear-lock)
+  add
+))
+
+(define king-shift-7 (
+  (check-lock)
+  (set-position-flag from? true)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  (check-long-enemies)
+  (clear-lock)
+  add
+))
+
+(define king-shift-8 (
+  (check-lock)
+  (set-position-flag from? true)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  (check-long-enemies)
+  (clear-lock)
+  add
+))
+
+(define king-shift-9 (
+  (check-lock)
+  (set-position-flag from? true)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  $1
+  (verify empty?)
+  (check-long-enemies)
+  (clear-lock)
+  add
+))
+
+(define damii-checker-jump (
+  (check-lock)
+  (set-position-flag from? true)
+  $1
+  (verify enemy?)
+  (set-position-flag from? true)
+  capture
+  $1
+  (verify empty?)
+  (clear-huffs)
+  (clear-lock)
+  (set-flag more-captures false)
+  (damii-checker-captured-find $1)
+  (damii-checker-captured-find $2)
+  (damii-checker-captured-find $3)
+  (if (flag? more-captures)
+      (set-attribute is-huff? true)
+   else
+      (check-long-enemies)
+      (set-attribute is-huff? false)
+  )
+  (if (in-zone? promotion)
+      (if (flag? more-captures)
+          (add-partial jumptype)
+       else
+          (add-partial King notype)
+      )
+   else
+      (if (flag? more-captures)
+          (add-partial jumptype)
+       else
+          (add-partial notype)
+      )
+  )
+))
+
+(define damii-checker-shift (
+  (check-lock)
+  (set-position-flag from? true)
+  $1
+  (verify empty?)
+  (check-long-enemies)
+  (clear-lock)
+  (if (in-zone? promotion)
+      (add King)
+   else
+      add
+  )
+))
+
+(variant
+  (title "Damii (Ghana Draughts)")
+  (description "")
+  (history  "Traditional game.")
+
+  (drop-sound "Audio/Pickup.wav")
+
+  (option "maximal captures" false)
+  (option "pass partial"     true)
+  (option "recycle captures" true)
+  (option "animate captures" false)
+  (option "animate drops"    false)
+
+  (board
+    (image "images/sultan/chess10x10.bmp" "images/wiedem/chess10x10.bmp")
+    (grid
+      (start-rectangle 5 5 54 54)
+      (dimensions
+        ("a/b/c/d/e/f/g/h/i/j" (49 0)) ; files
+        ("10/9/8/7/6/5/4/3/2/1" (0 49)) ; ranks
+      )
+      (directions (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)
+                  (next 0 -1)
+      ) 
+    )
+    (dummy a0)
+    (links next (a0 a1) (a10 b1) (b10 c1) (c10 d1) (d10 e1) (e10 f1) (f10 g1) (g10 h1) (h10 i1) (i10 j1))
+    (symmetry Black (nw sw) (sw nw) (ne se) (se ne))
+    (zone (name promotion) (players White)
+          (positions a10 b10 c10 d10 e10 f10 g10 h10 i10 j10)
+    )
+    (zone (name promotion) (players Black)
+          (positions a1 b1 c1 d1 e1 f1 g1 h1 i1 j1)
+    )
+    (zone (name pass-zone) (players White Black)
+          (positions a10)
+    )
+  )
+
+  (move-priorities normaltype passtype)
+
+  (piece
+     (name Lock)
+     (image White "images/other/pass.bmp"
+            Black "images/other/pass.bmp")
+     (drops (move-type passtype)
+            (drop-pass)
+     )
+  )
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (attribute is-huff? false)
+     (drops (move-type normaltype)
+            (capture-huff)
+     )
+     (moves
+        (move-type jumptype)
+           (damii-checker-jump nw sw ne)
+           (damii-checker-jump ne se nw)
+           (damii-checker-jump sw se nw)
+           (damii-checker-jump se ne sw)
+
+        (move-type normaltype)
+           (damii-checker-jump nw sw ne)
+           (damii-checker-jump ne se nw)
+           (damii-checker-jump sw se nw)
+           (damii-checker-jump se ne sw)
+           (damii-checker-shift nw)
+           (damii-checker-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (attribute is-huff? false)
+     (moves (move-type jumptype)
+            (king-jump-1 nw sw ne) (king-jump-1 ne se nw) (king-jump-1 sw se nw) (king-jump-1 se ne sw)
+            (king-jump-2 nw sw ne) (king-jump-2 ne se nw) (king-jump-2 sw se nw) (king-jump-2 se ne sw)
+            (king-jump-3 nw sw ne) (king-jump-3 ne se nw) (king-jump-3 sw se nw) (king-jump-3 se ne sw)
+            (king-jump-4 nw sw ne) (king-jump-4 ne se nw) (king-jump-4 sw se nw) (king-jump-4 se ne sw)
+            (king-jump-5 nw sw ne) (king-jump-5 ne se nw) (king-jump-5 sw se nw) (king-jump-5 se ne sw)
+            (king-jump-6 nw sw ne) (king-jump-6 ne se nw) (king-jump-6 sw se nw) (king-jump-6 se ne sw)
+            (king-jump-7 nw sw ne) (king-jump-7 ne se nw) (king-jump-7 sw se nw) (king-jump-7 se ne sw)
+            (king-jump-8 nw sw ne) (king-jump-8 ne se nw) (king-jump-8 sw se nw) (king-jump-8 se ne sw)
+        
+            (move-type  normaltype)
+            (king-jump-1 nw sw ne) (king-jump-1 ne se nw) (king-jump-1 sw se nw) (king-jump-1 se ne sw)
+            (king-jump-2 nw sw ne) (king-jump-2 ne se nw) (king-jump-2 sw se nw) (king-jump-2 se ne sw)
+            (king-jump-3 nw sw ne) (king-jump-3 ne se nw) (king-jump-3 sw se nw) (king-jump-3 se ne sw)
+            (king-jump-4 nw sw ne) (king-jump-4 ne se nw) (king-jump-4 sw se nw) (king-jump-4 se ne sw)
+            (king-jump-5 nw sw ne) (king-jump-5 ne se nw) (king-jump-5 sw se nw) (king-jump-5 se ne sw)
+            (king-jump-6 nw sw ne) (king-jump-6 ne se nw) (king-jump-6 sw se nw) (king-jump-6 se ne sw)
+            (king-jump-7 nw sw ne) (king-jump-7 ne se nw) (king-jump-7 sw se nw) (king-jump-7 se ne sw)
+            (king-jump-8 nw sw ne) (king-jump-8 ne se nw) (king-jump-8 sw se nw) (king-jump-8 se ne sw)
+            (king-shift-1 ne) (king-shift-1 nw) (king-shift-1 se) (king-shift-1 sw)
+            (king-shift-2 ne) (king-shift-2 nw) (king-shift-2 se) (king-shift-2 sw)
+            (king-shift-3 ne) (king-shift-3 nw) (king-shift-3 se) (king-shift-3 sw)
+            (king-shift-4 ne) (king-shift-4 nw) (king-shift-4 se) (king-shift-4 sw)
+            (king-shift-5 ne) (king-shift-5 nw) (king-shift-5 se) (king-shift-5 sw)
+            (king-shift-6 ne) (king-shift-6 nw) (king-shift-6 se) (king-shift-6 sw)
+            (king-shift-7 ne) (king-shift-7 nw) (king-shift-7 se) (king-shift-7 sw)
+            (king-shift-8 ne) (king-shift-8 nw) (king-shift-8 se) (king-shift-8 sw)
+            (king-shift-9 ne) (king-shift-9 nw) (king-shift-9 se) (king-shift-9 sw)
+
+            (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 c1 e1 g1 i1  b2 d2 f2 h2 j2  a3 c3 e3 g3 i3  b4 d4 f4 h4 j4 off 1) (Lock off 2) )
+    (Black (Checker b10 d10 f10 h10 j10  a9 c9 e9 g9 i9  b8 d8 f8 h8 j8  a7 c7 e7 g7 i7 off 1) (Lock off 2) )
+  )
+
+  (loss-condition (White Black) (pieces-remaining 1) )
+  (loss-condition (White Black) stalemated )
+)
+
+(variant
+  (title "Canadian Checkers")
+  (description "")
+  (history  "Traditional game.")
+
+  (option "maximal captures" true)
+
+  (board
+    (image "images/sultan/chess12x12.bmp" "images/wiedem/chess12x12.bmp")
+    (grid
+      (start-rectangle 5 5 54 54)
+      (dimensions
+        ("a/b/c/d/e/f/g/h/i/j/k/l" (49 0)) ; files
+        ("12/11/10/9/8/7/6/5/4/3/2/1" (0 49)) ; ranks
+      )
+      (directions (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)
+                  (next 0 -1)
+      ) 
+    )
+    (dummy a0)
+    (links next (a0 a1) (a12 b1) (b12 c1) (c12 d1) (d12 e1) (e12 f1) (f12 g1) (g12 h1) (h12 i1) (i12 j1) (j12 k1) (k12 l1))
+    (symmetry Black (nw sw) (sw nw) (ne se) (se ne))
+    (zone (name promotion) (players White)
+          (positions a12 b12 c12 d12 e12 f12 g12 h12 i12 j12 k12 l12)
+    )
+    (zone (name promotion) (players Black)
+          (positions a1 b1 c1 d1 e1 f1 g1 h1 i1 j1 k1 l1)
+    )
+  )
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (international-checker-jump nw sw ne)
+           (international-checker-jump ne se nw)
+           (international-checker-jump sw se nw)
+           (international-checker-jump se ne sw)
+
+        (move-type normaltype)
+           (checker-shift nw)
+           (checker-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (long-king-jump nw sw ne)
+           (long-king-jump ne se nw)
+           (long-king-jump sw se nw)
+           (long-king-jump se ne sw)
+
+        (move-type continuetype)
+           (long-king-continue nw sw ne)
+           (long-king-continue ne se nw)
+           (long-king-continue sw se nw)
+           (long-king-continue se ne sw)
+
+        (move-type normaltype)
+           (king-shift ne)
+           (king-shift nw)
+           (king-shift se)
+           (king-shift sw)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 c1 e1 g1 i1 k1  b2 d2 f2 h2 j2 l2  a3 c3 e3 g3 i3 k3  b4 d4 f4 h4 j4 l4  a5 c5 e5 g5 i5 k5) )
+    (Black (Checker b12 d12 f12 h12 j12 l12  a11 c11 e11 g11 i11 k11  b10 d10 f10 h10 j10 l10  a9 c9 e9 g9 i9 k9  b8 d8 f8 h8 j8 l8) )
+  )
+)
+
+(variant
+  (title "South African Checkers")
+  (description "")
+  (history  "Traditional game.")
+
+  (option "maximal captures" true)
+
+  (board
+    (image "images/sultan/chess14x14.bmp" "images/wiedem/chess14x14.bmp")
+    (grid
+      (start-rectangle 5 5 54 54)
+      (dimensions
+        ("a/b/c/d/e/f/g/h/i/j/k/l/m/n" (49 0)) ; files
+        ("14/13/12/11/10/9/8/7/6/5/4/3/2/1" (0 49)) ; ranks
+      )
+      (directions (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)
+                  (next 0 -1)
+      ) 
+    )
+    (dummy a0)
+    (links next (a0 a1) (a14 b1) (b14 c1) (c14 d1) (d14 e1) (e14 f1) (f14 g1) (g14 h1) (h14 i1) (i14 j1) (j14 k1) (k14 l1) (l14 m1) (m14 n1))
+    (symmetry Black (nw sw) (sw nw) (ne se) (se ne))
+    (zone (name promotion) (players White)
+          (positions a14 b14 c14 d14 e14 f14 g14 h14 i14 j14 k14 l14 m14 n14)
+    )
+    (zone (name promotion) (players Black)
+          (positions a1 b1 c1 d1 e1 f1 g1 h1 i1 j1 k1 l1 m1 n1)
+    )
+  )
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (international-checker-jump nw sw ne)
+           (international-checker-jump ne se nw)
+           (international-checker-jump sw se nw)
+           (international-checker-jump se ne sw)
+
+        (move-type normaltype)
+           (checker-shift nw)
+           (checker-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (long-king-jump nw sw ne)
+           (long-king-jump ne se nw)
+           (long-king-jump sw se nw)
+           (long-king-jump se ne sw)
+
+        (move-type continuetype)
+           (long-king-jump nw sw ne)
+           (long-king-jump ne se nw)
+           (long-king-jump sw se nw)
+           (long-king-jump se ne sw)
+
+        (move-type normaltype)
+           (king-shift ne)
+           (king-shift nw)
+           (king-shift se)
+           (king-shift sw)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 c1 e1 g1 i1 k1 m1  b2 d2 f2 h2 j2 l2 n2  a3 c3 e3 g3 i3 k3 m3  b4 d4 f4 h4 j4 l4 n4  a5 c5 e5 g5 i5 k5 m5  b6 d6 f6 h6 j6 l6 n6) )
+    (Black (Checker b14 d14 f14 h14 j14 l14 n14  a13 c13 e13 g13 i13 k13 m13  b12 d12 f12 h12 j12 l12 n12  a11 c11 e11 g11 i11 k11 m11  b10 d10 f10 h10 j10 l10 n10  a9 c9 e9 g9 i9 k9 m9) )
+  )
+)
+
+(define frisian-checker-jump (
+  (verify (not captured?))    
+  $1
+  (verify enemy?)
+  (verify (not captured?))
+  $1
+  (verify empty?)
+  (set-flag more-captures false)
+  (checker-captured-find $1)
+  (checker-captured-find $2)
+  (checker-captured-find $3)
+  (checker-captured-find $4)
+  (checker-captured-find $5)
+  (checker-captured-find $6)
+  (checker-captured-find $7)
+  (if (flag? more-captures)
+      (opposite $1)
+      (markit)
+      $1
+   else
+      (opposite $1) 
+      (if enemy?
+          capture
+      )
+      $1
+      (capture-all)
+  )
+  (if (in-zone? promotion)
+      (if (flag? more-captures)
+          (add-partial jumptype)
+       else
+          (add-partial King notype)
+      )
+   else
+      (if (flag? more-captures)
+          (add-partial jumptype)
+       else
+          (add-partial notype)
+      )
+  )
+))
+
+(define fris-checker-jump (
+  $1
+  (verify enemy?)
+  capture
+  $1
+  (verify empty?)
+  (set-flag more-captures false)
+  (checker-captured-find $1)
+  (checker-captured-find $2)
+  (checker-captured-find $3)
+  (checker-captured-find $4)
+  (checker-captured-find $5)
+  (checker-captured-find $6)
+  (checker-captured-find $7)
+  (if (in-zone? promotion)
+      (if (flag? more-captures)
+          (add-partial jumptype)
+       else
+          (add-partial King notype)
+      )
+   else
+      (if (flag? more-captures)
+          (add-partial jumptype)
+       else
+          (add-partial notype)
+      )
+  )
+))
+
+(define frisian-king-jump (
+  (verify (not captured?))    
+  (while (or (empty? $1) captured?)
+      $1
+      (verify not-last-from?)
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (not captured?))    
+  (verify (empty? $1))
+  $1
+  (while empty?
+      (set-flag more-captures false)
+      (king-captured-find $1)
+      (king-captured-find $2)
+      (king-captured-find $3)
+      (king-captured-find $4)
+      (king-captured-find $5)
+      (king-captured-find $6)
+      (king-captured-find $7)
+      mark
+      (while empty? 
+          (opposite $1)
+      ) 
+      (if (flag? more-captures)
+         (markit)
+      )
+      back
+      (if (flag? more-captures)
+          (add-partial continuetype)
+       else
+          mark
+          (opposite $1)
+          (while empty?
+             (opposite $1)
+          )
+          (if enemy?
+              capture
+          )
+          back
+          (capture-all)
+          (add-partial notype)
+      )
+      $1
+  )
+))
+
+(define fris-king-jump (
+  (while (empty? $1)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (empty? $1))
+  $1
+  (while empty?
+      (set-flag more-captures false)
+      (king-captured-find $1)
+      (king-captured-find $2)
+      (king-captured-find $3)
+      (king-captured-find $4)
+      (king-captured-find $5)
+      (king-captured-find $6)
+      (king-captured-find $7)
+      mark
+      (while empty? 
+          (opposite $1)
+      ) 
+      (if (flag? more-captures)
+         (markit)
+      )
+      back
+      (if (flag? more-captures)
+          (add-partial continuetype)
+       else
+          mark
+          (opposite $1)
+          (while empty?
+             (opposite $1)
+          )
+          (if enemy?
+              capture
+          )
+          back
+          (capture-all)
+          (add-partial notype)
+      )
+      $1
+  )
+))
+
+(variant
+  (title "Frisian Checkers")
+  (description "")
+  (history  "Traditional game.")
+
+  (option "maximal captures" 2)
+
+  (board
+    (image "images/sultan/chess10x10.bmp" "images/wiedem/chess10x10.bmp")
+    (grid
+      (start-rectangle 5 5 54 54)
+      (dimensions
+        ("a/b/c/d/e/f/g/h/i/j" (49 0)) ; files
+        ("10/9/8/7/6/5/4/3/2/1" (0 49)) ; ranks
+      )
+      (directions (n 0 -2) (s 0 2) (e 2 0) (w -2 0)
+                  (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)
+                  (next 0 -1)
+      ) 
+    )
+    (dummy a0)
+    (links next (a0 a1) (a10 b1) (b10 c1) (c10 d1) (d10 e1) (e10 f1) (f10 g1) (g10 h1) (h10 i1) (i10 j1))
+    (symmetry Black (nw sw) (sw nw) (ne se) (se ne) (n s) (s n))
+    (zone (name promotion) (players White)
+          (positions a10 b10 c10 d10 e10 f10 g10 h10 i10 j10)
+    )
+    (zone (name promotion) (players Black)
+          (positions a1 b1 c1 d1 e1 f1 g1 h1 i1 j1)
+    )
+  )
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (frisian-checker-jump nw sw ne n s w e)  
+           (frisian-checker-jump ne se nw n s w e)  
+           (frisian-checker-jump sw se nw n s w e)  
+           (frisian-checker-jump se ne sw n s w e)  
+           (frisian-checker-jump n w e nw sw ne se)  
+           (frisian-checker-jump s w e nw sw ne se)  
+           (frisian-checker-jump w n s nw sw ne se)  
+           (frisian-checker-jump e n s nw sw ne se)  
+
+        (move-type normaltype)
+           (checker-shift nw)
+           (checker-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (fris-king-jump nw sw ne n s w e)  
+           (fris-king-jump ne se nw n s w e)  
+           (fris-king-jump sw se nw n s w e)  
+           (fris-king-jump se ne sw n s w e)  
+           (fris-king-jump n w e nw sw ne se)  
+           (fris-king-jump s w e nw sw ne se)  
+           (fris-king-jump w n s nw sw ne se)  
+           (fris-king-jump e n s nw sw ne se)  
+
+        (move-type continuetype)
+           (frisian-king-jump nw sw ne n s w e)  
+           (frisian-king-jump ne se nw n s w e)  
+           (frisian-king-jump sw se nw n s w e)  
+           (frisian-king-jump se ne sw n s w e)  
+           (frisian-king-jump n w e nw sw ne se)  
+           (frisian-king-jump s w e nw sw ne se)  
+           (frisian-king-jump w n s nw sw ne se)  
+           (frisian-king-jump e n s nw sw ne se)  
+
+        (move-type normaltype)
+           (king-shift ne)
+           (king-shift nw)
+           (king-shift se)
+           (king-shift sw)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 c1 e1 g1 i1  b2 d2 f2 h2 j2  a3 c3 e3 g3 i3  b4 d4 f4 h4 j4) )
+    (Black (Checker b10 d10 f10 h10 j10  a9 c9 e9 g9 i9  b8 d8 f8 h8 j8  a7 c7 e7 g7 i7) )
+  )
+)
+
+(variant
+  (title "Czech Checkers")
+  (description "")
+  (history  "Traditional game.")
+
+  (option "maximal captures" 2)
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (international-checker-jump nw ne ne)
+           (international-checker-jump ne nw nw)
+
+        (move-type normaltype)
+           (checker-shift nw)
+           (checker-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (long-king-jump nw sw ne)
+           (long-king-jump ne se nw)
+           (long-king-jump sw se nw)
+           (long-king-jump se ne sw)
+
+        (move-type continuetype)
+           (long-king-continue nw sw ne)
+           (long-king-continue ne se nw)
+           (long-king-continue sw se nw)
+           (long-king-continue se ne sw)
+
+        (move-type normaltype)
+           (king-shift nw)
+           (king-shift ne)
+           (king-shift sw)
+           (king-shift se)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 c1 e1 g1  b2 d2 f2 h2  a3 c3 e3 g3) )
+    (Black (Checker b8 d8 f8 h8  a7 c7 e7 g7  b6 d6 f6 h6) )
+  )
+)
+
+(variant
+  (title "Thai Checkers")
+  (description "")
+  (history  "Traditional game.")
+
+  (turn-order Black White)
+
+  (board
+    (image "images/sultan/chess8x8.bmp" "images/wiedem/chess8x8.bmp")
+    (grid
+      (start-rectangle 5 5 54 54)
+      (dimensions
+        ("a/b/c/d/e/f/g/h" (49 0)) ; files
+        ("8/7/6/5/4/3/2/1" (0 49)) ; ranks
+      )
+      (directions (n 0 -1) (s 0 1) (e 1 0) (w -1 0)
+                  (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)
+                  (ee 2 0) (ww -2 0) (nn 0 -2) (ss 0 2)
+                  (next 0 -1)
+      ) 
+    )
+    (dummy a0)
+    (links next (a0 a1) (a8 b1) (b8 c1) (c8 d1) (d8 e1) (e8 f1) (f8 g1) (g8 h1))
+    (symmetry White (n s) (s n) (nn ss) (ss nn) (nw sw) (sw nw) (ne se) (se ne))
+    (zone (name promotion) (players Black)
+          (positions a8 b8 c8 d8 e8 f8 g8 h8)
+    )
+    (zone (name promotion) (players White)
+          (positions a1 b1 c1 d1 e1 f1 g1 h1)
+    )
+  )
+
+  (piece
+     (name Checker)
+     (image Black "images/wiedem/CheckerBlack.bmp"
+            White "images/wiedem/CheckerWhite.bmp")
+     (moves
+        (move-type jumptype)
+           (checker-jump nw)
+           (checker-jump ne)
+
+        (move-type normaltype)
+           (checker-shift nw)
+           (checker-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image Black "images/wiedem/CheckerKingBlack.bmp"
+            White "images/wiedem/CheckerKingWhite.bmp")
+     (moves
+        (move-type jumptype)
+           (short-king-jump nw)
+           (short-king-jump ne)
+           (short-king-jump sw)
+           (short-king-jump se)
+
+        (move-type continuetype)
+           (short-king-jump nw)
+           (short-king-jump ne)
+           (short-king-jump sw)
+           (short-king-jump se)
+
+        (move-type normaltype)
+           (king-shift nw)
+           (king-shift ne)
+           (king-shift sw)
+           (king-shift se)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (Black (Checker a1 c1 e1 g1  b2 d2 f2 h2) )
+    (White (Checker b8 d8 f8 h8  a7 c7 e7 g7) )
+  )
+)
+
+(variant
+  (title "-")
+)
+
+(variant
+  (title "Losing Checkers")
+  (description "")
+  (history  "Traditional game.")
+
+  (turn-order Black White)
+  (option "maximal captures" false)
+
+  (board
+    (image "images/sultan/chess8x8.bmp" "images/wiedem/chess8x8.bmp")
+    (grid
+      (start-rectangle 5 5 54 54)
+      (dimensions
+        ("a/b/c/d/e/f/g/h" (49 0)) ; files
+        ("8/7/6/5/4/3/2/1" (0 49)) ; ranks
+      )
+      (directions (n 0 -1) (s 0 1) (e 1 0) (w -1 0)
+                  (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)
+                  (ee 2 0) (ww -2 0) (nn 0 -2) (ss 0 2)
+                  (next 0 -1)
+      ) 
+    )
+    (dummy a0)
+    (links next (a0 a1) (a8 b1) (b8 c1) (c8 d1) (d8 e1) (e8 f1) (f8 g1) (g8 h1))
+    (symmetry White (n s) (s n) (nn ss) (ss nn) (nw sw) (sw nw) (ne se) (se ne))
+    (zone (name promotion) (players Black)
+          (positions a8 b8 c8 d8 e8 f8 g8 h8)
+    )
+    (zone (name promotion) (players White)
+          (positions a1 b1 c1 d1 e1 f1 g1 h1)
+    )
+  )
+
+  (piece
+     (name Checker)
+     (image Black "images/wiedem/CheckerBlack.bmp"
+            White "images/wiedem/CheckerWhite.bmp")
+     (moves
+        (move-type jumptype)
+           (checker-jump nw)
+           (checker-jump ne)
+
+        (move-type normaltype)
+           (checker-shift nw)
+           (checker-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image Black "images/wiedem/CheckerKingBlack.bmp"
+            White "images/wiedem/CheckerKingWhite.bmp")
+     (moves
+        (move-type jumptype)
+           (damone-jump nw jumptype)
+           (damone-jump ne jumptype)
+           (damone-jump sw jumptype)
+           (damone-jump se jumptype)
+
+        (move-type normaltype)
+           (damone-shift nw)
+           (damone-shift ne)
+           (damone-shift sw)
+           (damone-shift se)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (Black (Checker a1 c1 e1 g1  b2 d2 f2 h2  a3 c3 e3 g3) )
+    (White (Checker b8 d8 f8 h8  a7 c7 e7 g7  b6 d6 f6 h6) )
+  )
+
+  (win-condition (White Black) (pieces-remaining 0) )
+  (win-condition (White Black) stalemated )
+)
+
+(define White-checker-shift (
+  $1
+  (verify empty?)
+  (if (in-zone? White-promotion-zone)
+      (add WhiteKing)
+   else
+      add
+  )
+))
+
+(define Black-checker-shift (
+  $1
+  (verify empty?)
+  (if (in-zone? Black-promotion-zone)
+      (add BlackKing)
+   else
+      add
+  )
+))
+
+(define White-long-jump (
+  $1
+  (verify (or (piece? BlackChecker) (piece? BlackKing)))
+  capture
+  $1
+  (verify empty?)
+  (if (in-zone? White-promotion-zone)
+      (add-partial WhiteKing jumptype)
+   else
+      (add-partial jumptype)
+  )
+))
+
+(define Black-long-jump (
+  $1
+  (verify (or (piece? WhiteChecker) (piece? WhiteKing)))
+  capture
+  $1
+  (verify empty?)
+  (if (in-zone? Black-promotion-zone)
+      (add-partial BlackKing jumptype)
+   else
+      (add-partial jumptype)
+  )
+))
+
+(define White-king-jump (
+  (while (empty? $1)
+      $1
+  )
+  $1
+  (verify (or (piece? BlackChecker) (piece? BlackKing)))
+  (verify (empty? $1))
+  $1
+  (while empty?
+      mark
+      (while empty? 
+        (opposite $1)
+      ) 
+      capture
+      back
+      (add-partial continuetype)
+      $1
+  )
+))
+
+(define Black-king-jump (
+  (while (empty? $1)
+      $1
+  )
+  $1
+  (verify (or (piece? WhiteChecker) (piece? WhiteKing)))
+  (verify (empty? $1))
+  $1
+  (while empty?
+      mark
+      (while empty? 
+        (opposite $1)
+      ) 
+      capture
+      back
+      (add-partial continuetype)
+      $1
+  )
+))
+
+(variant
+  (title "Stavropol Checkers")
+  (description "")
+  (history  "Unknown Inventor.")
+
+  (option "maximal captures" false)
+
+  (players White Black Neurtal)
+  (turn-order (White Neurtal) (Black Neurtal))
+
+  (board
+    (image "images/sultan/chess8x8.bmp" "images/wiedem/chess8x8.bmp")
+    (grid
+      (start-rectangle 5 5 54 54)
+      (dimensions
+        ("a/b/c/d/e/f/g/h" (49 0)) ; files
+        ("8/7/6/5/4/3/2/1" (0 49)) ; ranks
+      )
+      (directions (n 0 -1) (s 0 1) (e 1 0) (w -1 0)
+                  (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)
+                  (ee 2 0) (ww -2 0)
+                  (next 0 -1)
+      ) 
+    )
+    (dummy a0)
+    (links next (a0 a1) (a8 b1) (b8 c1) (c8 d1) (d8 e1) (e8 f1) (f8 g1) (g8 h1))
+    (zone (name White-promotion-zone) (players Neurtal) (positions a8 b8 c8 d8 e8 f8 g8 h8) )
+    (zone (name Black-promotion-zone) (players Neurtal) (positions a1 b1 c1 d1 e1 f1 g1 h1) )
+    (zone (name promotion) (players White)
+          (positions a8 b8 c8 d8 e8 f8 g8 h8)
+    )
+    (zone (name promotion) (players Black)
+          (positions a1 b1 c1 d1 e1 f1 g1 h1)
+    )
+  )
+
+  (piece
+     (name WhiteChecker)
+     (image Neurtal "images/wiedem/CheckerWhite.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (White-long-jump nw)
+           (White-long-jump ne)
+           (White-long-jump sw)
+           (White-long-jump se)
+
+        (move-type normaltype)
+           (White-checker-shift nw)
+           (White-checker-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name BlackChecker)
+     (image Neurtal "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (Black-long-jump nw)
+           (Black-long-jump ne)
+           (Black-long-jump sw)
+           (Black-long-jump se)
+
+        (move-type normaltype)
+           (Black-checker-shift sw)
+           (Black-checker-shift se)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name WhiteKing)
+     (image Neurtal "images/wiedem/CheckerKingWhite.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (White-king-jump nw)
+           (White-king-jump ne)
+           (White-king-jump sw)
+           (White-king-jump se)
+
+        (move-type normaltype)
+           (king-shift ne)
+           (king-shift nw)
+           (king-shift se)
+           (king-shift sw)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name BlackKing)
+     (image Neurtal "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (Black-king-jump nw)
+           (Black-king-jump ne)
+           (Black-king-jump sw)
+           (Black-king-jump se)
+
+        (move-type normaltype)
+           (king-shift ne)
+           (king-shift nw)
+           (king-shift se)
+           (king-shift sw)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (Neurtal (WhiteChecker a1 c1 e1 g1  b2 d2 f2 h2  a3 c3 e3 g3) )
+    (Neurtal (BlackChecker b8 d8 f8 h8  a7 c7 e7 g7  b6 d6 f6 h6) )
+  )
+
+  (loss-condition (White) (and (total-piece-count 0 WhiteChecker) (total-piece-count 0 WhiteKing)))
+  (loss-condition (Black) (and (total-piece-count 0 BlackChecker) (total-piece-count 0 BlackKing)))
+)
+
+(define clear-all
+   mark  
+   a0 
+   (while (on-board? next) 
+      next
+      (if (piece? Checker)
+          (set-attribute captured? false)
+      )
+   )
+   back  
+)
+
+(define north-jump (
+  $1
+  (verify enemy?)
+  (if (piece? King)
+      (change-type Checker)
+      (set-attribute captured? true)
+   else
+      capture
+  )
+  $1
+  (verify empty?)
+  (clear-all)
+  (if (in-zone? promotion)
+      (add-partial King jumptype)
+   else
+      (set-attribute captured? false)
+      (add-partial continuetype)
+  )
+))
+
+(define north-jump-continue (
+  $1
+  (verify enemy?)
+  (if (piece? King)
+      (change-type Checker)
+      (set-attribute captured? true)
+   else
+      (verify (not captured?))
+      capture
+  )
+  $1
+  (verify empty?)
+  (if (in-zone? promotion)
+      (add-partial King jumptype)
+   else
+      (add-partial continuetype)
+  )
+))
+
+(define north-king-jump (
+  (while (empty? $1)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (empty? $1))
+  $1
+  (while empty?
+      mark
+      (while empty? 
+        (opposite $1)
+      ) 
+      (if (piece? King)
+          (change-type Checker)
+          (set-attribute captured? true)
+       else
+          capture
+      )
+      back
+      (clear-all)
+      (add-partial continuetype)
+      $1
+  )
+))
+
+(define north-king-continue (
+  (while (empty? $1)
+      $1
+      (verify not-last-from?)
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (empty? $1))
+  $1
+  (while empty?
+      mark
+      (while empty? 
+        (opposite $1)
+      ) 
+      (if (piece? King)
+          (change-type Checker)
+          (set-attribute captured? true)
+       else
+          (verify (not captured?))
+          capture
+      )
+      back
+      (add-partial continuetype)
+      $1
+  )
+))
+
+(define north-shift (
+  (clear-all)
+  $1
+  (verify empty?)
+  (if (in-zone? promotion)
+      (add King)
+   else
+      (set-attribute captured? false)
+      add
+  )
+))
+
+(define north-king-shift (
+  (clear-all)
+  (while (empty? $1)
+      $1
+      add
+  )
+))
+
+(variant
+  (title "Northern Checkers")
+  (description "")
+  (history  "Unknown Inventor.")
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (north-jump nw)
+           (north-jump ne)
+           (north-jump sw)
+           (north-jump se)
+
+        (move-type continuetype)
+           (north-jump-continue nw)
+           (north-jump-continue ne)
+           (north-jump-continue sw)
+           (north-jump-continue se)
+
+        (move-type normaltype)
+           (north-shift nw)
+           (north-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (north-king-jump nw)
+           (north-king-jump ne)
+           (north-king-jump sw)
+           (north-king-jump se)
+
+        (move-type continuetype)
+           (north-king-continue nw)
+           (north-king-continue ne)
+           (north-king-continue sw)
+           (north-king-continue se)
+
+        (move-type normaltype)
+           (north-king-shift ne)
+           (north-king-shift nw)
+           (north-king-shift se)
+           (north-king-shift sw)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (Checker a1 c1 e1 g1  b2 d2 f2 h2  a3 c3 e3 g3) )
+    (Black (Checker b8 d8 f8 h8  a7 c7 e7 g7  b6 d6 f6 h6) )
+  )
+)
+
+(variant
+  (title "Northern Kings")
+  (description "")
+  (history  "Variant of the Northern Checkers.")
+
+  (piece
+     (name Checker)
+     (image White "images/wiedem/CheckerWhite.bmp"
+            Black "images/wiedem/CheckerBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (north-jump nw)
+           (north-jump ne)
+           (north-jump sw)
+           (north-jump se)
+
+        (move-type continuetype)
+           (north-jump-continue nw)
+           (north-jump-continue ne)
+           (north-jump-continue sw)
+           (north-jump-continue se)
+
+        (move-type normaltype)
+           (north-shift nw)
+           (north-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image White "images/wiedem/CheckerKingWhite.bmp"
+            Black "images/wiedem/CheckerKingBlack.bmp")
+     (attribute captured? false)
+     (moves
+        (move-type jumptype)
+           (north-king-jump nw)
+           (north-king-jump ne)
+           (north-king-jump sw)
+           (north-king-jump se)
+
+        (move-type continuetype)
+           (north-king-continue nw)
+           (north-king-continue ne)
+           (north-king-continue sw)
+           (north-king-continue se)
+
+        (move-type normaltype)
+           (north-king-shift ne)
+           (north-king-shift nw)
+           (north-king-shift se)
+           (north-king-shift sw)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (White (King a1 c1 e1 g1  b2 d2 f2 h2  a3 c3 e3 g3) )
+    (Black (King b8 d8 f8 h8  a7 c7 e7 g7  b6 d6 f6 h6) )
+  )
+)
+
+(define na-jump (
+  $1
+  (verify enemy?)
+  (verify (empty? $1))
+  (add-partial jumptype)
+))
+
+(variant
+  (title "North American Checkers")
+  (description "")
+  (history  "Unknown Inventor.")
+
+  (turn-order Black White)
+  (option "maximal captures" false)
+
+  (board
+    (image "images/sultan/chess8x8.bmp" "images/wiedem/chess8x8.bmp")
+    (grid
+      (start-rectangle 5 5 54 54)
+      (dimensions
+        ("a/b/c/d/e/f/g/h" (49 0)) ; files
+        ("8/7/6/5/4/3/2/1" (0 49)) ; ranks
+      )
+      (directions (n 0 -1) (s 0 1) (e 1 0) (w -1 0)
+                  (ne 1 -1) (nw -1 -1) (se 1 1) (sw -1 1)
+                  (ee 2 0) (ww -2 0) (nn 0 -2) (ss 0 2)
+                  (next 0 -1)
+      ) 
+    )
+    (dummy a0)
+    (links next (a0 a1) (a8 b1) (b8 c1) (c8 d1) (d8 e1) (e8 f1) (f8 g1) (g8 h1))
+    (symmetry White (n s) (s n) (nn ss) (ss nn) (nw sw) (sw nw) (ne se) (se ne))
+    (zone (name promotion) (players Black)
+          (positions a8 b8 c8 d8 e8 f8 g8 h8)
+    )
+    (zone (name promotion) (players White)
+          (positions a1 b1 c1 d1 e1 f1 g1 h1)
+    )
+  )
+
+  (piece
+     (name Checker)
+     (image Black "images/wiedem/CheckerBlack.bmp"
+            White "images/wiedem/CheckerWhite.bmp")
+     (moves
+        (move-type jumptype)
+           (checker-jump nw)
+           (checker-jump ne)
+
+        (move-type normaltype)
+           (checker-shift nw)
+           (checker-shift ne)
+
+        (move-type notype)
+     )
+  )
+
+  (piece
+     (name King)
+     (image Black "images/wiedem/CheckerKingBlack.bmp"
+            White "images/wiedem/CheckerKingWhite.bmp")
+     (moves
+        (move-type jumptype)
+           (na-jump nw)
+           (na-jump ne)
+           (na-jump sw)
+           (na-jump se)
+
+        (move-type normaltype)
+           (damone-shift nw)
+           (damone-shift ne)
+           (damone-shift sw)
+           (damone-shift se)
+
+        (move-type notype)
+     )
+  )
+
+  (board-setup
+    (Black (Checker a1 c1 e1 g1  b2 d2 f2 h2  a3 c3 e3 g3) )
+    (White (Checker b8 d8 f8 h8  a7 c7 e7 g7  b6 d6 f6 h6) )
+  )
+)

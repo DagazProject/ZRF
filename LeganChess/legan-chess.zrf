@@ -1,0 +1,172 @@
+(define pawn-shift (
+  $1 (verify empty?)
+  (if (in-zone? last-rank)
+      (add Knight Bishop Rook Queen)
+   else
+      add
+  )
+))
+
+(define pawn-step (
+  $1 (verify enemy?)
+  (if (in-zone? last-rank)
+      (add Knight Bishop Rook Queen)
+   else
+      add
+  )
+))
+
+(define step (
+  $1 (verify not-friend?)
+  add
+))
+
+(define leap (
+  $1 $2 (verify not-friend?)
+  add
+))
+
+(define slide (
+  $1 
+  (while empty? add $1)
+  (verify not-friend?)
+  add
+))
+
+(game
+  (title "Legan Chess")
+  (description "Legan chess differs from standard chess by the starting position as well as by pawn movements.
+        Pawns move one square diagonally forward: White from right to left and Black left to right. 
+        They capture orthogonally in direction of movements. Pawns promote on squares occupied 
+        in the initial position by the opponent's king, bishops, knights, and rooks.
+        There is no castling and no en passant.")
+  (history "Legan chess is a chess variant invented by L. Legan in 1913.")
+
+  (option "prevent flipping" 2)
+  (win-sound "Audio\Orchestra_CF.wav")
+  (loss-sound "Audio\Orchestra_FC.wav")
+  (click-sound "Audio\Pickup.wav")
+  (release-sound "Audio\WoodThunk.wav")
+
+  (players White Black)
+  (turn-order White Black)
+
+  (board
+     (image "images\Chess\SHaag\Chess8x8.bmp" "images\Chess\Chess8x8.bmp")
+     (grid
+         (start-rectangle 5 5 53 53)
+         (dimensions
+           ("a/b/c/d/e/f/g/h" (49 0)) ; files
+           ("8/7/6/5/4/3/2/1" (0 49)) ; ranks
+         )
+         (directions 
+              (n 0 -1) (s 0 1) (e 1 0) (w -1 0)
+              (nw -1 -1) (sw -1 1) (ne 1 -1) (se 1 1)
+         )
+     )
+     (symmetry Black (n s) (s n) (nw se) (sw ne) (ne sw) (se nw) (w e) (e w))
+     (zone (name last-rank) (players White)
+           (positions a8 b8 c8 d8 a7 a6 a5)
+     )
+     (zone (name last-rank) (players Black)
+           (positions e1 f1 g1 h1 h2 h3 h4)
+     )
+  )
+
+  (piece
+     (name Pawn)
+     (help "Pawn: moves diagonally forward, captures orthogonally in direction of movements")
+     (description "Pawn\A Pawn can move straight ahead one square diagonally.
+           A Pawn captures by moving one square orthogonally in direction of movements.
+           If a Pawn reaches the far squares occupied in the initial position by the opponent's king, bishops, knights, and rooks, 
+           changing into a Knight, Bishop, Rook, or Queen.")
+     (image White "images\Chess\SHaag\wpawn.bmp" "images\Chess\wpawn.bmp"
+            Black "images\Chess\SHaag\bpawn.bmp" "images\Chess\bpawn.bmp")
+     (moves
+         (pawn-shift nw)
+         (pawn-step n) (pawn-step w)
+     )
+  )
+  (piece
+     (name Rook)
+     (help "Rook: slides any number of squares along the row or column.")
+     (description "Rook\A Rook moves any number of squares orthogonally on a rank
+           or a file.  It may not leap over other pieces.")
+     (image White "images\Chess\SHaag\wrook.bmp" "images\Chess\wrook.bmp"
+            Black "images\Chess\SHaag\brook.bmp" "images\Chess\brook.bmp")
+     (moves
+         (slide n) (slide s) (slide w) (slide e)
+     )
+  )
+  (piece
+     (name Knight)
+     (help "Knight: moves like an `L`, 2 squares one way and one the other")
+     (description "Knight\A Knight moves like an `L`, two squares vertically plus one
+          horizontally, or two squares horizontally plus one vertically.  It
+          hops over any pieces on the way.")
+     (image White "images\Chess\SHaag\wknight.bmp" "images\Chess\wknight.bmp"
+            Black "images\Chess\SHaag\bknight.bmp" "images\Chess\bknight.bmp")
+     (moves
+         (leap n nw) (leap n ne) (leap s sw) (leap s se)
+         (leap w nw) (leap w sw) (leap e ne) (leap e se)
+     )
+  )
+  (piece
+     (name Bishop)
+     (help "Bishop: slides diagonally any number of squares")
+     (description "Bishop\A Bishop moves any number of squares on a diagonal.  It may
+           not leap over other pieces.")
+     (image White "images\Chess\SHaag\wbishop.bmp" "images\Chess\wbishop.bmp"
+            Black "images\Chess\SHaag\bbishop.bmp" "images\Chess\bbishop.bmp")
+     (moves
+         (slide nw) (slide sw) (slide ne) (slide se)
+     )
+  )
+  (piece
+     (name Queen)
+     (help "Queen: can slide any number of squares in any direction")
+     (description "Queen\A Queen moves any number of squares in a straight line.
+          It may not leap over other pieces.")
+     (image White "images\Chess\SHaag\wqueen.bmp" "images\Chess\wqueen.bmp"
+            Black "images\Chess\SHaag\bqueen.bmp" "images\Chess\bqueen.bmp")
+     (moves
+         (slide n) (slide s) (slide w) (slide e)
+         (slide nw) (slide sw) (slide ne) (slide se)
+     )
+  )
+  (piece
+     (name King)
+     (help "King: steps 1 square in any direction to a safe square")
+     (description "King\A King can move to any adjacent square, but never to a 
+          square where it can be captured.")
+     (image White "images\Chess\SHaag\wking.bmp" "images\Chess\wking.bmp"
+            Black "images\Chess\SHaag\bking.bmp" "images\Chess\bking.bmp")
+     (moves
+         (step n) (step s) (step w) (step e)
+         (step nw) (step sw) (step ne) (step se)
+     )
+  )
+
+  (board-setup
+    (White 
+         (Pawn d1 e2 e4 f2 f3 g3 g4 h5)
+         (Rook e1 h4)
+         (Knight g1 h3)
+         (Bishop f1 h2)
+         (Queen g2)
+         (King h1)
+    )
+    (Black 
+         (Pawn a4 b5 b6 c6 c7 d5 d7 e8)
+         (Rook a5 d8)
+         (Knight a6 b8)
+         (Bishop a7 c8)
+         (Queen b7)
+         (King a8)
+    )
+  )
+
+  (loss-condition (White Black) (checkmated King))
+  (draw-condition (White Black) stalemated)
+  (loss-condition (White Black) repetition)
+)

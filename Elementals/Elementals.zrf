@@ -1,0 +1,886 @@
+(define check-water
+  (verify (or (not-enemy? $1)
+              (and (not-piece? $2 $1)
+                   (not-piece? $3 $1)
+                   (not-piece? $4 $1)
+                   (not-piece? $5 $1)
+                   (not-piece? $6 $1)
+                   (not-piece? $7 $1)
+              )
+          )
+  )
+  (set-flag $8 true)
+)
+
+(define check-frozen
+  (set-flag frozen-n false) (set-flag frozen-nw false)
+  (set-flag frozen-s false) (set-flag frozen-sw false)
+  (set-flag frozen-e false) (set-flag frozen-ne false)
+  (set-flag frozen-w false) (set-flag frozen-se false)
+  (if frozen-s?  (check-water n  GBB GBA BGD YBB YBA BYD frozen-s))
+  (if frozen-se? (check-water nw GBC GBB GBA YBC YBB YBA frozen-se))
+  (if frozen-e?  (check-water w  GBD GBC GBB YBD YBC YBB frozen-e))
+  (if frozen-ne? (check-water sw BGA GBD GBC BYA YBD YBC frozen-ne))
+  (if frozen-n?  (check-water s  BGB BGA GBD BYB BYA YBD frozen-n))
+  (if frozen-nw? (check-water se BGC BGB BGA BYC BYB BYA frozen-mw))
+  (if frozen-w?  (check-water e  BGD BGC BGB BYD BYC BYB frozen-w))
+  (if frozen-sw? (check-water ne GBA BGD BGC YBA BYD BYC frozen-sw))
+)
+
+(define clear-frozen-flag
+  (if (flag? frozen-$1)
+      (set-attribute frozen-$1? false)
+  )
+)
+
+(define clear-frozen
+  (clear-frozen-flag n) (clear-frozen-flag nw)
+  (clear-frozen-flag s) (clear-frozen-flag sw)
+  (clear-frozen-flag e) (clear-frozen-flag se)
+  (clear-frozen-flag w) (clear-frozen-flag ne)
+)
+
+(define fire-slide (
+  (check-frozen) $1 (verify empty?) 
+  (while (and (on-board? $1) (empty? $1)) 
+     (clear-frozen) add 
+     $1
+  )
+))
+
+(define fire-strike (
+  (check-frozen) $1 (verify empty?)
+  (while (and (on-board? $1) (empty? $1)) $1)
+  (verify empty?) (clear-frozen) mark
+  (while (and (on-board? $1)
+              (enemy? $1)
+              (not-piece? $2 $1)
+              (not-piece? $3 $1)
+              (not-piece? $4 $1)
+              (not-piece? $5 $1)
+              (not-piece? $6 $1)
+              (not-piece? $7 $1)
+         )
+     $1 capture 
+  )
+  back add
+))
+
+(define fire-rotate (
+  (check-frozen)
+  $1 (verify empty?) 
+  (clear-frozen) mark
+  (while (and (on-board? $1)
+              (enemy? $1)
+              (not-piece? $3 $1)
+              (not-piece? $4 $1)
+              (not-piece? $5 $1)
+              (not-piece? $6 $1)
+              (not-piece? $7 $1)
+              (not-piece? $8 $1)
+         )
+     $1 capture 
+  )
+  back (add $2)
+))
+
+(define is-fire?
+  (or (piece? RA) (piece? RB) (piece? RC) (piece? RD)
+      (piece? G$1) (piece? GR$1) (piece? RG$1) (piece? GB$1) (piece? BG$1) (piece? YG$1) (piece? GY$1) (piece? YB$1) (piece? BY$1)
+      (piece? $2) (piece? $3) (piece? $4)
+  )
+)
+
+(define water-slide (
+  (check-frozen) $1 
+  (while empty? 
+     (if (empty? $1)
+         (clear-frozen) add 
+     )
+     $1
+  )
+  (while (and not-friend?
+              (is-fire? $2 $3 $4 $5)
+         )
+     (if enemy?
+         (clear-frozen) add 
+     )
+     $1
+  )
+))
+
+(define freeze
+  (if (enemy? $1)
+      mark $1
+      (set-attribute frozen-$1? true)
+      back
+  )
+)
+
+(define water-strike (
+  (check-frozen) $1 (verify empty?)
+  (while (empty? $1) $1)
+  (freeze $1) (freeze $2) (freeze $3)
+  (clear-frozen) add 
+))
+
+(define water-rotate (
+  (check-frozen) $1 
+  (verify not-friend?) 
+  (verify (is-fire? $3 $4 $5 $6))
+  (freeze $1) (freeze $7) (freeze $8)
+  (clear-frozen) (add $2)
+))
+
+(define wind-slide (
+  (check-frozen)
+  (while (empty? $1)
+     $1
+     (clear-frozen)
+     add
+  )
+  (while (on-board? $1)
+     $1
+     (if (and enemy?
+              (or (piece? R$8)
+                  (and
+                      (not-piece? RA) (not-piece? RB) (not-piece? RC) (not-piece? RD)
+                      (not-piece? $2) (not-piece? $3) (not-piece? $4)
+                      (not-piece? $5) (not-piece? $6) (not-piece? $7)
+                  )
+              )
+         )
+         (clear-frozen)
+         (add-partial continue-type)
+     )
+  )
+))
+
+(define wind-rotate (
+  (check-frozen)
+  $1 (while empty? (clear-frozen) (add $2) $1)
+))
+
+(define wind-strike (
+  (check-frozen)
+  (while (on-board? $1)
+     $1
+     (if (and enemy?
+              (or (piece? R$9)
+                  (and
+                     (not-piece? RA) (not-piece? RB) (not-piece? RC) (not-piece? RD)
+                     (not-piece? $3) (not-piece? $4) (not-piece? $5)
+                     (not-piece? $6) (not-piece? $7) (not-piece? $8)
+                  )
+              )
+         )
+         (clear-frozen)
+         (add $2)
+     )
+  )
+))
+
+(define not-water?
+  (and (not-piece? R$1) (not-piece? G$1) (not-piece? GR$1) (not-piece? RG$1) (not-piece? GB$1) (not-piece? BG$1) (not-piece? YG$1) (not-piece? GY$1) (not-piece? YB$1) (not-piece? BY$1)
+       (not-piece? $2) (not-piece? $3) (not-piece? $4) (not-piece? $5) (not-piece? $6) (not-piece? $7)
+  )
+)
+
+(define stone-step (
+  (check-frozen)
+  $1 (clear-frozen)
+  (if (or friend?
+          (not-water? $2 $3 $4 $5 $6 $7 $8)
+      )
+      (while not-empty?
+         (check-frozen)
+         cascade $1
+      )
+  )
+  add
+))
+
+(define stone-rotate (
+  (check-frozen)
+  $1 (clear-frozen)
+  (verify not-friend?)
+  (verify (or empty?
+              (not (not-water? $3 $4 $5 $6 $7 $8 $9))
+          )
+  )
+  (add $2)
+))
+
+(define common-piece
+  (name $1)
+  (image Light "images/Elementals/l$2.bmp"
+         Dark "images/Elementals/d$2.bmp")
+  (attribute frozen-n? false) (attribute frozen-nw? false) 
+  (attribute frozen-s? false) (attribute frozen-se? false) 
+  (attribute frozen-e? false) (attribute frozen-ne? false) 
+  (attribute frozen-w? false) (attribute frozen-sw? false) 
+)
+
+(define light-piece
+  (name $1)
+  (image Light "images/Elementals/l$2.bmp")
+  (attribute frozen-n? false) (attribute frozen-nw? false) 
+  (attribute frozen-s? false) (attribute frozen-se? false) 
+  (attribute frozen-e? false) (attribute frozen-ne? false) 
+  (attribute frozen-w? false) (attribute frozen-sw? false) 
+)
+
+(define dark-piece
+  (name $1)
+  (image Dark "images/Elementals/d$2.bmp")
+  (attribute frozen-n? false) (attribute frozen-nw? false) 
+  (attribute frozen-s? false) (attribute frozen-se? false) 
+  (attribute frozen-e? false) (attribute frozen-ne? false) 
+  (attribute frozen-w? false) (attribute frozen-sw? false) 
+)
+
+(game 
+  (title "Elementals")
+  (description "It is a war of 100 years of absence of an avatar. Genocide of Fire against the Air.\
+                Water and Stone are supported by both factions. Each fraction has its role in the game:\\
+                Fire - Brutal, but slightly sluggish killers. Kills several pieces standing one after another, but requires a distance to takeoff (Vulnerable to Water)\
+                Air - Unpredictable assassins. Freely pass through neutral pieces and can hit two targets, changing direction (Vulnerable to Fire)\
+                Water - Tactical pieces. Can freeze enemies coming up close. Can drown a few enemies, passing through them through and through (Vulnerable to Stone)\
+                Stone -Food for powder. A lot of them! Can move any number of other pieces (removing frost). Very slow! (Vulnerable to Air)\\
+                For win, control 4 central squares.")
+
+  (option "animate captures"   false)
+  (option "prevent flipping"   true)
+  (option "smart moves"        false)
+  (option "pass partial"       true)
+
+  (move-sound    "Audio/Clack.wav")
+  (release-sound "Audio/Clack.wav")
+  (drop-sound    "")
+  (capture-sound "")
+  (change-sound  "")
+  (click-sound   "")
+  (draw-sound    "")
+
+  (players Light Dark)
+  (turn-order Light Dark)
+
+  (board
+    (image "images/Elementals/board.bmp")
+    (grid
+      (start-rectangle 2 2 72 72)
+      (dimensions
+        ("a/b/c/d/e/f/g/h/i/j" (70 0)) ; files
+        ("10/9/8/7/6/5/4/3/2/1" (0 70)) ; ranks
+      )
+      (directions (n 0 -1) (s 0 1) (e 1 0) (w -1 0)
+          (nw -1 -1) (sw -1 1) (ne 1 -1) (se 1 1)
+      )
+    )
+  )
+
+  (piece
+     (common-piece GA ga)
+     (help "Stone")
+     (moves
+        (stone-step n C YBB YBA BYD GBB GBA BGD) 
+        (stone-step s C BYB BYA YBD BGB BGA GBD)
+        (stone-rotate nw GB D YBC YBB YBA GBC GBB GBA) 
+        (stone-rotate ne GD B YBA BYD BYC GBA BGD BGC)
+        (stone-rotate se GB D BYC BYB BYA BGC BGB BGA) 
+        (stone-rotate sw GD B BYA YBD YBC BGA GBD GBC)
+     )
+  )
+  (piece
+     (common-piece GB gb)
+     (help "Stone")
+     (moves
+        (stone-step nw D YBC YBB YBA GBC GBB GBA) 
+        (stone-step se D BYC BYB BYA BGC BGB BGA)
+        (stone-rotate w GC A YBD YBC YBB GBD GBC GBB) 
+        (stone-rotate n GA C YBB YBA BYD GBB GBA BGD)
+        (stone-rotate e GC A BYD BYC BYB BGD BGC BGB) 
+        (stone-rotate s GA C BYB BYA YBD BGB BGA GBD)
+     )
+  )
+  (piece
+     (common-piece GC gc)
+     (help "Stone")
+     (moves
+        (stone-step w A YBD YBC YBB GBD GBC GBB) 
+        (stone-step e A BYD BYC BYB BGD BGC BGB)
+        (stone-rotate sw GD B BYA YBD YBC BGA GBD GBC) 
+        (stone-rotate nw GB D YBC YBB YBA GBC GBB GBA)
+        (stone-rotate ne GD B YBA BYD BYC GBA BGD BGC) 
+        (stone-rotate se GB D BYC BYB BYA BGC BGB BGA)
+     )
+  )
+  (piece
+     (common-piece GD gd)
+     (help "Stone")
+     (moves
+        (stone-step sw B BYA YBD YBC BGA GBD GBC) 
+        (stone-step ne B YBA BYD BYC GBA BGD BGC)
+        (stone-rotate s GA C BYB BYA YBD BGB BGA GBD) 
+        (stone-rotate w GC A YBD YBC YBB GBD GBC GBB)
+        (stone-rotate n GA C YBB YBA BYD GBB GBA BGD) 
+        (stone-rotate e GC A BYD BYC BYB BGD BGC BGB)
+     )
+  )
+  (piece
+     (light-piece BYA bya)
+     (help "Water + Wind")
+     (moves
+        (water-slide n C GRB GRA RGD) 
+        (water-strike n nw ne)
+        (wind-slide s RGA RGB GRD BGA BGB GBD C)
+        (water-rotate nw BYB D GRC GRB GRA w n) 
+        (water-rotate ne YBD B GRA RGD RGC n e)
+        (wind-rotate se BYB) (wind-rotate sw YBD)
+        (move-type continue-type)
+        (wind-strike se BYB RGA RGB RGC BGA BGB BGC D) 
+        (wind-strike sw YBD GRC GRD RGA GBC GBD BGA B)
+     )
+  )
+  (piece
+     (light-piece BYB byb)
+     (help "Water + Wind")
+     (moves
+        (water-slide nw D GRC GRB GRA) 
+        (water-strike nw w n)
+        (wind-slide se RGA RGB RGC BGA BGB BGC D) 
+        (water-rotate w BYC A GRD GRC GRB sw nw) 
+        (water-rotate n BYA C GRB GRA RGD nw ne)
+        (wind-rotate e BYC) (wind-rotate s BYA)
+        (move-type continue-type)
+        (wind-strike e BYC RGB RGC RGD BGB BGC BGD A) 
+        (wind-strike s BYA RGA RGB GRD BGA BGB GBD C)
+     )
+  )
+  (piece
+     (light-piece BYC byc)
+     (help "Water + Wind")
+     (moves
+        (water-slide w A GRD GRC GRB) 
+        (water-strike w sw nw)
+        (wind-slide e RGB RGC RGD BGB BGC BGD A)
+        (water-rotate sw BYD B RGA GRD GRC s w) 
+        (water-rotate nw BYB D GRC GRB GRA n w)
+        (wind-rotate ne BYD) (wind-rotate se BYB)
+        (move-type continue-type)
+        (wind-strike ne BYD RGC RGD GRA BGC BGD GBA B) 
+        (wind-strike se BYB RGA RGB RGC BGA BGB BGC D)
+     )
+  )
+  (piece
+     (light-piece BYD byd)
+     (help "Water + Wind")
+     (moves
+        (water-slide sw B RGA GRD GRC) 
+        (water-strike sw s w)
+        (wind-slide ne RGC RGD GRA BGC BGD GBA B)
+        (water-rotate s YBA C RGB RGA GRD se sw) 
+        (water-rotate w BYC A GRD GRC GRB sw nw)
+        (wind-rotate n YBA) (wind-rotate e BYC)
+        (move-type continue-type)
+        (wind-strike n YBA RGD GRA GRB BGD GBA GBB C) 
+        (wind-strike e BYC RGB RGC RGD BGB BGC BGD A)
+     )
+  )
+  (piece
+     (light-piece YBA yba)
+     (help "Water + Wind")
+     (moves
+        (wind-slide n RGD GRA GRB BGD GBA GBB C) 
+        (water-slide s C RGB RGA GRD) 
+        (water-strike s se sw)
+        (water-rotate se YBB D RGC RGB RGA s e) 
+        (water-rotate sw BYD B RGA GRD GRC s w)
+        (wind-rotate nw YBB) (wind-rotate ne BYD)
+        (move-type continue-type)
+        (wind-strike nw YBB GRA GRB GRC GBA GBB GBC D) 
+        (wind-strike ne BYD RGC RGD GRA BGC BGD GBA B)
+     )
+  )
+  (piece
+     (light-piece YBB ybb)
+     (help "Water + Wind")
+     (moves
+        (wind-slide nw GRA GRB GRC GBA GBB GBC D) 
+        (water-slide se D RGC RGB RGA) 
+        (water-strike se e s)
+        (water-rotate e YBC A RGD RGC RGB ne se) 
+        (water-rotate s YBA C RGB RGA GRD se sw)
+        (wind-rotate w YBC) (wind-rotate n YBA)
+        (move-type continue-type)
+        (wind-strike w YBC GRB GRC GRD GBB GBC GBD A) 
+        (wind-strike n YBA RGD GRA GRB BGD GBA GBB C)
+     )
+  )
+  (piece
+     (light-piece YBC ybc)
+     (help "Water + Wind")
+     (moves
+        (wind-slide w GRB GRC GRD GBB GBC GBD A) 
+        (water-slide e A RGD RGC RGB) 
+        (water-strike e ne se)
+        (water-rotate ne YBD B GRA RGD RGC n e) 
+        (water-rotate se YBB D RGC RGB RGA s e)
+        (wind-rotate sw YBD) (wind-rotate nw YBB)
+        (move-type continue-type)
+        (wind-strike sw YBD GRC GRD RGA GBC GBD BGA B) 
+        (wind-strike nw YBB GRA GRB GRC GBA GBB GBC D)
+     )
+  )
+  (piece
+     (light-piece YBD ybd)
+     (help "Water + Wind")
+     (moves
+        (wind-slide sw GRC GRD RGA GBC GBD BGA B) 
+        (water-slide ne B GRA RGD RGC) 
+        (water-strike ne n e)
+        (water-rotate n BYA C GRB GRA RGD nw ne) 
+        (water-rotate e YBC A RGD RGC RGB ne se)
+        (wind-rotate s BYA) (wind-rotate w YBC)
+        (move-type continue-type)
+        (wind-strike s BYA RGA RGB GRD BGA BGB GBD C) 
+        (wind-strike w YBC GRB GRC GRD GBB GBC GBD A)
+     )
+  )
+  (piece
+     (common-piece GBA gba)
+     (help "Stone + Water")
+     (moves
+        (stone-step n C YBB YBA BYD GBB GBA BGD) 
+        (water-slide s C RGB RGA GRD)
+        (water-strike s se sw)
+        (stone-rotate nw GBB D YBC YBB YBA GBC GBB GBA) 
+        (stone-rotate ne BGD B YBA BYD BYC GBA BGD BGC)
+        (water-rotate se GBB D RGC RGB RGA s e) 
+        (water-rotate sw BGD B RGA GRD GRC s w)
+     )
+  )
+  (piece
+     (common-piece GBB gbb)
+     (help "Stone + Water")
+     (moves
+        (stone-step nw D YBC YBB YBA GBC GBB GBA) 
+        (water-slide se D RGC RGB RGA)
+        (water-strike se e s)
+        (stone-rotate w GBC A YBD YBC YBB GBD GBC GBB) 
+        (stone-rotate n GBA C YBB YBA BYD GBB GBA BGD)
+        (water-rotate e GBC A RGD RGC RGB ne se) 
+        (water-rotate s GBA C RGB RGA GRD se sw)
+     )
+  )
+  (piece
+     (common-piece GBC gbc)
+     (help "Stone + Water")
+     (moves
+        (stone-step w A YBD YBC YBB GBD GBC GBB) 
+        (water-slide e A RGD RGC RGB)
+        (water-strike e ne se)
+        (stone-rotate sw GBD B BYA YBD YBC BGA GBD GBC) 
+        (stone-rotate nw GBB D YBC YBB YBA GBC GBB GBA)
+        (water-rotate ne GBD B GRA RGD RGC n e) 
+        (water-rotate se GBB D RGC RGB RGA s e)
+     )
+  )
+  (piece
+     (common-piece GBD gbd)
+     (help "Stone + Water")
+     (moves
+        (stone-step sw B BYA YBD YBC BGA GBD GBC) 
+        (water-slide ne B GRA RGD RGC)
+        (water-strike ne n e)
+        (stone-rotate s BGA C BYB BYA YBD BGB BGA GBD) 
+        (stone-rotate w GBC A YBD YBC YBB GBD GBC GBB)
+        (water-rotate n BGA C GRB GRA RGD nw ne) 
+        (water-rotate e GBC A RGD RGC RGB ne se)
+     )
+  )
+  (piece
+     (common-piece BGA bga)
+     (help "Stone + Water")
+     (moves
+        (water-slide n C GRB GRA RGD) 
+        (water-strike n nw ne)
+        (stone-step s C BYB BYA YBD BGB BGA GBD)
+        (water-rotate nw BGB D GRC GRB GRA n w) 
+        (water-rotate ne GBD B GRA RGD RGC n e)
+        (stone-rotate se BGB D BYC BYB BYA BGC BGB BGA) 
+        (stone-rotate sw GBD B BYA YBD YBC BGA GBD GBC)
+     )
+  )
+  (piece
+     (common-piece BGB bgb)
+     (help "Stone + Water")
+     (moves
+        (water-slide nw D GRC GRB GRA)
+        (water-strike nw w n)
+        (stone-step se D BYC BYB BYA BGC BGB BGA)
+        (water-rotate w BGC A GRD GRC GRB sw nw) 
+        (water-rotate n BGA C GRB GRA RGD nw ne)
+        (stone-rotate e BGC A BYD BYC BYB BGD BGC BGB) 
+        (stone-rotate s BGA C BYB BYA YBD BGB BGA GBD)
+     )
+  )
+  (piece
+     (common-piece BGC bgc)
+     (help "Stone + Water")
+     (moves
+        (water-slide w A GRD GRC GRB)
+        (water-strike w sw nw)
+        (stone-step e A BYD BYC BYB BGD BGC BGB)
+        (water-rotate sw BGD B RGA GRD GRC s w) 
+        (water-rotate nw BGB D GRC GRB GRA n w)
+        (stone-rotate ne BGD B YBA BYD BYC GBA BGD BGC) 
+        (stone-rotate se BGB D BYC BYB BYA BGC BGB BGA)
+     )
+  )
+  (piece
+     (common-piece BGD bgd)
+     (help "Stone + Water")
+     (moves
+        (water-slide sw B RGA GRD GRC)
+        (water-strike sw s w)
+        (stone-step ne B YBA BYD BYC GBA BGD BGC)
+        (water-rotate s GBA C RGB RGA GRD se sw) 
+        (water-rotate w BGC A GRD GRC GRB sw nw)
+        (stone-rotate n GBA C YBB YBA BYD GBB GBA BGD) 
+        (stone-rotate e BGC A BYD BYC BYB BGD BGC BGB)
+     )
+  )
+  (piece
+     (light-piece YGA yga)
+     (help "Stone + Wind")
+     (moves
+        (wind-slide n RGD GRA GRB BGD GBA GBB C) 
+        (stone-step s C BYB BYA YBD BGB BGA GBD)
+        (stone-rotate se YGB D BYC BYB BYA BGC BGB BGA) 
+        (stone-rotate sw GYD B BYA YBD YBC BGA GBD GBC)
+        (wind-rotate nw YGB) (wind-rotate ne GYD)
+        (move-type continue-type)
+        (wind-strike nw YGB GRA GRB GRC GBA GBB GBC D) 
+        (wind-strike ne GYD RGC RGD GRA BGC BGD GBA B)
+     )
+  )
+  (piece
+     (light-piece YGB ygb)
+     (help "Stone + Wind")
+     (moves
+        (wind-slide nw GRA GRB GRC GBA GBB GBC D) 
+        (stone-step se D BYC BYB BYA BGC BGB BGA)
+        (stone-rotate e YGC A BYD BYC BYB BGD BGC BGB) 
+        (stone-rotate s YGA C BYB BYA YBD BGB BGA GBD)
+        (wind-rotate w YGC) (wind-rotate n YGA)
+        (move-type continue-type)
+        (wind-strike w YGC GRB GRC GRD GBB GBC GBD A) 
+        (wind-strike n YGA RGD GRA GRB BGD GBA GBB C)
+     )
+  )
+  (piece
+     (light-piece YGC ygc)
+     (help "Stone + Wind")
+     (moves
+        (wind-slide w GRB GRC GRD GBB GBC GBD A) 
+        (stone-step e A BYD BYC BYB BGD BGC BGB)
+        (stone-rotate ne YGD B YBA BYD BYC GBA BGD BGC) 
+        (stone-rotate se YGB D BYC BYB BYA BGC BGB BGA)
+        (wind-rotate sw YGD) (wind-rotate nw YGB)
+        (move-type continue-type)
+        (wind-strike sw YGD GRC GRD RGA GBC GBD BGA B) 
+        (wind-strike nw YGB GRA GRB GRC GBA GBB GBC D)
+     )
+  )
+  (piece
+     (light-piece YGD ygd)
+     (help "Stone + Wind")
+     (moves
+        (wind-slide sw GRC GRD RGA GBC GBD BGA B) 
+        (stone-step ne B YBA BYD BYC GBA BGD BGC)
+        (stone-rotate n GYA C YBB YBA BYD GBB GBA BGD) 
+        (stone-rotate e YGC A BYD BYC BYB BGD BGC BGB)
+        (wind-rotate s GYA) (wind-rotate w YGC)
+        (move-type continue-type)
+        (wind-strike s GYA RGA RGB GRD BGA BGB GBD C) 
+        (wind-strike w YGC GRB GRC GRD GBB GBC GBD A)
+     )
+  )
+  (piece
+     (light-piece GYA gya)
+     (help "Stone + Wind")
+     (moves
+        (stone-step n C YBB YBA BYD GBB GBA BGD) 
+        (wind-slide s RGA RGB GRD BGA BGB GBD C)
+        (stone-rotate nw GYB D YBC YBB YBA GBC GBB GBA) 
+        (stone-rotate ne YGD B YBA BYD BYC GBA BGD BGC)
+        (wind-rotate se GYB) (wind-rotate sw YGD)
+        (move-type continue-type)
+        (wind-strike se GYB RGA RGB RGC BGA BGB BGC D) 
+        (wind-strike sw YGD GRC GRD RGA GBC GBD BGA B )
+     )
+  )
+  (piece
+     (light-piece GYB gyb)
+     (help "Stone + Wind")
+     (moves
+        (stone-step nw D YBC YBB YBA GBC GBB GBA) 
+        (wind-slide se RGA RGB RGC BGA BGB BGC D)
+        (stone-rotate w GYC A YBD YBC YBB GBD GBC GBB) 
+        (stone-rotate n GYA C YBB YBA BYD GBB GBA BGD)
+        (wind-rotate e GYC) (wind-rotate s GYA)
+        (move-type continue-type)
+        (wind-strike e GYC RGB RGC RGD BGB BGC BGD A) 
+        (wind-strike s GYA RGA RGB GRD BGA BGB GBD C)
+     )
+  )
+  (piece
+     (light-piece GYC gyc)
+     (help "Stone + Wind")
+     (moves
+        (stone-step w A YBD YBC YBB GBD GBC GBB) 
+        (wind-slide e RGB RGC RGD BGB BGC BGD A)
+        (stone-rotate sw GYD B BYA YBD YBC BGA GBD GBC) 
+        (stone-rotate nw GYB D YBC YBB YBA GBC GBB GBA)
+        (wind-rotate ne GYD) (wind-rotate se GYB)
+        (move-type continue-type)
+        (wind-strike ne GYD RGC RGD GRA BGC BGD GBA B) 
+        (wind-strike se GYB RGA RGB RGC BGA BGB BGC D)
+     )
+  )
+  (piece
+     (light-piece GYD gyd)
+     (help "Stone + Wind")
+     (moves
+        (stone-step sw B BYA YBD YBC BGA GBD GBC) 
+        (wind-slide ne RGC RGD GRA BGC BGD GBA B)
+        (stone-rotate s YGA C BYB BYA YBD BGB BGA GBD) 
+        (stone-rotate w GYC A YBD YBC YBB GBD GBC GBB)
+        (wind-rotate n YGA) (wind-rotate e GYC)
+        (move-type continue-type)
+        (wind-strike n YGA RGD GRA GRB BGD GBA GBB C) 
+        (wind-strike e GYC RGB RGC RGD BGB BGC BGD A)
+     )
+  )
+  (piece
+     (dark-piece RA ra)
+     (help "Fire")
+     (moves
+        (fire-slide n) (fire-strike n GBB GBA BGD YBB YBA BYD) 
+        (fire-slide s) (fire-strike s BGB BGA GBD BYB BYA YBD)
+        (fire-rotate nw RB GBC GBB GBA YBC YBB YBA) 
+        (fire-rotate ne RD GBA BGD BGC YBA BYD BYC)
+        (fire-rotate se RB BGC BGB BGA BYC BYB BYA) 
+        (fire-rotate sw RD BGA GBD GBC BYA YBD YBC)
+     )
+  )
+  (piece
+     (dark-piece RB rb)
+     (help "Fire")
+     (moves
+        (fire-slide nw) (fire-strike nw GBC GBB GBA YBC YBB YBA) 
+        (fire-slide se) (fire-strike se BGC BGB BGA BYC BYB BYA)
+        (fire-rotate w RC GBD GBC GBB YBD YBC YBB) 
+        (fire-rotate n RA GBB GBA BGD YBB YBA BYD)
+        (fire-rotate e RC BGD BGC BGB BYD BYC BYB) 
+        (fire-rotate s RA BGB BGA GBD BYB BYA YBD)
+     )
+  )
+  (piece
+     (dark-piece RC rc)
+     (help "Fire")
+     (moves
+        (fire-slide w) (fire-strike w GBD GBC GBB YBD YBC YBB) 
+        (fire-slide e) (fire-strike e BGD BGC BGB BYD BYC BYB)
+        (fire-rotate sw RD BGA GBD GBC BYA YBD YBC) 
+        (fire-rotate nw RB GBC GBB GBA YBC YBB YBA)
+        (fire-rotate ne RD GBA BGD BGC YBA BYD BYC) 
+        (fire-rotate se RB BGC BGB BGA BYC BYB BYA)
+     )
+  )
+  (piece
+     (dark-piece RD rd)
+     (help "Fire")
+     (moves
+        (fire-slide sw) (fire-strike sw BGA GBD GBC BYA YBD YBC) 
+        (fire-slide ne) (fire-strike ne GBA BGD BGC YBA BYD BYC)
+        (fire-rotate s RA BGB BGA GBD BYB BYA YBD) 
+        (fire-rotate w RC GBD GBC GBB YBD YBC YBB)
+        (fire-rotate n RA GBB GBA BGD YBB YBA BYD) 
+        (fire-rotate e RC BGD BGC BGB BYD BYC BYB)
+     )
+  )
+  (piece
+     (dark-piece GRA gra)
+     (help "Stone + Fire")
+     (moves
+        (stone-step n C YBB YBA BYD GBB GBA BGD) 
+        (fire-slide s)
+        (fire-strike s BGB BGA GBD BYB BYA YBD)
+        (stone-rotate nw GRB D YBC YBB YBA GBC GBB GBA) 
+        (stone-rotate ne RGD B YBA BYD BYC GBA BGD BGC)
+        (fire-rotate se GRB BGC BGB BGA BYC BYB BYA) 
+        (fire-rotate sw RGD BGA GBD GBC BYA YBD YBC)
+     )
+  )
+  (piece
+     (dark-piece GRB grb)
+     (help "Stone + Fire")
+     (moves
+        (stone-step nw D YBC YBB YBA GBC GBB GBA) 
+        (fire-slide se)
+        (fire-strike se BGC BGB BGA BYC BYB BYA)
+        (stone-rotate w GRC A YBD YBC YBB GBD GBC GBB) 
+        (stone-rotate n GRA C YBB YBA BYD GBB GBA BGD)
+        (fire-rotate e GRC BGD BGC BGB BYD BYC BYB) 
+        (fire-rotate s GRA BGB BGA GBD BYB BYA YBD)
+     )
+  )
+  (piece
+     (dark-piece GRC grc)
+     (help "Stone + Fire")
+     (moves
+        (stone-step w A YBD YBC YBB GBD GBC GBB) 
+        (fire-slide e)
+        (fire-strike e BGD BGC BGB BYD BYC BYB)
+        (stone-rotate sw GRD B BYA YBD YBC BGA GBD GBC) 
+        (stone-rotate nw GRB D YBC YBB YBA GBC GBB GBA)
+        (fire-rotate ne GRD GBA BGD BGC YBA BYD BYC) 
+        (fire-rotate se GRB BGC BGB BGA BYC BYB BYA)
+     )
+  )
+  (piece
+     (dark-piece GRD grd)
+     (help "Stone + Fire")
+     (moves
+        (stone-step sw B BYA YBD YBC BGA GBD GBC) 
+        (fire-slide ne)
+        (fire-strike ne GBA BGD BGC YBA BYD BYC)
+        (stone-rotate s RGA C BYB BYA YBD BGB BGA GBD) 
+        (stone-rotate w GRC A YBD YBC YBB GBD GBC GBB)
+        (fire-rotate n RGA GBB GBA BGD YBB YBA BYD) 
+        (fire-rotate e GRC BGD BGC BGB BYD BYC BYB)
+     )
+  )
+  (piece
+     (dark-piece RGA rga)
+     (help "Stone + Fire")
+     (moves
+        (fire-slide n) 
+        (stone-step s C BYB BYA YBD BGB BGA GBD)
+        (fire-strike n GBB GBA BGD YBB YBA BYD)
+        (fire-rotate nw RGB GBC GBB GBA YBC YBB YBA) 
+        (fire-rotate ne GRD GBA BGD BGC YBA BYD BYC)
+        (stone-rotate se RGB D BYC BYB BYA BGC BGB BGA) 
+        (stone-rotate sw GRD B BYA YBD YBC BGA GBD GBC)
+     )
+  )
+  (piece
+     (dark-piece RGB rgb)
+     (help "Stone + Fire")
+     (moves
+        (fire-slide nw) 
+        (stone-step se D BYC BYB BYA BGC BGB BGA)
+        (fire-strike nw GBC GBB GBA YBC YBB YBA)
+        (fire-rotate w RGC GBD GBC GBB YBD YBC YBB) 
+        (fire-rotate n RGA GBB GBA BGD YBB YBA BYD)
+        (stone-rotate e RGC A BYD BYC BYB BGD BGC BGB) 
+        (stone-rotate s RGA C BYB BYA YBD BGB BGA GBD)
+     )
+  )
+  (piece
+     (dark-piece RGC rgc)
+     (help "Stone + Fire")
+     (moves
+        (fire-slide w) 
+        (stone-step e A BYD BYC BYB BGD BGC BGB)
+        (fire-strike w GBD GBC GBB YBD YBC YBB)
+        (fire-rotate sw RGD BGA GBD GBC BYA YBD YBC) 
+        (fire-rotate nw RGB GBC GBB GBA YBC YBB YBA)
+        (stone-rotate ne RGD B YBA BYD BYC GBA BGD BGC) 
+        (stone-rotate se RGB D BYC BYB BYA BGC BGB BGA)
+     )
+  )
+  (piece
+     (dark-piece RGD rgd)
+     (help "Stone + Fire")
+     (moves
+        (fire-slide sw) 
+        (stone-step ne B YBA BYD BYC GBA BGD BGC)
+        (fire-strike sw BGA GBD GBC BYA YBD YBC)
+        (fire-rotate s GRA BGB BGA GBD BYB BYA YBD) 
+        (fire-rotate w RGC GBD GBC GBB YBD YBC YBB)
+        (stone-rotate n GRA C YBB YBA BYD GBB GBA BGD) 
+        (stone-rotate e RGC A BYD BYC BYB BGD BGC BGB)
+     )
+  )
+
+  (board-setup
+     (Light
+        (GA c2 d2 e2 f2 g2 h2)
+        (GC b1 i1)
+        (GB b2)
+        (GD i2)
+        (BYA e1 f1)
+        (GBB d1)
+        (BGD g1)
+        (GYB c1)
+        (YGD h1)
+     )
+     (Dark
+        (GA c9 d9 e9 f9 g9 h9)
+        (GC b10 i10)
+        (GB i9)
+        (GD b9)
+        (RA e10 f10)
+        (GRD d10)
+        (RGB g10)
+        (GBD c10)
+        (BGB h10)
+     )
+  )
+
+  (win-condition (Light Dark) (absolute-config 
+     GA GB GC GD BYA BYB BYC BYD YBA YBB YBC YBD 
+     GBA GBB GBC GBD BGA BGB BGC BGD YGA YGB YGC
+     YGD GYA GYB GYC GYD RA RB RC RD GRA GRB GRC
+     GRD RGA RGB RGC RGD
+     (e5 f5 e6 f6)) 
+  )
+  (loss-condition (Light Dark) (pieces-remaining 3) )
+  (loss-condition (Light Dark) (pieces-remaining 2) )
+  (loss-condition (Light Dark) (pieces-remaining 1) )
+  (loss-condition (Light Dark) (pieces-remaining 0) )
+  (loss-condition (Light Dark) repetition )
+)
+
+(variant
+  (title "Elementals (setup)")
+  (board-setup
+     (Light
+        (GA c2 d2 e2 f2 g2 h2)
+        (GC b1 i1)
+        (GB b2)
+        (GD i2)
+        (YBD e1)
+        (BYB f1)
+        (GYB d1)
+        (YGD g1)
+        (BGB c1)
+        (GBD h1)
+     )
+     (Dark
+        (GA c9 d9 e9 f9 g9 h9)
+        (GC b10 i10)
+        (GB i9)
+        (GD b9)
+        (RD e10)
+        (RB f10)
+        (GRB d10)
+        (RGD g10)
+        (BGD c10)
+        (GBB h10)
+     )
+  )
+)

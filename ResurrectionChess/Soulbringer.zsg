@@ -1,0 +1,64 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=ResurrectionChess.zrf
+VariantName=Soulbringer
+1. Bishop f1a x d3a White Bishop f1a = Knight on d3a
+1. Knight b8a - c6a
+2. Pawn g2a - g4a
+2. Pawn d7a - d5a
+3. Bishop c1a x e3a White Bishop c1a = Knight on e3a
+3. Pawn d5a x e4a White PawnDead e4b
+4. Pawn f3a x e4a
+4. Knight g8a - f6a
+5. Bishop f1a x h3a White Bishop f1a @ h3a 0 0 = Rook on h3a
+5. Knight f6a x e4a White PawnDead e4b
+6. Pawn b2a - b4a
+6. Knight e4a x c3a PawnDead e4b x e4a White PawnDead c3b
+7. King d1a - e1a @ e1a 0 0
+7. Knight c3a - b1a PawnDead c3b x c3a
+8. Pawn d4a - d5a
+8. Knight c6a - d4a
+9. Bishop c1a x a3a White Bishop c1a @ a3a 0 0 = Rook on a3a
+9. Knight b1a x a3a White RookDead a3b
+10. Bishop c1a x a3a
+10. Bishop c8a x g4a White PawnDead g4b
+11. Bishop a3a - c1a RookDead a3b x a3a
+11. Bishop g4a x h3a PawnDead g4b x g4a White RookDead h3b
+12. Bishop f1a x h3a
+12. Pawn c7a - c5a
+13. Pawn d5a - c6a White PawnDead c7b x c5a
+13. Pawn b7a x c6a White PawnDead c6b
+14. Bishop c1a x a3a White Bishop c1a @ a3a 0 0 = Rook on a3a
+14. Knight d4a - b5a
+15. Bishop h3a - g2a RookDead h3b x h3a
+15. Knight b5a x a3a White RookDead a3b
+16. Bishop g2a x c6a
+16. King e8a - d8a @ d8a 0 0
+17. Bishop c6a x a8a PawnDead c6b x c6a
+17. Pawn e7a - e6a
+18. Bishop a8a - g2a
+18. Pawn f7a - f5a
+19. Bishop g2a x h3a White Bishop g2a @ h3a 0 0 = Rook on h3a
+19. Pawn a7a - a5a
+20. Bishop c1a x a3a
+20. Pawn a5a x b4a White PawnDead b4b
+21. Bishop a3a - b2a RookDead a3b x a3a
+21. King d8a - c7a @ c7a 0 0
+22. Bishop b2a x c3a White Bishop b2a = Pawn on c3a
+22. Pawn b4a x c3a PawnDead b4b x b4a White PawnDead c3b
+23. Bishop b2a x c3a
+23. Bishop f8a x a3a RookDead a3a - a3b
+24. Bishop c3a x b4a White Bishop c3a = Pawn on b4a
+24. King c7a - d7a PawnDead c7b x c7a @ d7a 0 0
+25. Bishop c3a - e5a PawnDead c3b x c3a
+25. Bishop a3a x b4a RookDead a3b x a3a White PawnDead b4b
+26. Knight d3a x b4a
+26. King d7a - e8a @ e8a 0 0
+27. Bishop e5a x d6a White Bishop e5a = Queen on d6a
+27. Pawn g7a - g6a
+28. Queen d6a x e6a
+28. King e8a - f8a @ f8a 0 0
+29. Bishop e5a - g7a
+29. King f8a x g7a @ g7a 0 0 White BishopDead g7b
+30. Queen e6a - e7a
+30. King g7a - g8a BishopDead g7b x g7a @ g8a 0 0
+31. Bishop g2a - d5a

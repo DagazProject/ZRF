@@ -1,0 +1,562 @@
+Zillions Save Game File Version 0.02 HCC
+RulesFile=Sahkku.zrf
+VariantName=Sahkku
+1. Black D0 Y
+1. Black D0 X
+1. Black D0 Z
+1. Pass
+1. Pass
+1. Pass
+1. White D1 X
+1. White D0 Z
+1. White D2 Y
+1. ManA k17 - k16 x X
+1. ManA k16 - i16 x Y
+1. Pass
+2. Black D1 X
+2. Black D2 Y
+2. Black D0 Z
+2. ManA o1 - o2 x X
+2. ManA o2 - n7 x Y
+2. Pass
+2. White D3 Z
+2. White D2 Y
+2. White D0 X
+2. ManA i16 - g16 x Y
+2. ManA g16 - d16 x Z
+2. Pass
+3. Black D0 Z
+3. Black D0 Y
+3. Black D3 X
+3. ManA n7 - k7 x X
+3. Pass
+3. Pass
+3. White D2 Y
+3. White D2 X
+3. White D3 Z
+3. ManA d16 - a16 x Z
+3. ManA a16 - b11 x X
+3. ManA b11 - d11 x Y
+4. Black D1 Y
+4. Black D3 X
+4. Black D3 Z
+4. ManA k7 - h7 = Black on hII x X
+4. King hII - gII x Y
+4. partial 4 King gII - fII x Z
+4. partial 3 King fII - eII
+4. King eII - dII x d11
+4. White D1 X
+4. White D2 Y
+4. White D3 Z
+4. ManA b17 - b16 x X
+4. ManA b16 - b11 x Z
+4. ManA b11 - d11 = White on dII x Y
+5. Black D1 Y
+5. Black D3 X
+5. Black D2 Z
+5. ManA h7 - e7 x X
+5. ManA e7 - d7 = Black on dII x d11 x Y
+5. partial 3 King dII - eII x Z
+5. King eII - eI
+5. White D0 Z
+5. White D0 X
+5. White D0 Y
+5. Pass
+5. Pass
+5. Pass
+6. Black D3 Y
+6. Black D3 Z
+6. Black D0 X
+6. ManA d7 - a7 x Y
+6. ManA a7 - c16 x Z
+6. Pass
+6. White D2 Z
+6. White D2 Y
+6. White D3 X
+6. Pass
+6. Pass
+6. Pass
+7. Black D0 Y
+7. Black D3 Z
+7. Black D1 X
+7. ManA n1 - n2 x X
+7. ManA n2 - n7 x Z
+7. Pass
+7. White D0 Z
+7. White D3 Y
+7. White D2 X
+7. Pass
+7. Pass
+7. Pass
+8. Black D1 Z
+8. Black D0 Y
+8. Black D3 X
+8. ManA m1 - m2 x Z
+8. ManA n7 - k7 x X
+8. Pass
+8. White D0 Z
+8. White D1 X
+8. White D0 Y
+8. ManA h17 - h16 x X
+8. Pass
+8. Pass
+9. Black D3 X
+9. Black D2 Y
+9. Black D3 Z
+9. ManA c16 - f16 x X
+9. ManA f16 x h16 x Y
+9. ManA h16 - k16 x Z
+9. White D3 X
+9. White D2 Y
+9. White D2 Z
+9. Pass
+9. Pass
+9. Pass
+10. Black D0 Z
+10. Black D2 X
+10. Black D2 Y
+10. ManA m2 - o2 x X
+10. ManA o2 - n7 x Y
+10. Pass
+10. White D0 Y
+10. White D1 Z
+10. White D0 X
+10. ManA l17 - l16 x Z
+10. Pass
+10. Pass
+11. Black D0 X
+11. Black D2 Z
+11. Black D3 Y
+11. ManA k16 - n16 x Y
+11. ManA n7 - l7 x Z
+11. Pass
+11. White D1 Y
+11. White D3 X
+11. White D2 Z
+11. ManA i17 - i16 x Y
+11. ManA i16 - g16 x Z
+11. ManA g16 - d16 x X
+12. Black D2 Y
+12. Black D1 Z
+12. Black D0 X
+12. ManA l1 - l2 x Z
+12. ManA l2 - n2 x Y
+12. Pass
+12. White D0 Y
+12. White D2 X
+12. White D1 Z
+12. ManA d16 - b16 x X
+12. ManA a17 - a16 x Z
+12. Pass
+13. Black D0 Z
+13. Black D1 X
+13. Black D3 Y
+13. ManA k1 - k2 x X
+13. ManA k7 - h7 x Y
+13. Pass
+13. White D2 Y
+13. White D1 Z
+13. White D2 X
+13. ManA d17 - d16 x Z
+13. ManA d16 - b15 x X
+13. ManA a16 - b11 x Y
+14. Black D3 Z
+14. Black D3 X
+14. Black D0 Y
+14. ManA h7 - e7 x X
+14. ManA e7 - b7 x Z x b11
+14. Pass
+14. White D0 Z
+14. White D0 X
+14. White D0 Y
+14. Pass
+14. Pass
+14. Pass
+15. Black D3 Y
+15. Black D2 X
+15. Black D2 Z
+15. partial 4 King eI - eII x Y
+15. partial 3 King eII - dII
+15. King dII - cII
+15. partial 3 King cII - bII x X
+15. King bII - bIII x b15 x b16
+15. partial 3 King bIII - cIII x Z
+15. King cIII - cII
+15. White D2 Y
+15. White D3 Z
+15. White D1 X
+15. ManA c17 - c16 x X
+15. ManA c16 - a16 x Y
+15. ManA a16 - c11 = White on cII x Z
+16. Black D2 Z
+16. Black D3 X
+16. Black D3 Y
+16. ManA k2 - n3 x X
+16. ManA n3 - n7 x Y
+16. ManA n2 - o7 x Z
+16. White D1 X
+16. White D0 Y
+16. White D0 Z
+16. King cII - dII x X
+16. Pass
+16. Pass
+17. Black D3 Y
+17. Black D0 X
+17. Black D2 Z
+17. ManA b7 - b16 x Y
+17. ManA b16 - d16 x Z
+17. Pass
+17. White D0 Y
+17. White D1 X
+17. White D3 Z
+17. partial 4 King dII - cII x Z
+17. partial 3 King cII - cIII
+17. King cIII - dIII x d16
+17. King dIII - eIII x X
+17. Pass
+18. Black D0 Z
+18. Black D3 X
+18. Black D3 Y
+18. ManA n16 - n11 x X
+18. ManA n11 - k7 x Y
+18. Pass
+18. White D0 Y
+18. White D1 X
+18. White D0 Z
+18. ManA o17 - o16 x X
+18. Pass
+18. Pass
+19. Black D2 Y
+19. Black D1 X
+19. Black D1 Z
+19. ManA j1 - j2 x X
+19. ManA i1 - i2 x Z
+19. ManA k7 - i7 x Y
+19. White D0 X
+19. White D3 Z
+19. White D0 Y
+19. partial 4 King eIII - dIII x Z
+19. partial 3 King dIII - dII
+19. King dII - dI
+19. Pass
+19. Pass
+20. Black D0 Y
+20. Black D1 Z
+20. Black D2 X
+20. ManA b1 - b2 x Z
+20. ManA b2 - d2 = Black on dI x X
+20. Pass
+20. White D2 X
+20. White D2 Y
+20. White D3 Z
+20. ManA c11 - e11 x X
+20. ManA l16 - j16 x Y
+20. ManA e11 - h11 x Z
+21. Black D2 Z
+21. Black D3 Y
+21. Black D2 X
+21. partial 4 King dI - dII x Y
+21. partial 3 King dII - eII
+21. King eII - fII
+21. partial 3 King fII - gII x X
+21. King gII - hII x h11
+21. partial 3 King hII - hI x Z
+21. King hI - gI
+21. White D3 Y
+21. White D3 X
+21. White D0 Z
+21. ManA j16 - g16 x X
+21. ManA o16 - l16 x Y
+21. Pass
+22. Black D0 X
+22. Black D0 Y
+22. Black D0 Z
+22. Pass
+22. Pass
+22. Pass
+22. White D1 Z
+22. White D0 X
+22. White D2 Y
+22. ManA e17 - e16 x Z
+22. ManA g16 - e15 x Y
+22. Pass
+23. Black D0 X
+23. Black D1 Z
+23. Black D0 Y
+23. ManA h1 - h2 x Z
+23. Pass
+23. Pass
+23. White D2 Z
+23. White D3 X
+23. White D0 Y
+23. ManA e15 - b16 x X
+23. ManA b16 - a11 x Z
+23. Pass
+24. Black D3 Z
+24. Black D3 X
+24. Black D1 Y
+24. partial 4 King gI - gII x X
+24. partial 3 King gII - fII
+24. King fII - eII
+24. King eII - eIII x Y x e16
+24. partial 4 King eIII - dIII x Z
+24. partial 3 King dIII - dII
+24. King dII - dI
+24. White D1 Y
+24. White D1 Z
+24. White D1 X
+24. ManA n17 - n16 x X
+24. ManA m17 - m16 x Y
+24. ManA a11 - b11 x Z
+25. Black D3 Y
+25. Black D0 Z
+25. Black D3 X
+25. partial 4 King dI - dII x X
+25. partial 3 King dII - cII
+25. King cII - bII x b11
+25. partial 4 King bII - bI x Y
+25. partial 3 King bI - cI
+25. King cI - dI
+25. Pass
+25. White D0 X
+25. White D3 Z
+25. White D2 Y
+25. ManA m16 - k16 x Y
+25. ManA n16 - k15 x Z
+25. Pass
+26. Black D2 Z
+26. Black D0 Y
+26. Black D0 X
+26. partial 3 King dI - eI x Z
+26. King eI - fI
+26. Pass
+26. Pass
+26. White D0 X
+26. White D2 Z
+26. White D3 Y
+26. ManA k15 - i16 x Z
+26. ManA k16 - h16 x Y
+26. Pass
+27. Black D3 X
+27. Black D0 Y
+27. Black D3 Z
+27. partial 4 King fI - gI x X
+27. partial 3 King gI - hI
+27. King hI - iI
+27. partial 4 King iI - jI x Z
+27. partial 3 King jI - jII
+27. King jII - iII
+27. Pass
+27. White D1 Z
+27. White D2 Y
+27. White D3 X
+27. ManA f17 - f16 x Z
+27. ManA h16 - f15 x Y
+27. ManA l16 - i15 x X
+28. Black D2 X
+28. Black D3 Y
+28. Black D3 Z
+28. ManA l7 - i11 = Black on iII x Y
+28. ManA n7 - k7 x Z
+28. ManA o7 - m7 x X
+28. White D2 Y
+28. White D2 Z
+28. White D3 X
+28. ManA f15 - d16 x Y
+28. ManA i15 - g16 x Z
+28. ManA d16 - a16 x X
+29. Black D0 X
+29. Black D0 Z
+29. Black D0 Y
+29. Pass
+29. Pass
+29. Pass
+29. White D3 Y
+29. White D2 X
+29. White D2 Z
+29. ManA i16 - g15 x X
+29. ManA a16 - c11 x Y
+29. ManA c11 - e11 x Z
+30. Black D0 Z
+30. Black D0 Y
+30. Black D3 X
+30. partial 4 King iII - hII x X
+30. partial 3 King hII - gII
+30. King gII - gIII x g15 x g16
+30. Pass
+30. Pass
+30. White D3 Y
+30. White D1 Z
+30. White D1 X
+30. ManA e11 - f11 x X
+30. ManA j17 - j16 x Z
+30. ManA j16 - g16 = White on gIII x Y
+31. Black D0 Z
+31. Black D2 Y
+31. Black D0 X
+31. ManA i11 - g7 x Y
+31. Pass
+31. Pass
+31. White D1 X
+31. White D3 Z
+31. White D1 Y
+31. ManA f11 - g11 x X x g7
+31. ManA g11 - h11 x Y
+31. ManA h11 - k11 x Z x k7
+32. Black D0 Z
+32. Black D1 Y
+32. Black D1 X
+32. ManA m7 - l7 x X
+32. ManA l7 - k7 x Y x k11
+32. Pass
+32. White D2 Z
+32. White D3 X
+32. White D0 Y
+32. partial 4 King gIII - hIII x X
+32. partial 3 King hIII - hII
+32. King hII - hI x h2
+32. ManA g16 - e16 x Z
+32. Pass
+33. Black D1 X
+33. Black D0 Y
+33. Black D0 Z
+33. ManA f1 - f2 x X
+33. Pass
+33. Pass
+33. White D2 Y
+33. White D1 X
+33. White D1 Z
+33. King hI - iI x X x i2
+33. King iI - jI x Z x j2
+33. partial 3 King jI - jII x Y
+33. King jII - iII x i7
+34. Black D0 Z
+34. Black D0 Y
+34. Black D1 X
+34. ManA k7 - j7 x X
+34. Pass
+34. Pass
+34. White D0 Z
+34. White D3 X
+34. White D2 Y
+34. partial 4 King iII - iIII x X
+34. partial 3 King iIII - jIII
+34. King jIII - jII x j7
+34. ManA e16 - c16 x Y
+34. Pass
+35. Black D1 X
+35. Black D3 Z
+35. Black D2 Y
+35. ManA d2 - g2 x Z
+35. ManA d1 - d2 x X
+35. ManA d2 - f3 x Y
+35. White D1 Y
+35. White D3 Z
+35. White D0 X
+35. ManA g17 - g16 x Y
+35. partial 4 King jII - kII x Z
+35. partial 3 King kII - lII
+35. King lII - lI
+35. Pass
+36. Black D3 X
+36. Black D3 Z
+36. Black D1 Y
+36. ManA f3 - i2 x X
+36. ManA i2 - l2 = Black on lI x Z
+36. King lI - lII x Y
+36. White D2 Z
+36. White D2 Y
+36. White D3 X
+36. ManA c16 - a11 x X
+36. ManA f16 - d16 x Y
+36. ManA a11 - c11 x Z
+37. Black D0 Z
+37. Black D2 X
+37. Black D2 Y
+37. ManA g2 - i2 x X
+37. ManA f2 - h2 x Y
+37. Pass
+37. White D2 Z
+37. White D0 Y
+37. White D1 X
+37. ManA g16 - e16 x Z
+37. ManA d16 - c16 x X
+37. Pass
+38. Black D1 Z
+38. Black D2 Y
+38. Black D0 X
+38. ManA g1 - g2 x Z
+38. ManA g2 - i3 x Y
+38. Pass
+38. White D2 Z
+38. White D0 X
+38. White D1 Y
+38. ManA c11 - e11 x Z
+38. ManA c16 - b16 x Y
+38. Pass
+39. Black D2 X
+39. Black D0 Z
+39. Black D2 Y
+39. partial 3 King lII - lI x X
+39. King lI - kI
+39. ManA i3 - k2 = Black on kI x Y
+39. Pass
+39. White D1 Y
+39. White D3 Z
+39. White D0 X
+39. ManA e11 - h11 x Z
+39. ManA h11 - i11 x Y
+39. Pass
+40. Black D2 X
+40. Black D2 Y
+40. Black D2 Z
+40. partial 3 King kI - jI x X
+40. King jI - iI
+40. partial 3 King iI - hI x Y
+40. King hI - hII
+40. partial 3 King hII - iII x Z
+40. King iII - iI
+40. White D3 Y
+40. White D3 Z
+40. White D0 X
+40. ManA b16 - b11 x Y
+40. ManA e16 - b16 x Z
+40. Pass
+41. Black D1 Y
+41. Black D3 X
+41. Black D2 Z
+41. King iI - iII x Y x i11
+41. partial 4 King iII - hII x X
+41. partial 3 King hII - hI
+41. King hI - gI
+41. partial 3 King gI - fI x Z
+41. King fI - eI
+41. White D3 X
+41. White D0 Y
+41. White D2 Z
+41. ManA b11 - d11 x Z
+41. ManA b16 - b11 x X
+41. Pass
+42. Black D3 Y
+42. Black D1 X
+42. Black D3 Z
+42. partial 4 King eI - dI x Y
+42. partial 3 King dI - cI
+42. King cI - bI
+42. King bI - bII x X x b11
+42. partial 4 King bII - cII x Z
+42. partial 3 King cII - cI
+42. King cI - dI
+42. White D3 X
+42. White D0 Y
+42. White D0 Z
+42. ManA d11 - g11 x X
+42. Pass
+42. Pass
+43. Black D2 X
+43. Black D2 Z
+43. Black D2 Y
+43. partial 3 King dI - eI x X
+43. King eI - fI
+43. partial 3 King fI - gI x Y
+43. King gI - gII x g11

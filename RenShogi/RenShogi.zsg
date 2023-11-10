@@ -1,0 +1,54 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=RenShogi.zrf
+VariantName=REN Shogi
+1. Pawn c3 - c4
+1. Pawn c5 x c4 Pawn c4 - n7 flip n7
+2. Rook c2 x c4 Pawn c4 - y1 flip y1
+2. King b7 - b6
+3. Gold a1 - b2
+3. Bishop c6 - b7
+4. Pawn b3 - b4
+4. Gold c7 - c6
+5. Gold b2 - b3
+5. Pawn n7 - c5
+6. Rook c4 - c2
+6. King b6 - c7
+7. Silver c1 - b2
+7. King c7 - b6
+8. Pawn b4 x b5 Pawn b5 - z1 flip z1
+8. King b6 x b5 Pawn b5 - n7 flip n7
+9. Silver b2 - c3
+9. Gold c6 - b6
+10. Silver c3 - b4
+10. King b5 - c6
+11. King b1 - a1
+11. Pawn n7 - b5
+12. Silver b4 - c3
+12. King c6 - c7
+13. Bishop a2 - b1
+13. Bishop b7 - c6
+14. Pawn z1 - c4
+14. Bishop c6 - b7
+15. Pawn c4 x c5 Pawn c5 - z1 flip z1
+15. Gold b6 x c5 Pawn c5 - n7 flip n7
+16. Silver c3 - b4
+16. Pawn b5 x b4 Silver b4 - m7 flip m7
+17. Rook c2 x c5 Gold c5 - y2 = RookP on c5 flip y2
+17. Bishop b7 - c6
+18. Gold b3 x b4 Pawn b4 - z2 flip z2
+18. Silver a7 - b6
+19. RookP c5 x c6 Bishop c6 - y3 flip y3
+19. King c7 x c6 RookP c6 - n6 = Rook flip n6
+20. Pawn y1 - c5
+20. Silver b6 x c5 Pawn c5 - m6 flip m6
+21. Gold y2 - b5
+21. King c6 - b7
+22. Gold b4 x c5 Silver c5 - y1 flip y1
+22. Pawn n7 - b6
+23. Gold b5 x a6 Rook a6 - y2 flip y2
+23. King b7 x a6 Gold a6 - n7 flip n7
+24. Silver y1 - b5
+24. Pawn b6 x b5 Silver b5 - n5 flip n5
+25. Rook y2 - c6
+25. King a6 - b7
+26. Rook c6 - b6 = RookP

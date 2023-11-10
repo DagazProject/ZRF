@@ -1,0 +1,330 @@
+Zillions Save Game File Version 0.02 CCC
+RulesFile=Daldosa.zrf
+VariantName=Daldosa
+1. Black D1 Y Black Mark z1
+1. Black D3 X
+1. Off a1 - a2 x Y = On on a2
+1. On a2 - d2 x X
+1. White D3 X White Mark z2 x z1
+1. White D3 Y
+1. Pass
+1. Pass
+2. Black D1 Y Black Mark z1
+2. Black D2 X
+2. On d2 - f2 x X
+2. On f2 - g2 x Y
+2. White D3 X White Mark z3 x z2 x z1
+2. White D4 Y
+2. Pass
+2. Pass
+3. Black D3 Y Black Mark z1
+3. Black D3 X
+3. On g2 - j2 x X
+3. On j2 - m2 x Y
+3. White D1 Y White Mark z2 x z1
+3. White D4 X
+3. Off a3 - a2 x Y = On on a2
+3. On a2 - e2 x X
+4. Black D1 X Black Mark z1
+4. Black D3 Y
+4. On m2 - n2 x X
+4. On n2 - q2 x Y
+4. White D4 X White Mark z4 x z2 x z3 x z1
+4. White D2 Y
+4. On e2 - g2 x Y
+4. On g2 - k2 x X
+5. Black D1 X Black Mark z1
+5. Black D2 Y
+5. On q2 x o3 x Y
+5. On o3 x n3 x X
+5. White D1 X White Mark z2 x z1
+5. White D4 Y
+5. On k2 - o2 x Y
+5. Off b3 - a3 x X = On on a3
+6. Black D1 X Black Mark z1
+6. Black D1 Y Black Mark pf
+6. On n3 x m3 x X
+6. Off b1 - a1 x Y = On on a1
+6. White D3 Y White Mark z3 x z2 x z1
+6. White D1 X
+6. Pass
+6. Pass
+7. Black D4 Y Black Mark z1 x pf
+7. Black D4 X
+7. On m3 x i3 x X
+7. On i3 x e3 x Y
+7. White D2 Y White Mark z2 x z1
+7. White D2 X
+7. On a3 - b2 x X
+7. On b2 - d2 x Y
+8. Black D1 X Black Mark z1
+8. Black D3 Y
+8. On a1 - c2 x Y
+8. On c2 x d2 x X
+8. White D3 Y White Mark z5 x z2 x z3 x z4 x z1
+8. White D1 X
+8. On o2 x p1 x Y
+8. Off f3 x e3 x X = On on e3
+9. Black D2 X Black Mark z1
+9. Black D1 Y
+9. On d2 - e2 x Y
+9. On e2 - g2 x X
+9. White D2 Y White Mark z2 x z1
+9. White D3 X
+9. On p1 x n1 x Y
+9. On n1 x k1 x X
+10. Black D3 X Black Mark z1
+10. Black D4 Y
+10. On g2 - j2 x X
+10. On j2 - n2 x Y
+10. White D2 X White Mark z3 x z2 x z1
+10. White D4 Y
+10. On k1 x i1 x X
+10. On i1 x e1 x Y
+11. Black D2 X Black Mark z1
+11. Black D3 Y
+11. On n2 - q2 x Y
+11. On q2 - o3 x X
+11. White D4 Y White Mark z2 x z1
+11. White D1 X
+11. Off p3 x o3 x X = On on o3
+11. On e1 - a1 x Y
+12. Black D2 X Black Mark z1
+12. Black D1 Y
+12. Off o1 - n1 x Y = On on n1
+12. Pass
+12. White D2 X White Mark z4 x z2 x z3 x z1
+12. White D3 Y
+12. On a1 - c2 x Y
+12. On c2 - e2 x X
+13. Black D4 Y Black Mark z1
+13. Black D1 X
+13. Off l1 - k1 x X = On on k1
+13. Pass
+13. White D3 X White Mark z2 x z1
+13. White D2 Y
+13. On e2 - h2 x X
+13. On o3 - m3 x Y
+14. Black D4 Y Black Mark z1
+14. Black D1 X
+14. Off j1 - i1 x X = On on i1
+14. Pass
+14. White D3 X White Mark z3 x z2 x z1
+14. White D1 Y
+14. Off c3 - b3 x Y = On on b3
+14. On b3 - b2 x X
+15. Black D1 X Black Mark z1
+15. Black D4 Y
+15. Off m1 - l1 x X = On on l1
+15. Pass
+15. White D4 X White Mark z2 x z1
+15. White D2 Y
+15. On h2 - l2 x X
+15. On l2 - n2 x Y
+16. Black D1 Y Black Mark z1
+16. Black D4 X
+16. On n1 - m1 x Y
+16. Pass
+16. White D1 Y x z1 x z2 x z3 x z4 x z5
+16. White D4 X
+16. Off g3 - f3 x Y = On on f3
+16. On n2 - p1 x X
+17. Black D3 Y Black Mark z1
+17. Black D4 X
+17. Pass
+17. Pass
+17. White D4 Y White Mark z2 x z1
+17. White D3 X
+17. On p1 x m1 x X
+17. On m1 x i1 x Y
+18. Black D3 Y Black Mark z1
+18. Black D1 X
+18. Off c1 - b1 x X = On on b1
+18. On b1 x b2 x Y
+18. White D1 Y White Mark z3 x z2 x z1
+18. White D4 X
+18. Off d3 - c3 x Y = On on c3
+18. On i1 - e1 x X
+19. Black D2 Y Black Mark z1
+19. Black D3 X
+19. On b2 - d2 x Y
+19. On d2 - g2 x X
+19. White D4 Y White Mark z2 x z1
+19. White D3 X
+19. On c3 - b2 x Y
+19. On b2 - e2 x X
+20. Black D2 Y Black Mark z1
+20. Black D2 X
+20. On g2 - i2 x X
+20. On i2 - k2 x Y
+20. White D3 Y White Mark z4 x z2 x z3 x z1
+20. White D2 X
+20. On e1 - b1 x Y
+20. On b1 - a2 x X
+21. Black D2 Y Black Mark z1
+21. Black D4 X
+21. On k1 - i1 x Y
+21. On k2 - o2 x X
+21. White D4 Y White Mark z2 x z1
+21. White D4 X
+21. On e3 - a3 x X
+21. On f3 - b3 x Y
+22. Black D4 X Black Mark z1
+22. Black D2 Y
+22. On o2 - q2 x Y
+22. On q2 x m3 x X
+22. White D3 X White Mark z3 x z2 x z1
+22. White D3 Y
+22. On e2 - h2 x X
+22. On h2 - k2 x Y
+23. Black D3 X Black Mark z1
+23. Black D1 Y
+23. Off d1 - c1 x Y = On on c1
+23. On c1 x a2 x X
+23. White D2 Y White Mark z2 x z1
+23. White D1 X
+23. On a3 x a2 x X
+23. On k2 - m2 x Y
+24. Black D3 X Black Mark z1
+24. Black D2 Y
+24. On m3 x k3 x Y
+24. On k3 x h3 x X
+24. White D2 Y White Mark z5 x z2 x z3 x z4 x z1
+24. White D4 X
+24. On m2 - o2 x Y
+24. On o2 - o1 x X
+25. Black D4 X Black Mark z1
+25. Black D3 Y
+25. On h3 - d3 x X
+25. On d3 - a3 x Y
+25. White D4 X White Mark z2 x z1
+25. White D3 Y
+25. On o1 x l1 x Y
+25. On a2 - e2 x X
+26. Black D3 X Black Mark z1
+26. Black D3 Y
+26. On a3 - c2 x X
+26. On c2 - f2 x Y
+26. White D3 Y White Mark z3 x z2 x z1
+26. White D4 X
+26. On l1 x i1 x Y
+26. On e2 - i2 x X
+27. Black D1 Y Black Mark z1
+27. Black D1 X Black Mark pf
+27. Off f1 - e1 x X = On on e1
+27. On e1 - d1 x Y
+27. White D4 X White Mark z2 x z1
+27. White D3 Y
+27. Pass
+27. Pass
+28. Black D4 Y Black Mark z1 x pf
+28. Black D1 X
+28. On d1 - c1 x X
+28. On c1 - b2 x Y
+28. White D2 Y White Mark z4 x z2 x z3 x z1
+28. White D2 X
+28. On b3 - a2 x X
+28. On a2 - c2 x Y
+29. Black D4 X Black Mark z1
+29. Black D3 Y
+29. On f2 x i2 x Y
+29. On b2 - f2 x X
+29. White D3 Y White Mark z2 x z1
+29. White D2 X
+29. On c2 x f2 x Y
+29. On i1 x g1 x X
+30. Black D3 X Black Mark z1
+30. Black D3 Y
+30. On i2 - l2 x X
+30. On l2 - o2 x Y
+30. White D3 Y White Mark z3 x z2 x z1
+30. White D3 X
+30. On f2 - i2 x X
+30. On g1 - d1 x Y
+31. Black D4 X Black Mark z1
+31. Black D1 Y
+31. Off h1 - g1 x Y = On on g1
+31. On o2 - o3 x X
+31. White D3 X White Mark z2 x z1
+31. White D1 Y
+31. On d1 - a1 x X
+31. Off l3 - k3 x Y = On on k3
+32. Black D3 Y Black Mark z1
+32. Black D4 X
+32. On g1 - c1 x X
+32. On c1 - a2 x Y
+32. White D1 X x z1 x z2 x z3 x z4 x z5
+32. White D2 Y
+32. On a1 x a2 x X
+32. On a2 - c2 x Y
+33. Black D4 Y Black Mark z1
+33. Black D2 X
+33. On o3 - m3 x X
+33. On m3 - i3 x Y
+33. White D4 X White Mark z2 x z1
+33. White D4 Y
+33. On c2 - g2 x X
+33. On i2 - m2 x Y
+34. Black D3 Y Black Mark z1
+34. Black D3 X
+34. On i3 - f3 x X
+34. On f3 - c3 x Y
+34. White D4 X White Mark z3 x z2 x z1
+34. White D3 Y
+34. On g2 - k2 x X
+34. On m2 - p2 x Y
+35. Black D2 X Black Mark z1
+35. Black D4 Y
+35. On c3 - b2 x Y
+35. On b2 - d2 x X
+35. White D4 X White Mark z2 x z1
+35. White D2 Y
+35. On p2 - p1 x Y
+35. On k2 - o2 x X
+36. Black D3 Y Black Mark z1
+36. Black D1 X
+36. On d2 - g2 x Y
+36. On g2 - h2 x X
+36. White D4 Y White Mark z4 x z2 x z3 x z1
+36. White D2 X
+36. On p1 - l1 x Y
+36. On l1 - j1 x X
+37. Black D1 X Black Mark z1
+37. Black D4 Y
+37. On h2 - i2 x X
+37. On i2 - m2 x Y
+37. White D2 Y White Mark z2 x z1
+37. White D1 X
+37. On j1 - h1 x Y
+37. Off j3 - i3 x X = On on i3
+38. Black D1 Y Black Mark z1
+38. Black D3 X
+38. On m2 - n2 x Y
+38. On n2 - q2 x X
+38. White D4 X White Mark z3 x z2 x z1
+38. White D3 Y
+38. On i3 - f3 x Y
+38. On o2 - o1 x X
+39. Black D1 Y Black Mark z1
+39. Black D2 X
+39. On q2 - o3 x X
+39. On o3 - n3 x Y
+39. White D2 Y White Mark z2 x z1
+39. White D2 X
+39. On f3 - d3 x X
+39. On k3 - i3 x Y
+40. Black D3 X Black Mark z1
+40. Black D1 Y
+40. On n3 - m3 x Y
+40. On m3 - j3 x X
+40. White D4 Y White Mark z5 x z2 x z3 x z4 x z1
+40. White D2 X
+40. On h1 - f1 x X
+40. On i3 - e3 x Y
+41. Black D3 Y Black Mark z1
+41. Black D3 X
+41. On j3 - g3 x X
+41. On g3 x d3 x Y
+41. White D1 X White Mark z2 x z1
+41. White D3 Y
+41. On e3 x d3 x X

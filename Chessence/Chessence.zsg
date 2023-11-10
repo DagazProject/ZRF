@@ -1,0 +1,86 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=Chessence.zrf
+VariantName=Free Chessence
+1. Pawn e1 - c2
+1. Pawn b9 - d8
+2. Pawn c2 - c3
+2. Pawn c8 - d6
+3. Pawn e3 - f3
+3. Pawn b8 - b9
+4. Pawn f3 - e1
+4. Pawn b9 - c8
+5. Pawn f2 - e3
+5. Pawn c8 - b6
+6. Pawn e3 - e4
+6. Pawn b6 - c8
+7. Pawn e2 - e3
+7. Pawn d6 x e4 Pawn e4 - x9 = Black
+8. Pawn e3 x e4 Pawn e4 - y1 = White
+8. Pawn a8 - b9
+9. Pawn c3 - c4
+9. Pawn b9 - a8
+10. Pawn e4 - c3
+10. Pawn a8 - b9
+11. Pawn c3 - c2
+11. Pawn b9 - a8
+12. Pawn c2 - e3
+12. Pawn a8 - b9
+13. Pawn d2 - f2
+13. Pawn b7 - a8
+14. Pawn e3 - d2
+14. Pawn a8 - b7
+15. Pawn f2 - e3
+15. Pawn c8 - a8
+16. Pawn e1 - f2
+16. Pawn a8 - c8
+17. Pawn e3 - e1
+17. Pawn b7 - d6
+18. Pawn f2 - e3
+18. Pawn d6 - b7
+19. Pawn e1 - f2
+19. Pawn b7 - a8
+20. Pawn d2 - c2
+20. Pawn a8 - b7
+21. Pawn c4 - d2
+21. Pawn b7 - d6
+22. Pawn f2 - e1
+22. Pawn d8 - b7
+23. Pawn e3 - c4
+23. Pawn d6 x c4 Pawn c4 - x8 = Black
+24. Pawn c2 x c4 Pawn c4 - y2 = White
+24. Pawn b7 - d8
+25. Pawn e1 - f2
+25. Pawn d8 - d7
+26. Pawn d3 - c3
+26. Pawn d7 - d6
+27. Pawn c4 x d6 Pawn d6 - y3 = White
+27. Pawn c8 x d6 Pawn d6 - x7 = Black
+28. Pawn d2 - e4
+28. Pawn c7 - b8
+29. Pawn c3 - d5
+29. Pawn b8 - c8
+30. Pawn e4 x d6 Pawn d6 - y4 = White
+30. Pawn c8 x d6 Pawn d6 - x6 = Black
+31. Pawn f2 - f4
+31. Pawn b9 - b7
+32. Pawn f4 - e6
+32. Pawn b7 - c5
+33. Pawn y1 - d8
+33. Pawn x9 - d3
+34. Pawn y4 - c7
+34. Pawn x7 - b8
+35. Pawn y2 - d9
+35. Pawn x6 - b9
+36. Pawn d8 x b8 Pawn b8 - y1 = White
+36. King a9 - a3
+37. Pawn y1 - a8
+37. Pawn c5 - a4
+38. Pawn y3 - c5
+38. Pawn x8 - e2
+39. Pawn c5 x d3 Pawn d3 - y1 = White
+39. Pawn a4 x a8 Pawn a8 - x9 = Black
+40. Pawn c7 x a8 Pawn a8 - y2 = White
+40. Pawn x9 - a6
+41. Pawn a8 x a6 Pawn a6 - y3 = White
+41. Pass
+42. Pawn y1 - a5

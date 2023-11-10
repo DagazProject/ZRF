@@ -1,0 +1,22 @@
+Escalation
+----------
+2 variants
+
+Escalation first appeared in the Games and Puzzles Journal in 1988.
+
+Object: Capture the opponent's Wazir.
+
+The five patterns occurring, the pieces they represent, and the number 
+of each type in the set are as follows:
+
+Wazir   - 2
+Fers    - 4
+Dabbada - 8
+Knight  - 2
+Alfil   - 16
+
+A piece always consists of one or more patterns. The transparent upper tiles 
+of the captured piece are placed on top of the capturing piece, any duplicate 
+tiles being held in reserve for possible re-use. 
+
+Video: https://www.youtube.com/watch?v=HeOlz3ce6xA

@@ -1,0 +1,46 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=LeShogi.zrf
+VariantName=LeShogi
+1. Rook c2 - c4
+1. Rook b5 x b2 Bishop b2 - n6 = RookP on b2 flip n6
+2. Gold b1 x b2 RookP b2 - y1 = Rook flip y1
+2. Silver a6 - b5
+3. Rook c4 - c2
+3. Bishop n6 - a4
+4. Pawn d2 - d3
+4. Bishop a4 x c2 Rook c2 - n6 flip n6
+5. Silver d1 x c2 Bishop c2 - z1 flip z1
+5. Pawn a5 - a4
+6. Rook y1 - b3
+6. King b6 - a6
+7. King c1 - b1
+7. Gold c6 - b6
+8. Bishop z1 - d2
+8. Gold b6 - a5
+9. Silver c2 - d1
+9. Rook n6 - c4
+10. Silver d1 - c2
+10. King a6 - b6
+11. Silver c2 - d1
+11. Gold a5 - a6
+12. Silver d1 - c2
+12. King b6 - c6
+13. Silver c2 - d1
+13. Gold a6 - b6
+14. Silver d1 - c2
+14. Rook c4 x c2 Silver c2 - n6 flip n6
+15. Gold b2 x c2 Rook c2 - y1 flip y1
+15. Silver b5 - c4
+16. Knight a2 - b4
+16. King c6 - b5
+17. Knight b4 - a6 = KnightP
+17. Silver c4 x b3 Rook b3 - m6 flip m6
+18. KnightP a6 x b6 Gold b6 - z1 flip z1
+18. King b5 x b6 KnightP b6 - n5 = Knight flip n5
+19. Rook y1 - a6
+19. King b6 - b5
+20. Rook a6 - a5 = RookP
+20. King b5 - c4
+21. Gold z1 - b4
+21. Bishop c5 x b4 Gold b4 - m5 flip m5
+22. RookP a5 x b4 Bishop b4 - y1 flip y1

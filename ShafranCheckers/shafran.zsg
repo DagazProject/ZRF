@@ -1,0 +1,48 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=shafran.zrf
+VariantName=Shafran's Checkers
+1. Man b3 - c5
+1. partial 3 Man d7 - b3 x c5
+2. partial 3 Man a2 - c4 x b3
+2. Man d8 - c6
+3. Man a3 - b4
+3. partial 3 Man c6 - a2 x b4
+4. partial 3 Man a1 - a3 x a2
+4. Man e9 - d8
+5. Man a3 - b4
+5. Man d8 - c6
+6. partial 3 Man b4 - d8 x c6
+6. partial 3 Man c7 - e9 x d8
+7. Man b2 - b3
+7. Man e8 - d7
+8. Man b3 - b4
+8. Man d7 - c6
+9. partial 3 Man b4 - d8 x c6
+9. partial 3 Man e9 - c7 x d8
+10. Man c4 - c5
+10. Man e7 - d6
+11. partial 3 Man c5 - e7 x d6
+11. partial 3 Man e6 - e8 x e7
+12. Man c3 - c4
+12. Man c7 - c6
+13. Man d4 - e6
+13. Man c6 - b4
+14. Man c4 - d6
+14. partial 3 Man e8 - c4 x d6
+15. Man e6 - e7
+15. Man c4 - b2
+16. Man e7 - e8
+16. Man b4 - a2
+17. Man e8 - e9 = King
+17. Man a2 - a1 = King
+18. King e9 - d8
+18. King a1 - e9
+19. King d8 - a2
+19. Man b2 - a1 = King
+20. King a2 - e6
+20. Man b6 - b5
+21. partial 3 Man a4 - c6 x b5
+21. King e9 - b3
+22. partial 3 King e6 - a2 x b3
+22. partial 4 King a1 - a4 @ a2 0 1
+22. partial 3 King a4 - d7 x c6 x a2

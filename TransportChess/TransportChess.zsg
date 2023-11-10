@@ -1,0 +1,128 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=.\TransportChess.zrf
+VariantName=Bishop Transport Chess
+1. Knight c1 x a2 = BishopKnight
+1. Knight b8 - c6
+2. BishopKnight a2 - b3
+2. Knight c8 x e7 = BishopKnight
+3. Queen d1 x d2 = BishopQueen
+3. BishopKnight e7 - h4
+4. King e1 x e2 = BishopKing
+4. Queen d8 - f6
+5. Pawn g2 - g3
+5. Knight c6 - a5
+6. BishopKnight b3 x a5 White Bishop b3 @ b3 0 0 = Knight on a5
+6. Bishop h7 - e4
+7. BishopQueen d2 - d1 White Bishop d2 @ d2 0 0 = Queen on d1
+7. Bishop e4 x h1
+8. Pawn g3 x h4
+8. Pawn b7 - b6
+9. Bishop d2 - c3
+9. Pawn e6 - e5
+10. Knight a5 - c4
+10. Pawn b6 - b5
+11. Knight c4 - d2
+11. Queen f6 x h4
+12. Bishop h2 - g3
+12. Queen h4 - f6
+13. BishopKing e2 - e1 White Bishop e2 @ e2 0 0 = King on e1
+13. Knight g8 - e7
+14. Knight b1 x c3 = BishopKnight
+14. Knight f8 - e6
+15. BishopKnight c3 - e4 White Bishop c3 @ c3 0 0 = Knight on e4
+15. Bishop h1 x e4
+16. Knight d2 x e4
+16. Queen f6 - g6
+17. Knight f1 - d2
+17. Pawn d6 - d5
+18. Bishop e2 - h5
+18. Queen g6 - f5
+19. Knight e4 x g3 = BishopKnight
+19. Queen f5 - g5
+20. Bishop h5 x f7
+20. King e8 - f8 @ f8 0 0
+21. Knight d2 - f3
+21. Queen g5 - f6
+22. BishopKnight g3 x e5
+22. Queen f6 - f5
+23. Bishop f7 x e6
+23. Queen f5 x e5
+24. Bishop c3 x e5
+24. Bishop d7 x e6
+25. Bishop e5 x c7
+25. Rook a8 - c8 @ c8 0 0
+26. Bishop c7 - e5
+26. Knight e7 - c6
+27. Knight f3 - d4
+27. Bishop a7 x d4
+28. Bishop e5 x d4
+28. Knight c6 x d4
+29. Pawn e3 x d4
+29. King f8 - e7 @ e7 0 0
+30. Queen d1 - e2
+30. Rook h8 - d8 @ d8 0 0
+31. Queen e2 - e5
+31. King e7 - f8 @ f8 0 0
+32. Pawn h3 - h4
+32. Bishop e6 - f7
+33. Pawn b2 x b3 = BishopPawn
+33. Rook d8 - e8
+34. Knight g1 - f3
+34. Pawn a6 - a5
+35. Queen e5 x e8
+35. Rook c8 x e8 @ e8 0 0
+36. King e1 - d2 @ d2 0 0
+36. Pawn a5 - a4
+37. BishopPawn b3 - a2
+37. Bishop f7 - e6
+38. Knight f3 - e5
+38. King f8 - g8 @ g8 0 0
+39. Knight e5 - g6
+39. Rook e8 - d8
+40. Rook a1 - e1 @ e1 0 0
+40. Bishop e6 - f7
+41. Knight g6 - e7
+41. King g8 - h7 @ h7 0 0
+42. Rook e1 - e5 @ e5 0 0
+42. Rook d8 - f8 @ f8 0 0
+43. Pawn f2 - f3
+43. Rook f8 - e8 @ e8 0 0
+44. Knight e7 x d5
+44. Rook e8 x e5 @ e5 0 0
+45. Pawn d4 x e5
+45. Pawn g7 - g5
+46. Pawn h4 x g5
+46. Pawn h6 x g5
+47. Pawn c2 - c4
+47. Pawn b5 x c4
+48. BishopPawn a2 x c4
+48. King h7 - g7 @ g7 0 0
+49. BishopPawn c4 - c5 White Bishop c4 = Pawn on c5
+49. Bishop f7 - h5
+50. Pawn c5 - c6
+50. Bishop h5 x f3
+51. Pawn c6 - c7
+51. Bishop f3 - g4
+52. Knight d5 - b6
+52. King g7 - h6 @ h6 0 0
+53. Pawn e5 - e6
+53. Pawn g5 x g4 = BishopPawn
+54. Pawn c7 - c8 = Queen
+54. BishopPawn g4 - g3 Black Bishop g4 = Pawn on g3
+55. Queen c8 - h8
+55. King h6 - g5 @ g5 0 0
+56. Pawn e6 - e7
+56. Bishop g4 - h5
+57. Queen h8 x h5
+57. King g5 x h5 @ h5 0 0
+58. Pawn e7 - e8 = Queen
+58. King h5 - h4 @ h4 0 0
+59. Queen e8 - e4
+59. King h4 - g5 @ g5 0 0
+60. Queen e4 - e5
+60. King g5 - h4 @ h4 0 0
+61. Bishop c4 - e6
+61. Pawn g3 - g2
+62. Queen e5 - f4
+62. King h4 - h5 @ h5 0 0
+63. Bishop e6 - f7

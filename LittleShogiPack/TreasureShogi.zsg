@@ -1,0 +1,24 @@
+Zillions Save Game File Version 0.02 CC
+RulesFile=TreasureShogi.zrf
+VariantName=Treasure Shogi
+1. Knight y1 - b3
+1. Silver a5 - b4
+2. Knight b3 x c5 Gold c5 - y1 = KnightP on c5 flip y1
+2. King b5 x c5 KnightP c5 - n4 = Knight flip n4
+3. Gold a1 - a2
+3. Lance m5 - a3
+4. Lance z1 - c3
+4. Knight n4 - c4
+5. Lance c3 x c4 Knight c4 - z1 = LanceP on c4 flip z1
+5. King c5 x c4 LanceP c4 - m5 = Lance flip m5
+6. Knight z1 - b2
+6. King c4 - b5
+7. Gold y1 - c4
+7. King b5 - a5
+8. Gold c4 x b4 Silver b4 - y1 flip y1
+8. King a5 x b4 Gold b4 - n4 flip n4
+9. Silver y1 - b3
+9. King b4 - b5
+10. Knight b2 - a4 = KnightP
+10. King b5 - c5
+11. KnightP a4 - b4

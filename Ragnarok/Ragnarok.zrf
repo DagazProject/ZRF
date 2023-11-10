@@ -1,0 +1,2936 @@
+(define is-man?
+  (or  (piece? EldthursarA)
+       (piece? EldthursarR)
+       (piece? Eldthursar)
+       (piece? WarriorA)
+       (piece? WarriorR)
+       (piece? Warrior)
+       (piece? AlfrA)
+       (piece? AlfrR)
+       (piece? Alfr)
+       (piece? ValkyrieA)
+       (piece? ValkyrieR)
+       (piece? Valkyrie)
+       (piece? ZwergA)
+       (piece? ZwergR)
+       (piece? Zwerg)
+       (piece? JotunnA)
+       (piece? JotunnR)
+       (piece? Jotunn)
+  )
+)
+
+(define not-rune?
+  (and (not-piece? Mount)
+       (not-piece? Wyrd)
+       (not-piece? Ehwaz)
+       (not-piece? Berkana)
+       (not-piece? Algiz)
+       (not-piece? Fehu)
+       (not-piece? Thurisaz)
+       (not-piece? Ansuz)
+       (not-piece? Nauthiz)
+       (not-piece? Mannaz)
+       (not-piece? Othila)
+       (not-piece? Isa)
+       (not-piece? Hagalaz)
+       (not-piece? Eihwaz)
+       (not-piece? Sowelu)
+  )
+)
+
+(define not-rune-dir?
+  (and (not-piece? Mount $1)
+       (not-piece? Wyrd $1)
+       (not-piece? Ehwaz $1)
+       (not-piece? Berkana $1)
+       (not-piece? Algiz $1)
+       (not-piece? Fehu $1)
+       (not-piece? Thurisaz $1)
+       (not-piece? Ansuz $1)
+       (not-piece? Nauthiz $1)
+       (not-piece? Mannaz $1)
+       (not-piece? Othila $1)
+       (not-piece? Isa $1)
+       (not-piece? Hagalaz $1)
+       (not-piece? Eihwaz $1)
+       (not-piece? Sowelu $1)
+  )
+)
+
+(define jotunn-step-body
+  (if (and (on-board? $2) (not-rune-dir? $2))
+      (verify (not-enemy? $2))
+  )
+  $1 (verify empty?)
+  (if (and (on-board? $1) (not-rune-dir? $1))
+      (verify (not-enemy? $1))
+  )
+)
+
+(define walhall-jotunn-step (
+  (jotunn-step-body)
+  (if (in-zone? goal-zone)
+      (add Jotunn)
+   else  
+      (add $3)
+  )
+))
+
+(define jotunn-step (
+  (verify (not-enemy? a0))
+  (jotunn-step-body)
+  (add $3)
+))
+
+(define jotunn-push-body
+  (set-flag is-captured? false)
+  mark
+  (while (and (on-board? $2) (enemy? $2) (not-rune?))
+      $2
+      (if (not-rune?)
+          capture
+          (set-flag is-captured? true)
+      )
+  )
+  back
+  $1 (verify empty?)
+  mark
+  (while (and (on-board? $1) (enemy? $1) (not-rune?))
+      $1
+      (if (not-rune?)
+          capture
+          (set-flag is-captured? true)
+      )
+  )
+  back
+  (verify (flag? is-captured?))
+)
+
+(define walhall-jotunn-push (
+  (jotunn-push-body)
+  (if (in-zone? goal-zone)
+      (add-partial Jotunn capture-type)
+   else  
+      (add-partial $3 capture-type)
+  )
+))
+
+(define jotunn-push (
+  (verify (not-enemy? a0))
+  (jotunn-push-body)
+  (add-partial $3 capture-type)
+))
+
+(define common-slide-body
+  (while (empty? $1)
+      $1
+      (check-fire)
+      (add $2)
+  ) 
+  $1 (verify enemy?)
+  (verify (not-rune?))
+  (check-defended-all)
+  (check-fire)
+)
+
+(define common-slide (
+  (verify (not-enemy? a0))
+  (common-slide-body)
+  (add $2)
+))
+
+(define garmr-slide (
+  (verify (not-enemy? a0))
+  $1 (common-slide-body)
+))
+
+(define switch (
+  (verify (not-enemy? a0))
+  (add $1)
+))
+
+(define fenrir-slide (
+  (verify (not-enemy? a0))
+  (while (empty? $1)
+      $1
+      (check-fire)
+      (add $2)
+  ) 
+  $1 (verify enemy?)
+  (verify (not-rune?))
+  (check-defended-all)
+  (check-fire)
+  (add $2)
+))
+
+(define back-capture
+  mark
+  (opposite $1)
+  (while (not-position-flag? is-from?)
+      (if not-empty? capture)
+      (opposite $1)
+  )
+  back
+)
+
+(define beast-slide (
+  (verify (not-enemy? a0))
+  (set-position-flag is-from? true)
+  (while (on-board? $1)
+      $1 (verify (not-rune?))
+      (check-fire)
+      (back-capture $1)
+      (add $2)
+  ) 
+))
+
+(define valkyrie-slide (
+  (verify (not-enemy? a0))
+  (verify-not-frozen)
+  (while (empty? $1)
+      $1
+      (check-fire)
+      (add $2)
+  )
+))
+
+(define valkyrie-jump (
+  (verify (not-enemy? a0))
+  (verify-not-frozen)
+  (while (empty? $1)
+      $1
+  )
+  (verify (enemy? $1))
+  $1
+  (verify (not-rune?))
+  (check-defended-all)
+  (verify (empty? $1))
+  $1
+  (while empty?
+      mark
+      (while empty? 
+        (opposite $1)
+      ) 
+      capture
+      back
+      (check-fire)
+      (add-partial $2 capture-type)
+      $1
+  )
+))
+
+(define capture-all
+  (if (and (on-board? $1) (not-rune-dir? $1))
+      (capture $1)
+  )
+)
+
+(define check-fire-dir
+  (if (on-board? $2)
+      (if (piece? $1 $2)
+          (set-flag is-fired? true)
+      )
+  )
+)
+
+(define check-fire
+  (set-flag is-fired? false)
+  (check-fire-dir SurtrA n) (check-fire-dir SurtrA nw)
+  (check-fire-dir SurtrA s) (check-fire-dir SurtrA se)
+  (check-fire-dir SurtrA w) (check-fire-dir SurtrA sw)
+  (check-fire-dir SurtrA e) (check-fire-dir SurtrA ne)
+  (check-fire-dir SurtrR n) (check-fire-dir SurtrR nw)
+  (check-fire-dir SurtrR s) (check-fire-dir SurtrR se)
+  (check-fire-dir SurtrR w) (check-fire-dir SurtrR sw)
+  (check-fire-dir SurtrR e) (check-fire-dir SurtrR ne)
+  (check-fire-dir EldthursarA n) (check-fire-dir EldthursarR nw)
+  (check-fire-dir EldthursarA s) (check-fire-dir EldthursarR se)
+  (check-fire-dir EldthursarA w) (check-fire-dir EldthursarR sw)
+  (check-fire-dir EldthursarA e) (check-fire-dir EldthursarR ne)
+  (check-fire-dir Eldthursar n) (check-fire-dir Eldthursar nw)
+  (check-fire-dir Eldthursar s) (check-fire-dir Eldthursar se)
+  (check-fire-dir Eldthursar w) (check-fire-dir Eldthursar sw)
+  (check-fire-dir Eldthursar e) (check-fire-dir Eldthursar ne)
+  (if (flag? is-fired?) capture)
+)
+
+(define init-flags
+  (set-flag is-surtr? (or (piece? SurtrA) (piece? SurtrR) (piece? Eldthursar) (piece? EldthursarA) (piece? EldthursarR)))
+  (set-flag is-eda? (or (piece? SurtrA) (piece? SurtrR) (piece? Eldthursar) (piece? EldthursarA)))
+  (set-flag is-edr? (or (piece? SurtrA) (piece? SurtrR) (piece? Eldthursar) (piece? EldthursarR)))
+  (set-flag is-warrior? (or (piece? WarriorA) (piece? WarriorR) (piece? Warrior)))
+)
+
+(define verify-not-frozen
+  (set-flag is-frozen? false)
+  (check-frozen-all)
+  (verify (not-flag? is-frozen?))
+)
+
+(define common-step-body
+  $1 
+  (verify (or not-friend? 
+              (piece? SleipnirA) (piece? SleipnirR)
+          )
+  )
+  (verify (not-rune?))
+  (if (flag? is-warrior?)
+      (verify (not-piece? WarriorA))
+      (verify (not-piece? WarriorR))
+      (verify (not-piece? Warrior))
+  )
+  (if (not-flag? is-surtr?)
+      (check-fire)
+  )
+  (if (flag? is-eda?)
+      (fire nw) (fire se)
+      (fire sw) (fire ne)
+  )
+  (if (flag? is-edr?)
+      (fire n) (fire s)
+      (fire w) (fire e)
+  )
+)
+
+(define check-defended-dir
+  (if (on-board? $1)
+      (if (and (piece? $2 $1) (enemy? $1))
+          (set-flag is-defended? true)
+      )
+  )
+)
+
+(define check-algiz
+  (if (on-board? $1)
+      (if (and (piece? Algiz $1) (enemy? $1))
+          (set-flag is-defended? true)
+      )
+  )
+)
+
+(define check-algiz-r
+  (if (on-board? $1)
+      (if (and (piece? Algiz $1) (enemy? $1))
+          (set-flag is-defended? false)
+      )
+  )
+)
+
+(define check-defended-all
+  (set-flag is-defended? false)
+  (check-defended-dir se OdinA)     (check-defended-dir se SleipnirOA)
+  (check-defended-dir se OdinR)     (check-defended-dir se SleipnirOR)
+  (check-defended-dir w  ThorA)     (check-defended-dir e  ThorA)
+  (check-defended-dir n  ThorR)     (check-defended-dir s  ThorR)
+  (check-defended-dir se TyrA)      (check-defended-dir sw TyrA)
+  (check-defended-dir w  TyrR)      (check-defended-dir e  TyrR)  
+  (check-defended-dir s  TyrR)      
+  (check-defended-dir n  ValkyrieA) (check-defended-dir s  ValkyrieA)
+  (check-defended-dir w  ValkyrieA) (check-defended-dir e  ValkyrieA)
+  (check-defended-dir nw ValkyrieR) (check-defended-dir ne ValkyrieR)
+  (check-defended-dir sw ValkyrieR) (check-defended-dir se ValkyrieR)
+  (check-algiz n ) (check-algiz nwnw)
+  (check-algiz s ) (check-algiz swsw)
+  (check-algiz w ) (check-algiz nene)
+  (check-algiz e ) (check-algiz sese)
+  (check-algiz nn) (check-algiz nnw)
+  (check-algiz ss) (check-algiz ssw)
+  (check-algiz ww) (check-algiz nne)
+  (check-algiz ee) (check-algiz sse)
+  (check-algiz nw) (check-algiz nww)
+  (check-algiz sw) (check-algiz sww)
+  (check-algiz ne) (check-algiz nee)
+  (check-algiz se) (check-algiz see)
+  (check-algiz-r n ) (check-algiz-r nwnw)
+  (check-algiz-r s ) (check-algiz-r swsw)
+  (check-algiz-r w ) (check-algiz-r nene)
+  (check-algiz-r e ) (check-algiz-r sese)
+  (check-algiz-r nn) (check-algiz-r nnw)
+  (check-algiz-r ss) (check-algiz-r ssw)
+  (check-algiz-r ww) (check-algiz-r nne)
+  (check-algiz-r ee) (check-algiz-r sse)
+  (check-algiz-r nw) (check-algiz-r nww)
+  (check-algiz-r sw) (check-algiz-r sww)
+  (check-algiz-r ne) (check-algiz-r nee)
+  (check-algiz-r se) (check-algiz-r see)
+  (verify (not-flag? is-defended?))
+)
+
+(define common-step (
+  (verify (not-enemy? a0))
+  (init-flags)
+  (common-step-body)
+  (check-defended-all)
+  (add $2)
+))
+
+(define common-step-frozen (
+  (verify (not-enemy? a0))
+  (verify-not-frozen)
+  (init-flags)
+  (common-step-body)
+  (add $2)
+))
+
+(define alfr-step-frozen (
+  (verify (not-enemy? a0))
+  (verify-not-frozen)
+  (init-flags)
+  (common-step-body)
+  (if enemy?
+      (add-partial $2 capture-type)
+   else
+      (add $2)
+  )
+))
+
+(define hel-step (
+  (verify (not-enemy? a0))
+  (init-flags)
+  $3 (verify empty?)
+  (common-step-body)
+  (add $2)
+))
+
+(define hel-swap
+  (if (piece? $1)
+      (add $2)
+  )
+)
+
+(define create-hel
+  mark a0
+  (while (on-board? next)
+     next
+     (if (piece? HelA) (create HelR))
+     (if (piece? HelR) (create HelA))
+  )
+  back
+)
+
+(define hel-strike (
+  a0 (verify not-enemy?)
+  (while (on-board? next)
+     next
+     (set-flag is-frozen? false)
+     (check-frozen-all)
+     (if (and (flag? is-frozen?) enemy?)
+         (create-hel)
+         (hel-swap AlfrA ZwergA)
+         (hel-swap AlfrR ZwergR)
+         (hel-swap Alfr Zwerg)
+         (hel-swap WarriorA WarriorA)
+         (hel-swap WarriorR WarriorR)
+         (hel-swap Warrior Warrior)
+     )
+  )
+))
+
+(define sleipnir-split (
+  (verify (not-enemy? a0))
+  (init-flags)
+  (create $2)
+  (common-step-body)
+  (add $3)
+))
+
+(define sleipnir-join (
+  (verify (not-enemy? a0))
+  (init-flags)
+  (verify (and (not-piece? SleipnirOA $1) (not-piece? SleipnirOR $1) (not-piece? SleipnirLA $1) (not-piece? SleipnirLR $1)))
+  (common-step-body)
+  (if (or (piece? SleipnirA) (piece? SleipnirR))
+      (add $3)
+   else
+      (add $2)
+  )
+))
+
+(define sleipnir-swap (
+  (verify (not-enemy? a0))
+  (init-flags)
+  (verify (or (piece? SleipnirOA $1) (piece? SleipnirOR $1) (piece? SleipnirLA $1) (piece? SleipnirLR $1)))
+  (if (piece? SleipnirOA $1)
+      (create Light OdinA)
+  )
+  (if (piece? SleipnirOR $1)
+      (create Light OdinR)
+  )
+  (if (piece? SleipnirLA $1)
+      (create Dark LokiA)
+  )
+  (if (piece? SleipnirLR $1)
+      (create Dark LokiR)
+  )
+  (common-step-body)
+  (add $2)
+))
+
+(define empty-step-body
+  (init-flags)
+  $1 (verify empty?)
+  (if (not-flag? is-surtr?)
+      (check-fire)
+  )
+  (if (flag? is-eda?)
+      (fire nw) (fire se)
+      (fire sw) (fire ne)
+  )
+  (if (flag? is-edr?)
+      (fire n) (fire s)
+      (fire w) (fire e)
+  )
+)
+
+(define empty-step (
+  (verify (not-enemy? a0))
+  (empty-step-body)
+  (add $2)
+))
+
+(define empty-step-frozen (
+  (verify (not-enemy? a0))
+  (verify-not-frozen)
+  (empty-step-body)
+  (add $2)
+))
+
+(define zwerg-step-frozen (
+  (verify (not-enemy? a0))
+  (verify-not-frozen)
+  (empty-step-body)
+  (set-flag enemy-present? false)
+  (check-enemy $3) (check-enemy $4)
+  (check-enemy $5) (check-enemy $6)
+  (verify (flag? enemy-present?))
+  (add-partial $2 capture-type)
+))
+
+(define zwadv-step-frozen (
+  (verify (not-enemy? a0))
+  (verify-not-frozen)
+  (empty-step-body)
+  (set-flag enemy-present? false)
+  (check-enemy $3) (check-enemy $4)
+  (check-enemy $5) (check-enemy $6)
+  (check-enemy $7) (check-enemy $8)
+  (check-enemy $9) (check-enemy $10)
+  (verify (flag? enemy-present?))
+  (add-partial $2 capture-type)
+))
+
+(define warrior-step-frozen (
+  (verify (not-enemy? a0))
+  (verify-not-frozen)
+  (init-flags)
+  (common-step-body)
+  (verify enemy?)
+  (add-partial $2 $3)
+))
+
+(define check-enemy
+  (if (on-board? $1)
+      (if (and (enemy? $1) (not-rune-dir? $1))
+          (set-flag enemy-present? true)
+      )
+  )
+)
+
+(define warrior-check-enemy
+  (if (on-board? $1)
+      (if (and (enemy? $1) 
+               (not-piece? WarriorA $1) 
+               (not-piece? WarriorR $1) 
+               (not-piece? Warrior $1) 
+               (not-rune-dir? $1)
+          )
+          (set-flag enemy-present? true)
+      )
+  )
+)
+
+(define warrior-jump-frozen (
+  (verify (not-enemy? a0))
+  (verify-not-frozen)
+  (set-flag is-a? (or (piece? WarriorA) (piece? Warrior)))
+  (set-flag is-r? (or (piece? WarriorR) (piece? Warrior)))
+  $1 (verify empty?)
+  $1 (verify empty?)
+  (check-fire)
+  (set-flag enemy-present? false)
+  (if (flag? is-a?)
+      (warrior-check-enemy n) (warrior-check-enemy s)
+      (warrior-check-enemy w) (warrior-check-enemy e)
+  )
+  (if (flag? is-r?)
+      (warrior-check-enemy nw) (warrior-check-enemy se)
+      (warrior-check-enemy sw) (warrior-check-enemy ne)
+  )
+  (verify (flag? enemy-present?))
+  (add-partial $2 $3)
+))
+
+(define common-strike-body
+  (create $2)
+  $1 (verify enemy?)
+  (verify (not-rune?))
+  (set-flag is-special? false)
+  (if (piece? SleipnirOA)
+      (create Light OdinA)
+      (set-flag is-special? true)
+  )
+  (if (piece? SleipnirOR)
+      (create Light OdinR)
+      (set-flag is-special? true)
+  )
+  (if (piece? SleipnirLA)
+      (create Dark LokiA)
+      (set-flag is-special? true)
+  )
+  (if (piece? SleipnirLR)
+      (create Dark LokiR)
+      (set-flag is-special? true)
+  )
+  (if (not-flag? is-special?)
+      capture 
+  )
+  add
+)
+
+(define common-strike (
+  (verify (not-enemy? a0))
+  (common-strike-body)
+))
+
+(define common-strike-frozen (
+  (verify (not-enemy? a0))
+  (verify-not-frozen)
+  (common-strike-body)
+))
+
+(define check-friend
+  (if (on-board? $1)
+      (if (friend? $1)
+          (set-flag enemy-present? false)
+      )
+  )
+)
+
+(define thor-strike (
+  (verify (not-enemy? a0))
+  (create $2)
+  $1 
+  (set-flag enemy-present? false)
+  (check-enemy n) (check-enemy nw)
+  (check-enemy s) (check-enemy sw)
+  (check-enemy w) (check-enemy ne)
+  (check-enemy e) (check-enemy se)
+  (check-friend n) (check-friend nw)
+  (check-friend s) (check-friend sw)
+  (check-friend e) (check-friend se)
+  (check-friend w) (check-friend ne)
+  (verify (flag? enemy-present?))
+  (capture-all n) (capture-all nw)
+  (capture-all s) (capture-all sw)
+  (capture-all e) (capture-all se)
+  (capture-all w) (capture-all ne)
+  capture add
+))
+
+(define fire
+  (if (and (not-empty? $1)
+           (not-piece? Mount $1) (not-piece? Isa $1)
+           (not-piece? SurtrA $1) (not-piece? SurtrR $1) 
+           (not-piece? Eldthursar $1) (not-piece? EldthursarA $1) (not-piece? EldthursarR $1))
+      (capture $1)
+  )
+)
+
+(define bifrost-surtr-step (
+  (create Mount)
+  $1 (verify not-friend?)
+  (fire n) (fire nw)
+  (fire s) (fire se)
+  (fire w) (fire sw)
+  (fire e) (fire ne)
+  (add $2)
+))
+
+(define bifrost-common-step (
+  (init-flags)
+  (create Mount)
+  (common-step-body)
+  (add $2)
+))
+
+(define bifrost-empty-step (
+  (create Mount)
+  (empty-step-body)
+  (add $2)
+))
+
+(define drop-to (
+  (verify (not-enemy? a0))
+  (verify friend?)
+  (verify (piece? $1))
+  add
+))
+
+(define drop-piece (
+  (if (not-empty? $1)
+      (capture $1)
+  )
+  (verify (in-zone? home-zone))
+  (verify empty?)
+  add
+))
+
+(define check-master
+  (if (on-board? $2)
+      (if (and (piece? $1 $2) (friend? $2))
+          (create $3 $2)
+          (set-flag is-master? true)         
+      )
+  )
+)
+
+(define drop-beast (
+  (verify (not-enemy? a0))
+  (verify empty?)
+  (set-flag is-master? false)
+  (check-master LokiA see LokiR) (check-master SleipnirLA see SleipnirLR)
+  (check-master LokiA sse LokiR) (check-master SleipnirLA sse SleipnirLR)
+  (check-master LokiA sww LokiR) (check-master SleipnirLA sww SleipnirLR)
+  (check-master LokiA nnw LokiR) (check-master SleipnirLA nnw SleipnirLR)
+  (check-master LokiR ssw LokiA) (check-master SleipnirLR ssw SleipnirLA)
+  (check-master LokiR nww LokiA) (check-master SleipnirLR nww SleipnirLA)
+  (check-master LokiR nee LokiA) (check-master SleipnirLR nee SleipnirLA)
+  (check-master LokiR nne LokiA) (check-master SleipnirLR nne SleipnirLA)
+  (verify (flag? is-master?))
+  add
+))
+
+(define drop-man (
+  (verify (not-enemy? a0))
+  (verify empty?)
+  (set-flag is-master? false)
+  (check-master TyrA nee TyrR)  (check-master TyrR nee TyrA)
+  (check-master TyrA see TyrR)  (check-master TyrR see TyrA)
+  (check-master TyrA sww TyrR)  (check-master TyrR sww TyrA)
+  (check-master TyrA nww TyrR)  (check-master TyrR nww TyrA)
+  (check-master TyrA s   TyrR)  (check-master TyrR s   TyrA)
+  (check-master ThorA nw ThorR) (check-master ThorR nw ThorA)
+  (check-master ThorA ne ThorR) (check-master ThorR ne ThorA)
+  (check-master ThorA sw ThorR) (check-master ThorR sw ThorA)
+  (check-master ThorA se ThorR) (check-master ThorR se ThorA)
+  (verify (flag? is-master?))
+  add
+))
+
+(define drop-eda (
+  (verify (not-enemy? a0))
+  (verify empty?)
+  (set-flag is-master? false)
+  (check-master SurtrA nn   SurtrR) (check-master SurtrA ss   SurtrR)
+  (check-master SurtrA ww   SurtrR) (check-master SurtrA ee   SurtrR)
+  (check-master SurtrR nwnw SurtrA) (check-master SurtrR nene SurtrA)
+  (check-master SurtrR swsw SurtrA) (check-master SurtrR sese SurtrA)
+  (verify (flag? is-master?))
+  add
+))
+
+(define check-hel
+  mark a0
+  (while (on-board? next)
+     next
+     (if (piece? HelA)
+         (create HelR)
+         (set-flag hel-found? true)
+     )
+     (if (piece? HelR)
+         (create HelA)
+         (set-flag hel-found? true)
+     )
+     (if (or (piece? JotunnA) (piece? JotunnR) (piece? Jotunn))
+         (set-flag jotun-found? true)
+     )
+  )
+  back
+)
+
+(define drop-garmr (
+  (verify (not-enemy? a0))
+  (verify empty?)
+  (set-flag is-master? false)
+  (check-master HelA w HelR) (check-master HelA e HelR)
+  (check-master HelR n HelA) (check-master HelR s HelA)
+  (verify (flag? is-master?))
+  add
+))
+
+(define check-frozen
+  (if (on-board? $2)
+      (if (piece? $1 $2)
+          (set-flag is-frozen? $3)
+      )
+  )
+)
+
+(define check-rune
+  (check-frozen $1 n  $2) (check-frozen $1 nwnw $2)
+  (check-frozen $1 s  $2) (check-frozen $1 swsw $2)
+  (check-frozen $1 w  $2) (check-frozen $1 nene $2)
+  (check-frozen $1 e  $2) (check-frozen $1 sese $2)
+  (check-frozen $1 nn $2) (check-frozen $1 nnw  $2)
+  (check-frozen $1 ss $2) (check-frozen $1 ssw  $2)
+  (check-frozen $1 ww $2) (check-frozen $1 nne  $2)
+  (check-frozen $1 ee $2) (check-frozen $1 sse  $2)
+  (check-frozen $1 nw $2) (check-frozen $1 nww  $2)
+  (check-frozen $1 sw $2) (check-frozen $1 sww  $2)
+  (check-frozen $1 ne $2) (check-frozen $1 nee  $2)
+  (check-frozen $1 se $2) (check-frozen $1 see  $2)
+)
+
+(define check-frozen-all
+  (check-frozen HelA   nn true) (check-frozen HelA   n    true)
+  (check-frozen HelR   ne true) (check-frozen HelR   nene true)
+  (check-frozen HelR   nw true) (check-frozen HelR   nwnw true)
+  (check-frozen GarmrA n  true) (check-frozen GarmrA s    true)
+  (check-frozen GarmrA w  true) (check-frozen GarmrA e    true)
+  (check-frozen GarmrR nw true) (check-frozen GarmrR ne   true)
+  (check-frozen GarmrR sw true) (check-frozen GarmrR se   true)
+  (check-rune Isa true) (check-rune Sowelu false)
+)
+
+(define drop-jotunn (
+  (verify (not-enemy? a0))
+  (verify empty?)
+  (set-flag hel-found? false)
+  (set-flag jotun-found? false)
+  (set-flag is-frozen? false)
+  (check-hel)
+  (check-frozen-all)
+  (verify (and (flag? hel-found?) (not-flag? jotun-found?) (flag? is-frozen?)))
+  add
+))
+
+(define common-order-body
+  $1 (verify friend?)
+  (verify (piece? $2$3))
+  (change-type $2$4)
+  $5 
+)
+
+(define loki-order (
+  (verify (not-enemy? a0))
+  mark
+  (common-order-body)
+  (if not-empty?
+      cascade back
+  )
+  add
+))
+
+(define common-order (
+  (verify (not-enemy? a0))
+  (common-order-body)
+  (verify empty?)
+  add
+))
+
+(define order-loki
+  (loki-order sww $1 A R nww) (loki-order sww $1 A R nnw) (loki-order sww $1 A R sse)
+  (loki-order nnw $1 A R nww) (loki-order nnw $1 A R nnw) (loki-order nnw $1 A R nee)
+  (loki-order see $1 A R nee) (loki-order see $1 A R nnw) (loki-order see $1 A R sse)
+  (loki-order sse $1 A R nww) (loki-order sse $1 A R nee) (loki-order sse $1 A R sse)
+  (loki-order nww $1 R A nne) (loki-order nww $1 R A sse) (loki-order nww $1 R A see)
+  (loki-order ssw $1 R A see) (loki-order ssw $1 R A ssw) (loki-order ssw $1 R A sww)
+  (loki-order nne $1 R A sww) (loki-order nne $1 R A see) (loki-order nne $1 R A nne)
+  (loki-order nee $1 R A ssw) (loki-order nee $1 R A nne) (loki-order nee $1 R A see)
+)
+
+(define order-hel
+  (common-order e Hel A R e) (common-order w Hel A R w)
+  (common-order n Hel R A n) (common-order s Hel R A s)
+)
+
+(define order-odin
+  (common-order ee $1 $2 $3 swsw) (common-order ee $1 $2 $3 ss) (common-order ee $1 $2 $3 sese) (common-order ee $1 $2 $3 ee) (common-order ee $1 $2 $3 nene) (common-order ee $1 $2 $3 nn)
+  (common-order nene $1 $2 $3 ww) (common-order nene $1 $2 $3 ss) (common-order nene $1 $2 $3 sese) (common-order nene $1 $2 $3 ee) (common-order nene $1 $2 $3 nene) (common-order nene $1 $2 $3 nn)
+  (common-order nn $1 $2 $3 ww) (common-order nn $1 $2 $3 swsw) (common-order nn $1 $2 $3 sese) (common-order nn $1 $2 $3 ee) (common-order nn $1 $2 $3 nene) (common-order nn $1 $2 $3 nn)
+  (common-order nwnw $1 $2 $3 ww) (common-order nwnw $1 $2 $3 swsw) (common-order nwnw $1 $2 $3 ss) (common-order nwnw $1 $2 $3 ee) (common-order nwnw $1 $2 $3 nene) (common-order nwnw $1 $2 $3 nn)
+  (common-order ww $1 $2 $3 ww) (common-order ww $1 $2 $3 swsw) (common-order ww $1 $2 $3 ss) (common-order ww $1 $2 $3 sese) (common-order ww $1 $2 $3 nene) (common-order ww $1 $2 $3 nn)
+  (common-order swsw $1 $2 $3 ww) (common-order swsw $1 $2 $3 swsw) (common-order swsw $1 $2 $3 ss) (common-order swsw $1 $2 $3 sese) (common-order swsw $1 $2 $3 ee) (common-order swsw $1 $2 $3 nn)
+  (common-order ss $1 $2 $3 ww) (common-order ss $1 $2 $3 swsw) (common-order ss $1 $2 $3 ss) (common-order ss $1 $2 $3 sese) (common-order ss $1 $2 $3 ee) (common-order ss $1 $2 $3 nene)
+)
+
+(define order-tyr
+  (common-order see Tyr $1 $2 sww) (common-order see Tyr $1 $2 see) (common-order see Tyr $1 $2 nee) (common-order see Tyr $1 $2 n)
+  (common-order nee Tyr $1 $2 nww) (common-order nee Tyr $1 $2 see) (common-order nee Tyr $1 $2 nee) (common-order nee Tyr $1 $2 n)
+  (common-order nww Tyr $1 $2 nww) (common-order nww Tyr $1 $2 sww) (common-order nww Tyr $1 $2 nee) (common-order nww Tyr $1 $2 n)
+  (common-order sww Tyr $1 $2 nww) (common-order sww Tyr $1 $2 sww) (common-order sww Tyr $1 $2 see) (common-order sww Tyr $1 $2 n)
+  (common-order s Tyr $1 $2 nww) (common-order s Tyr $1 $2 sww) (common-order s Tyr $1 $2 nee) (common-order s Tyr $1 $2 nee)
+)
+
+(define order-thor
+  (common-order nw Thor $1 $2 sw) (common-order nw Thor $1 $2 nw) (common-order nw Thor $1 $2 ne)
+  (common-order ne Thor $1 $2 nw) (common-order ne Thor $1 $2 ne) (common-order ne Thor $1 $2 se)
+  (common-order se Thor $1 $2 ne) (common-order se Thor $1 $2 se) (common-order se Thor $1 $2 sw)
+  (common-order sw Thor $1 $2 se) (common-order sw Thor $1 $2 sw) (common-order sw Thor $1 $2 nw)
+)
+
+(define bifrost-eda-order (
+  (create Mount)
+  (common-order-body)
+  (verify empty?)
+  (fire n) (fire s)
+  (fire w) (fire e)
+  add
+))
+
+(define eda-order (
+  (verify (not-enemy? a0))
+  (common-order-body)
+  (verify empty?)
+  (fire n) (fire s)
+  (fire w) (fire e)
+  add
+))
+
+(define bifrost-edr-order (
+  (create Mount)
+  (common-order-body)
+  (verify empty?)
+  (fire nw) (fire se)
+  (fire sw) (fire ne)
+  add
+))
+
+(define edr-order (
+  (verify (not-enemy? a0))
+  (common-order-body)
+  (verify empty?)
+  (fire nw) (fire se)
+  (fire sw) (fire ne)
+  add
+))
+
+(define bifrost-surtr-order (
+  (create Mount)
+  (common-order-body)
+  (verify empty?)
+  (fire n) (fire s)
+  (fire w) (fire e)
+  (fire nw) (fire se)
+  (fire sw) (fire ne)
+  add
+))
+
+(define surtr-order (
+  (verify (not-enemy? a0))
+  (common-order-body)
+  (verify empty?)
+  (fire n) (fire s)
+  (fire w) (fire e)
+  (fire nw) (fire se)
+  (fire sw) (fire ne)
+  add
+))
+
+(define bifrost-order-eda
+  (bifrost-eda-order nwnw Surtr R A nwnw) (bifrost-eda-order nwnw Surtr R A nene) (bifrost-eda-order nwnw Surtr R A swsw) 
+  (bifrost-eda-order nene Surtr R A nwnw) (bifrost-eda-order nene Surtr R A nene) (bifrost-eda-order nene Surtr R A sese) 
+  (bifrost-eda-order sese Surtr R A nene) (bifrost-eda-order sese Surtr R A swsw) (bifrost-eda-order sese Surtr R A sese) 
+  (bifrost-eda-order swsw Surtr R A nwnw) (bifrost-eda-order swsw Surtr R A swsw) (bifrost-eda-order swsw Surtr R A sese) 
+  (bifrost-eda-order nn Surtr A R nn) (bifrost-eda-order nn Surtr A R ee) (bifrost-eda-order nn Surtr A R ww)
+  (bifrost-eda-order ee Surtr A R nn) (bifrost-eda-order ee Surtr A R ee) (bifrost-eda-order ee Surtr A R ss) 
+  (bifrost-eda-order ss Surtr A R ee) (bifrost-eda-order ss Surtr A R ss) (bifrost-eda-order ss Surtr A R ww)
+  (bifrost-eda-order ww Surtr A R nn) (bifrost-eda-order ww Surtr A R ss) (bifrost-eda-order ww Surtr A R ww)
+)
+
+(define order-eda
+  (eda-order nwnw Surtr R A nwnw) (eda-order nwnw Surtr R A nene) (eda-order nwnw Surtr R A swsw) 
+  (eda-order nene Surtr R A nwnw) (eda-order nene Surtr R A nene) (eda-order nene Surtr R A sese) 
+  (eda-order sese Surtr R A nene) (eda-order sese Surtr R A swsw) (eda-order sese Surtr R A sese) 
+  (eda-order swsw Surtr R A nwnw) (eda-order swsw Surtr R A swsw) (eda-order swsw Surtr R A sese) 
+  (eda-order nn Surtr A R nn) (eda-order nn Surtr A R ee) (eda-order nn Surtr A R ww)
+  (eda-order ee Surtr A R nn) (eda-order ee Surtr A R ee) (eda-order ee Surtr A R ss) 
+  (eda-order ss Surtr A R ee) (eda-order ss Surtr A R ss) (eda-order ss Surtr A R ww)
+  (eda-order ww Surtr A R nn) (eda-order ww Surtr A R ss) (eda-order ww Surtr A R ww)
+)
+
+(define bifrost-order-edr
+  (bifrost-edr-order nwnw Surtr R A nwnw) (bifrost-edr-order nwnw Surtr R A nene) (bifrost-edr-order nwnw Surtr R A swsw) 
+  (bifrost-edr-order nene Surtr R A nwnw) (bifrost-edr-order nene Surtr R A nene) (bifrost-edr-order nene Surtr R A sese) 
+  (bifrost-edr-order sese Surtr R A nene) (bifrost-edr-order sese Surtr R A swsw) (bifrost-edr-order sese Surtr R A sese) 
+  (bifrost-edr-order swsw Surtr R A nwnw) (bifrost-edr-order swsw Surtr R A swsw) (bifrost-edr-order swsw Surtr R A sese) 
+  (bifrost-edr-order nn Surtr A R nn) (bifrost-edr-order nn Surtr A R ee) (bifrost-edr-order nn Surtr A R ww)
+  (bifrost-edr-order ee Surtr A R nn) (bifrost-edr-order ee Surtr A R ee) (bifrost-edr-order ee Surtr A R ss) 
+  (bifrost-edr-order ss Surtr A R ee) (bifrost-edr-order ss Surtr A R ss) (bifrost-edr-order ss Surtr A R ww)
+  (bifrost-edr-order ww Surtr A R nn) (bifrost-edr-order ww Surtr A R ss) (bifrost-edr-order ww Surtr A R ww)
+)
+
+(define order-edr
+  (edr-order nwnw Surtr R A nwnw) (edr-order nwnw Surtr R A nene) (edr-order nwnw Surtr R A swsw) 
+  (edr-order nene Surtr R A nwnw) (edr-order nene Surtr R A nene) (edr-order nene Surtr R A sese) 
+  (edr-order sese Surtr R A nene) (edr-order sese Surtr R A swsw) (edr-order sese Surtr R A sese) 
+  (edr-order swsw Surtr R A nwnw) (edr-order swsw Surtr R A swsw) (edr-order swsw Surtr R A sese) 
+  (edr-order nn Surtr A R nn) (edr-order nn Surtr A R ee) (edr-order nn Surtr A R ww)
+  (edr-order ee Surtr A R nn) (edr-order ee Surtr A R ee) (edr-order ee Surtr A R ss) 
+  (edr-order ss Surtr A R ee) (edr-order ss Surtr A R ss) (edr-order ss Surtr A R ww)
+  (edr-order ww Surtr A R nn) (edr-order ww Surtr A R ss) (edr-order ww Surtr A R ww)
+)
+
+(define bifrost-order-surtr
+  (bifrost-surtr-order nwnw Surtr R A nwnw) (bifrost-surtr-order nwnw Surtr R A nene) (bifrost-surtr-order nwnw Surtr R A swsw) 
+  (bifrost-surtr-order nene Surtr R A nwnw) (bifrost-surtr-order nene Surtr R A nene) (bifrost-surtr-order nene Surtr R A sese) 
+  (bifrost-surtr-order sese Surtr R A nene) (bifrost-surtr-order sese Surtr R A swsw) (bifrost-surtr-order sese Surtr R A sese) 
+  (bifrost-surtr-order swsw Surtr R A nwnw) (bifrost-surtr-order swsw Surtr R A swsw) (bifrost-surtr-order swsw Surtr R A sese) 
+  (bifrost-surtr-order nn Surtr A R nn) (bifrost-surtr-order nn Surtr A R ee) (bifrost-surtr-order nn Surtr A R ww)
+  (bifrost-surtr-order ee Surtr A R nn) (bifrost-surtr-order ee Surtr A R ee) (bifrost-surtr-order ee Surtr A R ss) 
+  (bifrost-surtr-order ss Surtr A R ee) (bifrost-surtr-order ss Surtr A R ss) (bifrost-surtr-order ss Surtr A R ww)
+  (bifrost-surtr-order ww Surtr A R nn) (bifrost-surtr-order ww Surtr A R ss) (bifrost-surtr-order ww Surtr A R ww)
+)
+
+(define order-surtr
+  (surtr-order nwnw Surtr R A nwnw) (surtr-order nwnw Surtr R A nene) (surtr-order nwnw Surtr R A swsw) 
+  (surtr-order nene Surtr R A nwnw) (surtr-order nene Surtr R A nene) (surtr-order nene Surtr R A sese) 
+  (surtr-order sese Surtr R A nene) (surtr-order sese Surtr R A swsw) (surtr-order sese Surtr R A sese) 
+  (surtr-order swsw Surtr R A nwnw) (surtr-order swsw Surtr R A swsw) (surtr-order swsw Surtr R A sese) 
+  (surtr-order nn Surtr A R nn) (surtr-order nn Surtr A R ee) (surtr-order nn Surtr A R ww)
+  (surtr-order ee Surtr A R nn) (surtr-order ee Surtr A R ee) (surtr-order ee Surtr A R ss) 
+  (surtr-order ss Surtr A R ee) (surtr-order ss Surtr A R ss) (surtr-order ss Surtr A R ww)
+  (surtr-order ww Surtr A R nn) (surtr-order ww Surtr A R ss) (surtr-order ww Surtr A R ww)
+)
+
+(define create-piece (
+  (verify (not-enemy? a0))
+  (add $1)
+))
+
+(define revert
+  (if (piece? $1)
+      (add $1)
+  )
+)
+
+(define restore
+  (if (piece? $1)
+      (create $2)
+  )
+)
+
+(define capture-rune (
+  (verify (not-enemy? a0))
+  (set-flag rune-found? false)
+  (find-rune)
+  (verify (not-flag? rune-found?))
+  (restore LokiA LokiR)
+  (restore LokiR LokiA)
+  (restore SleipnirLA SleipnirLR)
+  (restore SleipnirLR SleipnirLA)
+  $1 (verify enemy?)
+  (revert Ehwaz)
+  (revert Berkana)
+  (revert Algiz)
+  (revert Fehu)
+  (revert Thurisaz)
+  (revert Ansuz)
+  (revert Mannaz)
+  (revert Othila)
+))
+
+(define change-man
+  mark a0
+  (while (on-board? next)
+     next
+     (if (piece? Man)
+         (change-type WarriorA)
+     )
+  )
+  back
+)
+
+(define drop-rune-body
+  (verify friend?)
+  (change-man)
+  (if (piece? Nauthiz)
+      capture
+   else
+      (verify (or (piece? Wyrd) (piece? Ansuz)))
+      (if (friend? a0) 
+          (capture a0)
+      )
+  )
+)
+
+(define drop-rune (
+  (verify (not-enemy? a0))
+  (drop-rune-body)
+  add
+))
+
+(define drop-ansuz (
+  (verify (not-enemy? a0))
+  (verify (not-piece? Ansuz))
+  (drop-rune-body)
+  (create Mark a0)
+  add
+))
+
+(define find-rune
+  mark a0
+  (while (on-board? next)
+     next
+     (if (and friend?
+              (or (piece? Wyrd)
+                  (piece? Ehwaz)
+                  (piece? Berkana)
+                  (piece? Algiz)
+                  (piece? Fehu)
+                  (piece? Thurisaz)
+                  (piece? Ansuz)
+                  (piece? Nauthiz)
+                  (piece? Mannaz)
+                  (piece? Othila)
+                  (piece? Isa)
+                  (piece? Hagalaz)
+                  (piece? Eihwaz)
+                  (piece? Sowelu)
+              )
+         )
+         (set-flag rune-found? true)
+     )
+  )
+  back
+)
+
+(define drop-wyrd (
+  (verify (not-enemy? a0))
+  (verify empty?)
+  (set-flag rune-found? false)
+  (find-rune)
+  (verify (not-flag? rune-found?))
+  (set-flag is-master? false)
+  (check-master OdinA nn   OdinR) (check-master SleipnirOA nn   SleipnirOR) 
+  (check-master OdinR nn   OdinA) (check-master SleipnirOR nn   SleipnirOA) 
+  (check-master OdinA ss   OdinR) (check-master SleipnirOA ss   SleipnirOR) 
+  (check-master OdinR ss   OdinA) (check-master SleipnirOR ss   SleipnirOA) 
+  (check-master OdinA ee   OdinR) (check-master SleipnirOA ee   SleipnirOR) 
+  (check-master OdinR ee   OdinA) (check-master SleipnirOR ee   SleipnirOA) 
+  (check-master OdinA ww   OdinR) (check-master SleipnirOA ww   SleipnirOR) 
+  (check-master OdinR ww   OdinA) (check-master SleipnirOR ww   SleipnirOA) 
+  (check-master OdinA nene OdinR) (check-master SleipnirOA nene SleipnirOR) 
+  (check-master OdinR nene OdinA) (check-master SleipnirOR nene SleipnirOA) 
+  (check-master OdinA nwnw OdinR) (check-master SleipnirOA nwnw SleipnirOR) 
+  (check-master OdinR nwnw OdinA) (check-master SleipnirOR nwnw SleipnirOA) 
+  (check-master OdinA swsw OdinR) (check-master SleipnirOA swsw SleipnirOR) 
+  (check-master OdinR swsw OdinA) (check-master SleipnirOR swsw SleipnirOA) 
+  (verify (flag? is-master?))
+  add
+))
+
+(define rune-move (
+  (verify (not-enemy? a0))
+  $1 (verify empty?)
+  (add Wyrd)
+))
+
+(define rune-moves
+  (rune-move n) (rune-move s) (rune-move w) (rune-move e)
+  (rune-move nn) (rune-move ss) (rune-move ww) (rune-move ee)
+  (rune-move nw) (rune-move ne) (rune-move sw) (rune-move se)
+  (rune-move nnw) (rune-move nne) (rune-move ssw) (rune-move sse)
+  (rune-move nww) (rune-move nee) (rune-move sww) (rune-move see)
+  (rune-move nwnw) (rune-move nene) (rune-move swsw) (rune-move sese)
+  (order-odin Odin A R) (order-odin Odin R A)
+  (order-odin SleipnirO A R) (order-odin SleipnirO R A)
+  (order-loki Loki) (order-loki SleipnirL)
+)
+
+(define change-friend (
+  (verify (not-enemy? a0))
+  $1 (verify friend?)
+  (verify (is-man?))
+  (add Man)
+))
+
+(define change-friends
+  (change-friend n) (change-friend s) (change-friend w) (change-friend e)
+  (change-friend nn) (change-friend ss) (change-friend ww) (change-friend ee)
+  (change-friend nw) (change-friend ne) (change-friend sw) (change-friend se)
+  (change-friend nnw) (change-friend nne) (change-friend ssw) (change-friend sse)
+  (change-friend nww) (change-friend nee) (change-friend sww) (change-friend see)
+  (change-friend nwnw) (change-friend nene) (change-friend swsw) (change-friend sese)
+)
+
+(define change-enemy (
+  (verify (not-enemy? a0))
+  $1 (verify enemy?)
+  (verify (is-man?))
+  (add Man)
+))
+
+(define change-enemies
+  (change-enemy n) (change-enemy s) (change-enemy w) (change-enemy e)
+  (change-enemy nn) (change-enemy ss) (change-enemy ww) (change-enemy ee)
+  (change-enemy nw) (change-enemy ne) (change-enemy sw) (change-enemy se)
+  (change-enemy nnw) (change-enemy nne) (change-enemy ssw) (change-enemy sse)
+  (change-enemy nww) (change-enemy nee) (change-enemy sww) (change-enemy see)
+  (change-enemy nwnw) (change-enemy nene) (change-enemy swsw) (change-enemy sese)
+)
+
+(define exchange (
+  (verify (not-enemy? a0))
+  mark 
+  $1 (verify not-empty?)
+  to (change-type Wyrd) 
+  cascade back
+  add
+))
+
+(define exchange-all
+  (exchange n) (exchange s) (exchange w) (exchange e)
+  (exchange nn) (exchange ss) (exchange ww) (exchange ee)
+  (exchange nw) (exchange ne) (exchange sw) (exchange se)
+  (exchange nnw) (exchange nne) (exchange ssw) (exchange sse)
+  (exchange nww) (exchange nee) (exchange sww) (exchange see)
+  (exchange nwnw) (exchange nene) (exchange swsw) (exchange sese)
+)
+
+(define destroy (
+  (verify (not-enemy? a0))
+  $1 (verify not-empty?)
+  (add Wyrd)
+))
+
+(define destroy-all
+  (destroy n) (destroy s) (destroy w) (destroy e)
+  (destroy nn) (destroy ss) (destroy ww) (destroy ee)
+  (destroy nw) (destroy ne) (destroy sw) (destroy se)
+  (destroy nnw) (destroy nne) (destroy ssw) (destroy sse)
+  (destroy nww) (destroy nee) (destroy sww) (destroy see)
+  (destroy nwnw) (destroy nene) (destroy swsw) (destroy sese)
+)
+
+(define promote-piece
+  (if (or (piece? $1A) (piece? $1R))
+      (add $1)
+  )
+)
+
+(define promote (
+  (verify (not-enemy? a0))
+  (create Wyrd)
+  $1 (verify friend?)
+  (promote-piece Eldthursar)
+  (promote-piece Warrior)
+  (promote-piece Alfr)
+  (promote-piece Valkyrie)
+  (promote-piece Zwerg)
+  (promote-piece Jotunn)
+))
+
+(define promote-all
+  (promote n) (promote s) (promote w) (promote e)
+  (promote nn) (promote ss) (promote ww) (promote ee)
+  (promote nw) (promote ne) (promote sw) (promote se)
+  (promote nnw) (promote nne) (promote ssw) (promote sse)
+  (promote nww) (promote nee) (promote sww) (promote see)
+  (promote nwnw) (promote nene) (promote swsw) (promote sese)
+)
+
+(define all-dirs
+  (directions (n 0 -1) (s 0 1) (e 1 0) (w -1 0)
+      (nw -1 -1) (sw -1 1) (ne 1 -1) (se 1 1)
+      (nne 1 -2) (nnw -1 -2) (ssw -1 2) (sse 1 2)
+      (nee 2 -1) (nww -2 -1) (sww -2 1) (see 2 1)
+      (nn 0 -2) (ss 0 2) (ee 2 0) (ww -2 0)
+      (nwnw -2 -2) (swsw -2 2) (nene 2 -2) (sese 2 2)
+      (next 0 -1)
+  )
+)
+
+(define jotunheimr-common
+  (description "Warrior wins if will kill all the enemies.")
+  (turn-order 
+     (Light normal-type)
+     (Dark normal-type)
+  )
+  (board
+    (image "images/Ragnarok/jotunheimr.bmp")
+    (grid
+      (start-rectangle 2 2 82 82)
+      (dimensions
+        ("a/b/c/d/e/f/g/h" (80 0)) ; files
+        ("8/7/6/5/4/3/2/1" (0 80)) ; ranks
+      )
+      (all-dirs)
+    )
+    (positions (a0 -10 -10 -5 -5) (z0 -10  -5 -5  0) )
+    (zone (name goal-zone) (players Dark)
+          (positions a1)
+    )
+    (zone (name home-zone) (players Light Dark)
+          (positions a1)
+    )
+  )
+  (loss-condition (Light) (pieces-remaining 0))
+  (loss-condition (Dark) (pieces-remaining 0 Jotunn))
+)
+
+(variant
+  (title "Jotunheimr (easy)")
+  (jotunheimr-common)
+  (board-setup
+     (Light
+       (WarriorA a1)
+     )
+     (Dark
+       (Jotunn a7 a5 b3 c8 c6 c2 d4 e7 e1 f6 f3 g8 g5 g1 h7 h3)
+       (Mount a4 c3 d1 d5 e4 e6 f5 h8)
+     )
+  )
+)
+
+(variant
+  (title "Jotunheimr (normal)")
+  (jotunheimr-common)
+  (board-setup
+     (Light
+       (WarriorA a1)
+     )
+     (Dark
+       (Jotunn a7 a5 b3 c8 c6 c2 d4 e7 e1 f6 f3 g8 g5 g1 h7 h3)
+       (Mount a4 c3 d1 d5 e4 h8)
+     )
+  )
+)
+
+(variant
+  (title "Jotunheimr (hard)")
+  (jotunheimr-common)
+  (board-setup
+     (Light
+       (WarriorA a1)
+     )
+     (Dark
+       (Jotunn a7 a5 b3 c8 c6 c2 d4 e7 e1 f6 f3 g8 g5 g1 h7 h3)
+     )
+  )
+)
+
+(variant
+  (title "-")
+)
+
+(define helheim-common
+  (description "Light lose if it loses all pieces.")
+  (option "include off-pieces" false)
+  (turn-order 
+     (Dark normal-type)
+     (Light normal-type)
+  )
+  (board
+    (image "images/Ragnarok/helheim.bmp")
+    (grid
+      (start-rectangle 2 2 82 82)
+      (dimensions
+        ("a/b/c/d/e/f/g/h/i" (80 0)) ; files
+        ("9/8/7/6/5/4/3/2/1" (0 80)) ; ranks
+      )
+      (all-dirs)
+    )
+    (positions (a0 -10 -10 -5 -5) (z0 -10  -5 -5  0) )
+    (links next (a0 a1) (a9 b1) (b9 c1) (c9 d1) (d9 e1) (e9 f1) (f9 g1) (g9 h1) (h9 i1))
+    (zone (name goal-zone) (players Dark)
+          (positions a1)
+    )
+    (zone (name home-zone) (players Light Dark)
+          (positions a1)
+    )
+  )
+  (loss-condition (Dark) (and (pieces-remaining 0 HelA) (pieces-remaining 0 HelR) (pieces-remaining 0 GarmrA) (pieces-remaining 0 GarmrR) ) )
+  (loss-condition (Light) (pieces-remaining 0) )
+)
+
+(variant
+  (title "Helheim (easy)")
+  (helheim-common)
+  (board-setup
+     (Light
+       (WarriorA a1 e1 i1)
+     )
+     (Dark
+       (HelA e8)
+       (GarmrA off 1)
+     )
+  )
+)
+
+(variant
+  (title "Helheim (normal)")
+  (helheim-common)
+  (board-setup
+     (Light
+       (WarriorA a1 c1 e1 g1 i1)
+     )
+     (Dark
+       (HelA e8)
+       (GarmrA off 1)
+     )
+  )
+)
+
+(variant
+  (title "Helheim (hard)")
+  (helheim-common)
+  (board-setup
+     (Light
+       (WarriorA a1 b1 c1 d1 e1 f1 g1 h1 i1)
+     )
+     (Dark
+       (HelA e8)
+       (GarmrA off 1)
+     )
+  )
+)
+
+(variant
+  (title "-")
+)
+
+(define bifrost-common
+  (description "Dark will win if it pass to the first rank.")
+  (turn-order 
+     (Dark normal-type)
+     (Light normal-type)
+  )
+
+  (board
+    (image "images/Ragnarok/bifrost.bmp")
+    (grid
+      (start-rectangle 2 2 82 82)
+      (dimensions
+        ("a/b/c/d/e/f/g" (80 0)) ; files
+        ("9/8/7/6/5/4/3/2/1" (0 80)) ; ranks
+      )
+      (all-dirs)
+    )
+    (positions (a0 -10 -10 -5 -5) (z0 -10  -5 -5  0) )
+    (zone (name goal-zone) (players Dark)
+          (positions a1 b1 c1 d1 e1 f1 g1)
+    )
+    (zone (name home-zone) (players Light Dark)
+          (positions a1)
+    )
+  )
+
+  (piece
+     (name Mount)
+     (help " ")
+     (image Dark "images/Ragnarok/hole.bmp")
+  )
+  (piece
+     (name SurtrA)
+     (help "Surtr")
+     (description "Surtr: Burns pieces around him.")
+     (image Dark "images/Ragnarok/sra.bmp")
+     (moves
+        (move-type normal-type)
+        (bifrost-surtr-step nne SurtrR) (bifrost-surtr-step see SurtrR)
+        (bifrost-surtr-step ssw SurtrR) (bifrost-surtr-step nww SurtrR)
+     )
+  )
+  (piece
+     (name SurtrR)
+     (help "Surtr")
+     (description "Surtr: Burns pieces around him.")
+     (image Dark "images/Ragnarok/srr.bmp")
+     (moves
+        (move-type normal-type)
+        (bifrost-surtr-step nnw SurtrA) (bifrost-surtr-step nee SurtrA)
+        (bifrost-surtr-step sse SurtrA) (bifrost-surtr-step sww SurtrA)
+     )
+  )
+  (piece
+     (name EldthursarA)
+     (help "Eldthursar")
+     (description "Eldthursar: Burns near the pieces itself.")
+     (image Dark "images/Ragnarok/eda.bmp")
+     (moves
+        (move-type normal-type)
+        (bifrost-common-step nw EldthursarR) (bifrost-common-step ne EldthursarR)
+        (bifrost-common-step se EldthursarR) (bifrost-common-step sw EldthursarR)
+        (bifrost-empty-step nwnw EldthursarR) (bifrost-empty-step nene EldthursarR)
+        (bifrost-empty-step swsw EldthursarR) (bifrost-empty-step sese EldthursarR)
+        (bifrost-empty-step nn EldthursarR) (bifrost-empty-step ss EldthursarR)
+        (bifrost-order-eda)
+     )
+  )
+  (piece
+     (name EldthursarR)
+     (help "Eldthursar")
+     (description "Eldthursar: Burns near the pieces itself.")
+     (image Dark "images/Ragnarok/edr.bmp")
+     (moves
+        (move-type normal-type)
+        (bifrost-common-step n EldthursarA) (bifrost-common-step e EldthursarA)
+        (bifrost-common-step s EldthursarA) (bifrost-common-step w EldthursarA)
+        (bifrost-empty-step nnw EldthursarA) (bifrost-empty-step nne EldthursarA)
+        (bifrost-empty-step ssw EldthursarA) (bifrost-empty-step sse EldthursarA)
+        (bifrost-empty-step ww EldthursarA) (bifrost-empty-step ee EldthursarA)
+        (bifrost-order-edr)
+     )
+  )
+  (piece
+     (name Eldthursar)
+     (help "Eldthursar")
+     (description "Eldthursar: Burns near the pieces itself.")
+     (image Dark "images/Ragnarok/ed.bmp")
+     (moves
+        (move-type normal-type)
+        (bifrost-empty-step nwnw Eldthursar) (bifrost-empty-step nene Eldthursar)
+        (bifrost-empty-step swsw Eldthursar) (bifrost-empty-step sese Eldthursar)
+        (bifrost-empty-step nn Eldthursar) (bifrost-empty-step ss Eldthursar)
+        (bifrost-empty-step nnw Eldthursar) (bifrost-empty-step nne Eldthursar)
+        (bifrost-empty-step ssw Eldthursar) (bifrost-empty-step sse Eldthursar)
+        (bifrost-empty-step ww Eldthursar) (bifrost-empty-step ee Eldthursar)
+        (bifrost-order-surtr)
+     )
+  )
+  (loss-condition (Light Dark) (pieces-remaining 0) )
+  (loss-condition (Light Dark) stalemated )
+  (win-condition (Dark) (absolute-config SurtrA SurtrR (goal-zone) ) )
+  (loss-condition (Dark) (and (pieces-remaining 0 SurtrA) (pieces-remaining 0 SurtrR)) )
+)
+
+(variant
+  (title "Bifrost (easy)")
+  (bifrost-common)
+  (board-setup
+     (Dark 
+       (SurtrA d9)
+       (EldthursarA a8 g8)
+     )
+     (Light
+       (AlfrA b2 f2 d3)
+     )
+  )
+)
+
+(variant
+  (title "Bifrost (normal)")
+  (bifrost-common)
+  (board-setup
+     (Dark 
+       (SurtrA d9)
+       (EldthursarA a8 g8)
+     )
+     (Light
+       (AlfrA b2 f2 d3 c1 e1)
+     )
+  )
+)
+
+(variant
+  (title "Bifrost (hard)")
+  (bifrost-common)
+  (board-setup
+     (Dark 
+       (SurtrA b9)
+       (EldthursarA f9)
+     )
+     (Light
+       (AlfrA b2 f2 c1 e1)
+     )
+  )
+)
+
+(variant
+  (title "-")
+)
+
+(define walhall-common
+  (description "Dark will win if 4 Jotunns pass to the first rank.")
+  (turn-order 
+     (Light normal-type)
+     (Dark normal-type)
+  )
+
+  (board
+    (image "images/Ragnarok/walhall.bmp")
+    (grid
+      (start-rectangle 2 2 82 82)
+      (dimensions
+        ("a/b/c/d/e/f/g/h" (80 0)) ; files
+        ("8/7/6/5/4/3/2/1" (0 80)) ; ranks
+      )
+      (all-dirs)
+    )
+    (positions (a0 -10 -10 -5 -5) (z0 -10  -5 -5  0) )
+    (zone (name goal-zone) (players Dark)
+          (positions a1 b1 c1 d1 e1 f1 g1 h1)
+    )
+    (zone (name home-zone) (players Light Dark)
+          (positions a1)
+    )
+  )
+
+  (piece
+     (name JotunnA)
+     (help "Jotunn")
+     (description "Jotunn: Is similar to the pieces in the ''Fanorona''.")
+     (image Dark "images/Ragnarok/jta.bmp")
+     (moves
+        (move-type normal-type)
+        (walhall-jotunn-step nw se JotunnR) (walhall-jotunn-step sw ne JotunnR)
+        (walhall-jotunn-step ne sw JotunnR) (walhall-jotunn-step se nw JotunnR)
+        (walhall-jotunn-push nw se JotunnR) (walhall-jotunn-push sw ne JotunnR)
+        (walhall-jotunn-push ne sw JotunnR) (walhall-jotunn-push se nw JotunnR)
+        (move-type capture-type)
+        (walhall-jotunn-push nw se JotunnR) (walhall-jotunn-push sw ne JotunnR)
+        (walhall-jotunn-push ne sw JotunnR) (walhall-jotunn-push se nw JotunnR)
+     )
+  )
+  (piece
+     (name JotunnR)
+     (help "Jotunn")
+     (description "Jotunn: Is similar to the pieces in the ''Fanorona''.")
+     (image Dark "images/Ragnarok/jtr.bmp")
+     (moves
+        (move-type normal-type)
+        (walhall-jotunn-step n s JotunnA) (walhall-jotunn-step s n JotunnA)
+        (walhall-jotunn-step e w JotunnA) (walhall-jotunn-step w e JotunnA)
+        (walhall-jotunn-push n s JotunnA) (walhall-jotunn-push s n JotunnA)
+        (walhall-jotunn-push e w JotunnA) (walhall-jotunn-push w e JotunnA)
+        (move-type capture-type)
+        (walhall-jotunn-push n s JotunnA) (walhall-jotunn-push s n JotunnA)
+        (walhall-jotunn-push e w JotunnA) (walhall-jotunn-push w e JotunnA)
+     )
+  )
+  (piece
+     (name Jotunn)
+     (help "Jotunn")
+     (description "Jotunn: Is similar to the pieces in the ''Fanorona''.")
+     (image Dark "images/Ragnarok/jt.bmp")
+     (moves
+        (move-type normal-type)
+        (walhall-jotunn-step nw se Jotunn) (walhall-jotunn-step sw ne Jotunn)
+        (walhall-jotunn-step ne sw Jotunn) (walhall-jotunn-step se nw Jotunn)
+        (walhall-jotunn-push nw se Jotunn) (walhall-jotunn-push sw ne Jotunn)
+        (walhall-jotunn-push ne sw Jotunn) (walhall-jotunn-push se nw Jotunn)
+        (walhall-jotunn-step n  s  Jotunn) (walhall-jotunn-step s  n  Jotunn)
+        (walhall-jotunn-step e  w  Jotunn) (walhall-jotunn-step w  e  Jotunn)
+        (walhall-jotunn-push n  s  Jotunn) (walhall-jotunn-push s  n  Jotunn)
+        (walhall-jotunn-push e  w  Jotunn) (walhall-jotunn-push w  e  Jotunn)
+        (move-type capture-type)
+        (walhall-jotunn-push nw se Jotunn) (walhall-jotunn-push sw ne Jotunn)
+        (walhall-jotunn-push ne sw Jotunn) (walhall-jotunn-push se nw Jotunn)
+        (walhall-jotunn-push n  s  Jotunn) (walhall-jotunn-push s  e  Jotunn)
+        (walhall-jotunn-push e  w  Jotunn) (walhall-jotunn-push w  n  Jotunn)
+     )
+  )
+  (win-condition (Dark) (pieces-remaining 4 Jotunn) )
+  (loss-condition (Dark) (pieces-remaining 3) )
+  (loss-condition (Light) (pieces-remaining 0) )
+  (loss-condition (Light Dark) stalemated )
+)
+
+(variant
+  (title "Walhall (easy)")
+  (walhall-common)
+  (board-setup
+     (Dark 
+       (JotunnA b8 c8 d8 e8 f8 g8)
+     )
+     (Light
+       (ValkyrieA c1 d1 e1 f1)
+     )
+  )
+)
+
+(variant
+  (title "Walhall (normal)")
+  (default)
+  (walhall-common)
+  (board-setup
+     (Dark 
+       (JotunnA b8 c8 d8 e8 f8 g8 b7 c7 d7 e7 f7 g7)
+     )
+     (Light
+       (ValkyrieA c1 d1 e1 f1)
+     )
+  )
+)
+
+(variant
+  (title "Walhall (hard)")
+  (walhall-common)
+  (board-setup
+     (Dark 
+       (JotunnA b8 c8 d8 e8 f8 g8 b7 c7 d7 e7 f7 g7 b6 c6 d6 e6 f6 g6)
+     )
+     (Light
+       (ValkyrieA c1 d1 e1 f1)
+     )
+  )
+)
+
+(variant
+  (title "-")
+)
+
+(game 
+  (title "Ragnarok (Loki)")
+  (description "Dark will lose if it loses all the pieces.\
+                Light lose if it loses Odin and Thor.")
+
+  (option "animate captures"   false)
+  (option "animate drops"      false)
+  (option "pass turn"          forced)
+  (option "pass partial"       true)
+  (option "highlight goals"    false)
+  (option "prevent flipping"   true)
+  (option "include off-pieces" false)
+  (option "recycle captures"   false)
+  (option "smart moves"        false)
+
+  (move-sound    "Audio/Clack.wav")
+  (release-sound "Audio/Clack.wav")
+  (drop-sound    "Audio/Clack.wav")
+  (capture-sound "")
+  (change-sound  "")
+  (click-sound   "")
+  (draw-sound    "")
+
+  (players Light Dark ?R)
+  (turn-order 
+     (Light normal-type)
+     (?R Light rune-type)
+     (Dark normal-type)
+     (?R Dark rune-type)
+  )
+
+  (board
+    (image "images/Ragnarok/vigrid.bmp")
+    (grid
+      (start-rectangle 2 2 82 82)
+      (dimensions
+        ("a/b/c/d/e/f/g/h/i" (80 0)) ; files
+        ("9/8/7/6/5/4/3/2/1" (0 80)) ; ranks
+      )
+      (all-dirs)
+    )
+    (positions (a0 -10 -10 -5 -5) (z0 -10  -5 -5  0) )
+    (links next (a0 a1) (a9 b1) (b9 c1) (c9 d1) (d9 e1) (e9 f1) (f9 g1) (g9 h1) (h9 i1))
+    (zone (name home-zone) (players Light)
+          (positions 
+              a1 b1 c1 d1 e1 f1 g1 h1 i1
+              a2 b2 c2 d2 e2 f2 g2 h2 i2
+              a3 b3 c3 d3 e3 f3 g3 h3 i3
+          )
+    )
+    (zone (name home-zone) (players Dark)
+          (positions 
+              a9 b9 c9 d9 e9 f9 g9 h9 i9
+              a8 b8 c8 d8 e8 f8 g8 h8 i8
+              a7 b7 c7 d7 e7 f7 g7 h7 i7
+          )
+    )
+  )
+
+  (piece
+     (name Mount)
+     (help " ")
+     (image Light "images/Ragnarok/mountain.bmp"
+            Dark "images/Ragnarok/mountain.bmp")
+  )
+  (piece
+     (name Wyrd)
+     (help "Wyrd")
+     (description "Wyrd: Empty rune.")
+     (image Light "images/Ragnarok/wyrd.bmp"
+            Dark "images/Ragnarok/wyrd.bmp")
+     (moves
+        (move-type normal-type)
+        (rune-moves)
+     )
+     (drops
+        (move-type normal-type)
+        (drop-wyrd)
+        (move-type rune-type)
+        (drop-rune)
+     )
+  )
+  (piece
+     (name Ehwaz)
+     (help "Ehwaz")
+     (description "Ehwaz: Can change friendly piece.")
+     (image Light "images/Ragnarok/ehwazl.bmp"
+            Dark "images/Ragnarok/ehwazd.bmp")
+     (moves
+        (move-type normal-type)
+        (rune-moves) (change-friends)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-rune)
+     )
+  )
+  (piece
+     (name Berkana)
+     (help "Berkana")
+     (description "Berkana: Can promote friendly piece.")
+     (image Light "images/Ragnarok/berkanal.bmp"
+            Dark "images/Ragnarok/berkanad.bmp")
+     (moves
+        (move-type normal-type)
+        (rune-moves) (promote-all)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-rune)
+     )
+  )
+  (piece
+     (name Algiz)
+     (help "Algiz")
+     (description "Algiz: Protect a friendly piece.")
+     (image Light "images/Ragnarok/algizl.bmp"
+            Dark "images/Ragnarok/algizd.bmp")
+     (moves
+        (move-type normal-type)
+        (rune-moves)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-rune)
+     )
+  )
+  (piece
+     (name Fehu)
+     (help "Fehu")
+     (description "Fehu: Can transform into any piece.")
+     (image Light "images/Ragnarok/fehul.bmp"
+            Dark "images/Ragnarok/fehud.bmp")
+     (moves
+        (move-type normal-type)
+        (rune-moves) (create-piece Man)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-rune)
+     )
+  )
+  (piece
+     (name Thurisaz)
+     (help "Thurisaz")
+     (description "Thurisaz: Can exchange with any piece.")
+     (image Light "images/Ragnarok/thurisazl.bmp"
+            Dark "images/Ragnarok/thurisazd.bmp")
+     (moves
+        (move-type normal-type)
+        (rune-moves) (exchange-all)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-rune)
+     )
+  )
+  (piece
+     (name Ansuz)
+     (help "Ansuz")
+     (description "Ansuz: The Opponent loses his turn.")
+     (image Light "images/Ragnarok/ansuzl.bmp"
+            Dark "images/Ragnarok/ansuzd.bmp")
+     (moves
+        (move-type normal-type)
+        (rune-moves)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-ansuz)
+     )
+  )
+  (piece
+     (name Nauthiz)
+     (help "Nauthiz")
+     (description "Nauthiz: It will be lost if not used.")
+     (image Light "images/Ragnarok/nauthiz.bmp"
+            Dark "images/Ragnarok/nauthiz.bmp")
+     (moves
+        (move-type normal-type)
+        (rune-moves)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-rune)
+     )
+  )
+  (piece
+     (name Mannaz)
+     (help "Mannaz")
+     (description "Mannaz: Can transform into Warrior.")
+     (image Light "images/Ragnarok/mannazl.bmp"
+            Dark "images/Ragnarok/mannazd.bmp")
+     (moves
+        (move-type normal-type)
+        (rune-moves) (create-piece WarriorA)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-rune)
+     )
+  )
+  (piece
+     (name Othila)
+     (help "Othila")
+     (description "Othila: Can lure enemy pieces.")
+     (image Light "images/Ragnarok/othilal.bmp"
+            Dark "images/Ragnarok/othilad.bmp")
+     (moves
+        (move-type normal-type)
+        (rune-moves) (change-enemies)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-rune)
+     )
+  )
+  (piece
+     (name Isa)
+     (help "Isa")
+     (description "Isa: Freezes all around.")
+     (image Light "images/Ragnarok/isa.bmp"
+            Dark "images/Ragnarok/isa.bmp")
+     (moves
+        (move-type normal-type)
+        (rune-moves)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-rune)
+     )
+  )
+  (piece
+     (name Hagalaz)
+     (help "Hagalaz")
+     (description "Hagalaz: Can destroy any pieces.")
+     (image Light "images/Ragnarok/hagalaz.bmp"
+            Dark "images/Ragnarok/hagalaz.bmp")
+     (moves
+        (move-type normal-type)
+        (rune-moves) (destroy-all)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-rune)
+     )
+  )
+  (piece
+     (name Eihwaz)
+     (help "Eihwaz")
+     (description "Eihwaz: Can transform into a mount.")
+     (image Light "images/Ragnarok/eihwaz.bmp"
+            Dark "images/Ragnarok/eihwaz.bmp")
+     (moves
+        (move-type normal-type)
+        (rune-moves) (create-piece Mount)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-rune)
+     )
+  )
+  (piece
+     (name Sowelu)
+     (help "Sowelu")
+     (description "Sowelu: Warms pieces.")
+     (image Light "images/Ragnarok/sowelu.bmp"
+            Dark "images/Ragnarok/sowelu.bmp")
+     (moves
+        (move-type normal-type)
+        (rune-moves)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-rune)
+     )
+  )
+  (piece
+     (name OdinA)
+     (help "Odin")
+     (description "Odin: Throws runes.\
+                   May give orders to all friendly pieces.")
+     (image Light "images/Ragnarok/oda.bmp")
+     (moves
+        (move-type normal-type)
+        (sleipnir-join n OdinR SleipnirOR) (sleipnir-join nn OdinR SleipnirOR) 
+        (sleipnir-join s OdinR SleipnirOR) (sleipnir-join ss OdinR SleipnirOR) 
+        (sleipnir-join w OdinR SleipnirOR) (sleipnir-join ww OdinR SleipnirOR)
+        (sleipnir-join e OdinR SleipnirOR) (sleipnir-join ee OdinR SleipnirOR)
+        (sleipnir-swap n SleipnirOR) (sleipnir-swap nn SleipnirOR) 
+        (sleipnir-swap s SleipnirOR) (sleipnir-swap ss SleipnirOR) 
+        (sleipnir-swap w SleipnirOR) (sleipnir-swap ww SleipnirOR)
+        (sleipnir-swap e SleipnirOR) (sleipnir-swap ee SleipnirOR)
+     )
+     (drops
+        (move-type setup-odin)
+        (drop-piece a0)
+     )
+  )
+  (piece
+     (name OdinR)
+     (help "Odin")
+     (description "Odin: Throws runes.\
+                   May give orders to all friendly pieces.")
+     (image Light "images/Ragnarok/odr.bmp")
+     (moves
+        (move-type normal-type)
+        (sleipnir-join ne OdinA SleipnirOR) (sleipnir-join nene OdinA SleipnirOR)
+        (sleipnir-join sw OdinA SleipnirOR) (sleipnir-join swsw OdinA SleipnirOR)
+        (sleipnir-join se OdinA SleipnirOR) (sleipnir-join sese OdinA SleipnirOR)
+        (sleipnir-swap ne SleipnirOR) (sleipnir-swap nene SleipnirOR)
+        (sleipnir-swap sw SleipnirOR) (sleipnir-swap swsw SleipnirOR)
+        (sleipnir-swap se SleipnirOR) (sleipnir-swap sese SleipnirOR)
+     )
+  )
+  (piece
+     (name SleipnirOA)
+     (help "Odin")
+     (description "Odin: Throws runes.\
+                   May give orders to all friendly pieces.")
+     (image Light "images/Ragnarok/osa.bmp")
+     (moves
+        (move-type normal-type)
+        (common-slide sw SleipnirOR) (common-slide se SleipnirOR)
+        (common-slide ne SleipnirOR)
+        (common-strike n SleipnirOR) (common-strike s SleipnirOR)
+        (common-strike w SleipnirOR) (common-strike e SleipnirOR)
+        (sleipnir-split ss SleipnirR OdinA) (sleipnir-split ww SleipnirR OdinA) 
+        (sleipnir-split ee SleipnirR OdinA) (sleipnir-split nn SleipnirR OdinA) 
+     )
+     (drops
+        (move-type setup-odin)
+        (drop-piece a0)
+     )
+  )
+  (piece
+     (name SleipnirOR)
+     (help "Odin")
+     (description "Odin: Throws runes.\
+                   May give orders to all friendly pieces.")
+     (image Light "images/Ragnarok/osr.bmp")
+     (moves
+        (move-type normal-type)
+        (common-slide n SleipnirOA) (common-slide s SleipnirOA)
+        (common-slide w SleipnirOA) (common-slide e SleipnirOA)
+        (common-strike sw SleipnirOA) (common-strike se SleipnirOA)
+        (common-strike ne SleipnirOA)
+        (sleipnir-split swsw SleipnirR OdinA) (sleipnir-split sese SleipnirR OdinA) 
+        (sleipnir-split nene SleipnirR OdinA)
+     )
+  )
+  (piece
+     (name ThorA)
+     (help "Thor")
+     (description "Thor: Strikes at the square 3x3 (there should be no friendly pieces).\
+                   Can summon the lower pieces and command them.")
+     (image Light "images/Ragnarok/tha.bmp")
+     (moves
+        (move-type normal-type)
+        (common-slide n ThorR) (common-slide s ThorR)
+        (common-step nw ThorR) (common-step sw ThorR)
+        (common-step ne ThorR) (common-step se ThorR)
+        (thor-strike ww ThorR) (thor-strike ee ThorR)
+        (thor-strike nwnw ThorR) (thor-strike nene ThorR)
+        (thor-strike swsw ThorR) (thor-strike sese ThorR)
+        (order-odin Odin A R) (order-odin Odin R A)
+        (order-odin SleipnirO A R) (order-odin SleipnirO R A)
+     )
+     (drops
+        (move-type setup-thor)
+        (drop-piece a0)
+     )
+  )
+  (piece
+     (name ThorR)
+     (help "Thor")
+     (description "Thor: Strikes at the square 3x3 (there should be no friendly pieces).\
+                   Can summon the lower pieces and command them.")
+     (image Light "images/Ragnarok/thr.bmp")
+     (moves
+        (move-type normal-type)
+        (common-slide w ThorA) (common-slide e ThorA)
+        (common-step nw ThorA) (common-step sw ThorA)
+        (common-step ne ThorA) (common-step se ThorA)
+        (thor-strike nn ThorA) (thor-strike ss ThorA)
+        (thor-strike nwnw ThorA) (thor-strike nene ThorA)
+        (thor-strike swsw ThorA) (thor-strike sese ThorA)
+        (order-odin Odin A R) (order-odin Odin R A)
+        (order-odin SleipnirO A R) (order-odin SleipnirO R A)
+     )
+  )
+  (piece
+     (name TyrA)
+     (help "Tyr")
+     (description "Tyr: Can summon the lower pieces and command them.")
+     (image Light "images/Ragnarok/tya.bmp")
+     (moves
+        (move-type normal-type)
+        (common-step n TyrR) (common-step nnw TyrR)
+        (common-step s TyrR) (common-step nww TyrR)
+        (common-step w TyrR) (common-step sww TyrR)
+        (empty-step nee TyrR) (empty-step see TyrR)
+        (empty-step e TyrR) (empty-step nne TyrR)
+        (order-odin Odin A R) (order-odin Odin R A)
+        (order-odin SleipnirO A R) (order-odin SleipnirO R A)
+     )
+     (drops
+        (move-type setup-tyr)
+        (drop-piece a0)
+     )
+  )
+  (piece
+     (name TyrR)
+     (help "Tyr")
+     (description "Tyr: Can summon the lower pieces and command them.")
+     (image Light "images/Ragnarok/tyr.bmp")
+     (moves
+        (move-type normal-type)
+        (common-step nw TyrA) (empty-step ne TyrA)
+        (common-step sw TyrA) (empty-step se TyrA)
+        (common-step ww TyrA) (common-step nn TyrA)
+        (empty-step ee TyrA) (common-step nwnw TyrA)
+        (empty-step nene TyrA)
+        (order-odin Odin A R) (order-odin Odin R A)
+        (order-odin SleipnirO A R) (order-odin SleipnirO R A)
+     )
+  )
+  (piece
+     (name LokiA)
+     (help "Loki")
+     (description "Loki: Can summon monsters.\
+                   Can use reversible runes.\
+                   Can move the friendly pieces.")
+     (image Dark "images/Ragnarok/lka.bmp")
+     (moves
+        (move-type normal-type)
+        (sleipnir-join n LokiR SleipnirLR) (sleipnir-join nne LokiR SleipnirLR) 
+        (sleipnir-join e LokiR SleipnirLR) (sleipnir-join see LokiR SleipnirLR) 
+        (sleipnir-join sw LokiR SleipnirLR) (sleipnir-join ssw LokiR SleipnirLR) 
+        (sleipnir-join sww LokiR SleipnirLR) 
+        (sleipnir-swap n SleipnirLR) (sleipnir-swap nne SleipnirLR) 
+        (sleipnir-swap e SleipnirLR) (sleipnir-swap see SleipnirLR) 
+        (sleipnir-swap sw SleipnirLR) (sleipnir-swap ssw SleipnirLR) 
+        (sleipnir-swap sww SleipnirLR) 
+        (capture-rune sse) (capture-rune nee) 
+        (capture-rune nww) (capture-rune nnw) 
+     )
+     (drops
+        (move-type setup-loki)
+        (drop-piece z0)
+     )
+  )
+  (piece
+     (name LokiR)
+     (help "Loki")
+     (description "Loki: Can summon monsters.\
+                   Can use reversible runes.\
+                   Can move the friendly pieces.")
+     (image Dark "images/Ragnarok/lkr.bmp")
+     (moves
+        (move-type normal-type)
+        (sleipnir-join s LokiA SleipnirLA) (sleipnir-join sse LokiA SleipnirLA) 
+        (sleipnir-join e LokiA SleipnirLA) (sleipnir-join nee LokiA SleipnirLA) 
+        (sleipnir-join nw LokiA SleipnirLA) (sleipnir-join nnw LokiA SleipnirLA) 
+        (sleipnir-join nww LokiA SleipnirLA) 
+        (sleipnir-swap s SleipnirLA) (sleipnir-swap sse SleipnirLA) 
+        (sleipnir-swap e SleipnirLA) (sleipnir-swap nee SleipnirLA) 
+        (sleipnir-swap nw SleipnirLA) (sleipnir-swap nnw SleipnirLA) 
+        (sleipnir-swap nww SleipnirLA) 
+        (capture-rune ssw) (capture-rune sww) 
+        (capture-rune see) (capture-rune nne) 
+     )
+  )
+  (piece
+     (name SleipnirLA)
+     (help "Loki")
+     (description "Loki: Can summon monsters.\
+                   Can use reversible runes.\
+                   Can move the friendly pieces.")
+     (image Dark "images/Ragnarok/sla.bmp")
+     (moves
+        (move-type normal-type)
+        (common-slide sw SleipnirLR) (common-slide se SleipnirLR)
+        (common-slide nw SleipnirLR) (common-slide ne SleipnirLR)
+        (common-strike n SleipnirLR) (common-strike s SleipnirLR)
+        (common-strike w SleipnirLR) (common-strike e SleipnirLR)
+        (sleipnir-split ssw SleipnirR LokiA) (sleipnir-split sww SleipnirR LokiA) 
+        (sleipnir-split see SleipnirR LokiA) (sleipnir-split nne SleipnirR LokiA) 
+        (capture-rune sse) (capture-rune nee) 
+        (capture-rune nww) (capture-rune nnw) 
+     )
+  )
+  (piece
+     (name SleipnirLR)
+     (help "Loki")
+     (description "Loki: Can summon monsters.\
+                   Can use reversible runes.\
+                   Can move the friendly pieces.")
+     (image Dark "images/Ragnarok/slr.bmp")
+     (moves
+        (move-type normal-type)
+        (common-slide s SleipnirLR) (common-slide e SleipnirLR)
+        (common-slide n SleipnirLR) (common-slide w SleipnirLR)
+        (common-strike nw SleipnirLR) (common-strike ne SleipnirLR)
+        (common-strike sw SleipnirLR) (common-strike se SleipnirLR)
+        (sleipnir-split sse SleipnirR LokiR) (sleipnir-split nee SleipnirR LokiR) 
+        (sleipnir-split nnw SleipnirR LokiR) (sleipnir-split nww SleipnirR LokiR) 
+        (capture-rune ssw) (capture-rune sww) 
+        (capture-rune see) (capture-rune nne) 
+     )
+  )
+  (piece
+     (name HelA)
+     (help "Hel")
+     (description "Hel: Can summon Garmr. Can use frozen pieces.\
+                   Calls the Jotunns on the frozen positions.\
+                   Can give orders to the Garmr and the Jotunns.")
+     (image Dark "images/Ragnarok/hla.bmp")
+     (moves
+        (move-type normal-type)
+        (common-step n HelR) (common-step w HelR) (common-step e HelR)
+        (common-step sw HelR) (common-step se HelR)
+        (hel-step n HelR n) (hel-step sw HelR sw) (hel-step se HelR se)
+        (hel-strike)
+        (order-loki Loki) (order-loki SleipnirL)
+     )
+     (drops
+        (move-type setup-hel)
+        (drop-piece z0)
+     )
+  )
+  (piece
+     (name HelR)
+     (help "Hel")
+     (description "Hel: Can summon Garmr. Can use frozen pieces.\
+                   Calls the Jotunns on the frozen positions.\
+                   Can give orders to the Garmr and the Jotunns.")
+     (image Dark "images/Ragnarok/hlr.bmp")
+     (moves
+        (move-type normal-type)
+        (common-step n HelA) (common-step s HelA) (common-step w HelA) (common-step e HelA)
+        (hel-step nw HelA w) (hel-step sw HelA w) (hel-step ne HelA e) (hel-step se HelA e)
+        (hel-strike)
+        (order-loki Loki) (order-loki SleipnirL)
+     )
+  )
+  (piece
+     (name GarmrA)
+     (help "Garmr")
+     (description "Garmr: Can freeze the pieces.")
+     (image Dark "images/Ragnarok/gra.bmp")
+     (moves
+        (move-type normal-type)
+        (common-step nw GarmrR) (common-step ne GarmrR)
+        (common-step sw GarmrR) (common-step se GarmrR)
+        (garmr-slide nw GarmrR) (garmr-slide ne GarmrR)
+        (garmr-slide sw GarmrR) (garmr-slide se GarmrR)
+        (order-loki Loki) (order-loki SleipnirL) (order-hel)
+     )
+     (drops
+        (move-type normal-type)
+        (drop-garmr)
+     )
+  )
+  (piece
+     (name GarmrR)
+     (help "Garmr")
+     (description "Garmr: Can freeze the pieces.")
+     (image Dark "images/Ragnarok/grr.bmp")
+     (moves
+        (move-type normal-type)
+        (common-step n GarmrA) (common-step e GarmrA)
+        (common-step s GarmrA) (common-step w GarmrA)
+        (garmr-slide n GarmrA) (garmr-slide e GarmrA)
+        (garmr-slide s GarmrA) (garmr-slide w GarmrA)
+        (order-loki Loki) (order-loki SleipnirL) (order-hel)
+     )
+  )
+  (piece
+     (name SleipnirA)
+     (help "Sleipnir")
+     (description "Sleipnir: Can be used by Odin or Loki.")
+     (image Dark "images/Ragnarok/spa.bmp"
+            Light "images/Ragnarok/swa.bmp")
+     (moves
+        (move-type normal-type)
+        (common-slide sw SleipnirR) (common-slide se SleipnirR)
+        (common-slide nw SleipnirR) (common-slide ne SleipnirR)
+        (order-odin Odin A R) (order-odin Odin R A)
+        (order-loki Loki)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-to Beast)
+     )
+  )
+  (piece
+     (name SleipnirR)
+     (help "Sleipnir")
+     (description "Sleipnir: Can be used by Odin or Loki.")
+     (image Dark "images/Ragnarok/spr.bmp"
+            Light "images/Ragnarok/swr.bmp")
+     (moves
+        (move-type normal-type)
+        (common-slide n SleipnirA) (common-slide w SleipnirA)
+        (common-slide s SleipnirA) (common-slide e SleipnirA)
+        (order-odin Odin A R) (order-odin Odin R A)
+        (order-loki Loki)
+     )
+  )
+  (piece
+     (name JormungandrA)
+     (help "Jormungandr")
+     (description "Jormungandr: Destroys all pieces in its path.")
+     (image Dark "images/Ragnarok/jma.bmp")
+     (moves
+        (move-type normal-type)
+        (beast-slide n JormungandrR) (beast-slide s JormungandrR) 
+        (order-loki Loki) (order-loki SleipnirL)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-to Beast)
+     )
+  )
+  (piece
+     (name JormungandrR)
+     (help "Jormungandr")
+     (description "Jormungandr: Destroys all pieces in its path.")
+     (image Dark "images/Ragnarok/jmr.bmp")
+     (moves
+        (move-type normal-type)
+        (beast-slide e JormungandrA) (beast-slide w JormungandrA) 
+        (order-loki Loki) (order-loki SleipnirL)
+     )
+  )
+  (piece
+     (name FenrirA)
+     (help "Fenrir")
+     (description "Fenrir: Destroys all pieces while moving forward.")
+     (image Dark "images/Ragnarok/fna.bmp")
+     (moves
+        (move-type normal-type)
+        (beast-slide se FenrirR) (fenrir-slide nw FenrirR) 
+        (order-loki Loki) (order-loki SleipnirL)
+        (switch FenrirR)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-to Beast)
+     )
+  )
+  (piece
+     (name FenrirR)
+     (help "Fenrir")
+     (description "Fenrir: Destroys all pieces while moving forward.")
+     (image Dark "images/Ragnarok/fnr.bmp")
+     (moves
+        (move-type normal-type)
+        (beast-slide sw FenrirA) (fenrir-slide ne FenrirA) 
+        (order-loki Loki) (order-loki SleipnirL)
+        (switch FenrirA)
+     )
+  )
+  (piece
+     (name SurtrA)
+     (help "Surtr")
+     (description "Surtr: Burns pieces around him.\
+                          Can summon the Eldthursars and command them.")
+     (image Dark "images/Ragnarok/sra.bmp")
+     (moves
+        (move-type normal-type)
+        (common-step nne SurtrR) (common-step see SurtrR)
+        (common-step ssw SurtrR) (common-step nww SurtrR)
+        (order-loki Loki) (order-loki SleipnirL)
+     )
+     (drops
+        (move-type setup-surtr)
+        (drop-piece z0)
+     )
+  )
+  (piece
+     (name SurtrR)
+     (help "Surtr")
+     (description "Surtr: Burns pieces around him.\
+                          Can summon the Eldthursars and command them.")
+     (image Dark "images/Ragnarok/srr.bmp")
+     (moves
+        (move-type normal-type)
+        (common-step nnw SurtrA) (common-step nee SurtrA)
+        (common-step sse SurtrA) (common-step sww SurtrA)
+        (order-loki Loki) (order-loki SleipnirL)
+     )
+  )
+  (piece
+     (name EldthursarA)
+     (help "Eldthursar")
+     (description "Eldthursar: Burns near the pieces itself.")
+     (image Dark "images/Ragnarok/eda.bmp")
+     (moves
+        (move-type normal-type)
+        (common-step-frozen nw EldthursarR) (common-step-frozen ne EldthursarR)
+        (common-step-frozen se EldthursarR) (common-step-frozen sw EldthursarR)
+        (empty-step-frozen nwnw EldthursarR) (empty-step-frozen nene EldthursarR)
+        (empty-step-frozen swsw EldthursarR) (empty-step-frozen sese EldthursarR)
+        (empty-step-frozen nn EldthursarR) (empty-step-frozen ss EldthursarR)
+        (order-eda) (order-loki Loki) (order-loki SleipnirL)
+     )
+     (drops
+        (move-type normal-type)
+        (drop-eda)
+     )
+  )
+  (piece
+     (name EldthursarR)
+     (help "Eldthursar")
+     (description "Eldthursar: Burns near the pieces itself.")
+     (image Dark "images/Ragnarok/edr.bmp")
+     (moves
+        (move-type normal-type)
+        (common-step-frozen n EldthursarA) (common-step-frozen e EldthursarA)
+        (common-step-frozen s EldthursarA) (common-step-frozen w EldthursarA)
+        (empty-step-frozen nnw EldthursarA) (empty-step-frozen nne EldthursarA)
+        (empty-step-frozen ssw EldthursarA) (empty-step-frozen sse EldthursarA)
+        (empty-step-frozen ww EldthursarA) (empty-step-frozen ee EldthursarA)
+        (order-edr) (order-loki Loki) (order-loki SleipnirL)
+     )
+  )
+  (piece
+     (name Eldthursar)
+     (help "Eldthursar")
+     (description "Eldthursar: Burns pieces around him.")
+     (image Dark "images/Ragnarok/ed.bmp")
+     (moves
+        (move-type normal-type)
+        (empty-step-frozen nwnw Eldthursar) (empty-step-frozen nene Eldthursar)
+        (empty-step-frozen swsw Eldthursar) (empty-step-frozen sese Eldthursar)
+        (empty-step-frozen nn Eldthursar) (empty-step-frozen ss Eldthursar)
+        (empty-step-frozen nnw Eldthursar) (empty-step-frozen nne Eldthursar)
+        (empty-step-frozen ssw Eldthursar) (empty-step-frozen sse Eldthursar)
+        (empty-step-frozen ww Eldthursar) (empty-step-frozen ee Eldthursar)
+        (order-surtr) (order-loki Loki) (order-loki SleipnirL)
+     )
+  )
+  (piece
+     (name WarriorA)
+     (help "Warrior")
+     (description "Warrior: Can jump to attack the enemy.")
+     (image Dark "images/Ragnarok/wda.bmp"
+            Light "images/Ragnarok/wla.bmp")
+     (moves
+        (move-type normal-type)
+        (common-step-frozen nw WarriorR) (common-step-frozen sw WarriorR)
+        (common-step-frozen ne WarriorR) (common-step-frozen se WarriorR)
+        (warrior-jump-frozen n WarriorR first-type) (warrior-jump-frozen w WarriorR first-type)
+        (warrior-jump-frozen s WarriorR first-type) (warrior-jump-frozen e WarriorR first-type)
+        (order-loki Loki) (order-loki SleipnirL) (order-hel)
+        (move-type first-type)
+        (warrior-step-frozen nw WarriorR second-type) (warrior-step-frozen sw WarriorR second-type)
+        (warrior-step-frozen ne WarriorR second-type) (warrior-step-frozen se WarriorR second-type)
+        (move-type second-type)
+        (warrior-jump-frozen n WarriorR first-type) (warrior-jump-frozen w WarriorR first-type)
+        (warrior-jump-frozen s WarriorR first-type) (warrior-jump-frozen e WarriorR first-type)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-to Man)
+     )
+  )
+  (piece
+     (name WarriorR)
+     (help "Warrior")
+     (description "Warrior: Can jump to attack the enemy.")
+     (image Dark "images/Ragnarok/wdr.bmp"
+            Light "images/Ragnarok/wlr.bmp")
+     (moves
+        (move-type normal-type)
+        (common-step-frozen n WarriorA) (common-step-frozen w WarriorA)
+        (common-step-frozen e WarriorA) (common-step-frozen s WarriorA)
+        (warrior-jump-frozen nw WarriorA first-type) (warrior-jump-frozen ne WarriorA first-type)
+        (warrior-jump-frozen sw WarriorA first-type) (warrior-jump-frozen se WarriorA first-type)
+        (order-loki Loki) (order-loki SleipnirL) (order-hel)
+        (move-type first-type)
+        (warrior-step-frozen n WarriorA second-type) (warrior-step-frozen w WarriorA second-type)
+        (warrior-step-frozen e WarriorA second-type) (warrior-step-frozen s WarriorA second-type)
+        (move-type second-type)
+        (warrior-jump-frozen nw WarriorA first-type) (warrior-jump-frozen ne WarriorA first-type)
+        (warrior-jump-frozen sw WarriorA first-type) (warrior-jump-frozen se WarriorA first-type)
+     )
+  )
+  (piece
+     (name Warrior)
+     (help "Warrior")
+     (description "Warrior: Can jump to attack the enemy.")
+     (image Dark "images/Ragnarok/wd.bmp"
+            Light "images/Ragnarok/wl.bmp")
+     (moves
+        (move-type normal-type)
+        (common-step-frozen nw Warrior) (common-step-frozen sw Warrior)
+        (common-step-frozen ne Warrior) (common-step-frozen se Warrior)
+        (common-step-frozen n Warrior) (common-step-frozen w Warrior)
+        (common-step-frozen e Warrior) (common-step-frozen s Warrior)
+        (warrior-jump-frozen nw Warrior first-type) (warrior-jump-frozen ne Warrior first-type)
+        (warrior-jump-frozen sw Warrior first-type) (warrior-jump-frozen se Warrior first-type)
+        (warrior-jump-frozen n Warrior first-type) (warrior-jump-frozen w Warrior first-type)
+        (warrior-jump-frozen s Warrior first-type) (warrior-jump-frozen e Warrior first-type)
+        (order-loki Loki) (order-loki SleipnirL) (order-hel)
+        (move-type first-type)
+        (warrior-step-frozen nw Warrior second-type) (warrior-step-frozen sw Warrior second-type)
+        (warrior-step-frozen ne Warrior second-type) (warrior-step-frozen se Warrior second-type)
+        (warrior-step-frozen n Warrior second-type) (warrior-step-frozen w Warrior second-type)
+        (warrior-step-frozen e Warrior second-type) (warrior-step-frozen s Warrior second-type)
+        (move-type second-type)
+        (warrior-jump-frozen nw Warrior first-type) (warrior-jump-frozen ne Warrior first-type)
+        (warrior-jump-frozen sw Warrior first-type) (warrior-jump-frozen se Warrior first-type)
+        (warrior-jump-frozen n Warrior first-type) (warrior-jump-frozen w Warrior first-type)
+        (warrior-jump-frozen s Warrior first-type) (warrior-jump-frozen e Warrior first-type)
+     )
+  )
+  (piece
+     (name AlfrA)
+     (help "Alfr")
+     (description "Alfr: Capturing the enemy piece can make an extra shot.")
+     (image Light "images/Ragnarok/ala.bmp")
+     (moves
+        (move-type normal-type)
+        (alfr-step-frozen n AlfrR) (alfr-step-frozen s AlfrR)
+        (alfr-step-frozen w AlfrR) (alfr-step-frozen e AlfrR)
+        (empty-step-frozen nnw AlfrR) (empty-step-frozen nne AlfrR)
+        (empty-step-frozen ssw AlfrR) (empty-step-frozen sse AlfrR)
+        (common-strike-frozen nn AlfrR) (common-strike-frozen ss AlfrR)
+        (common-strike-frozen ww AlfrR) (common-strike-frozen ee AlfrR)
+        (order-odin Odin A R) (order-odin Odin R A)
+        (order-odin SleipnirO A R) (order-odin SleipnirO R A)
+        (order-tyr A R) (order-tyr R A)
+        (order-thor A R) (order-thor R A)
+        (move-type capture-type)
+        (common-strike-frozen nn AlfrR) (common-strike-frozen ss AlfrR)
+        (common-strike-frozen ww AlfrR) (common-strike-frozen ee AlfrR)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-to Man)
+     )
+  )
+  (piece
+     (name AlfrR)
+     (help "Alfr")
+     (description "Alfr: Capturing the enemy piece can make an extra shot.")
+     (image Light "images/Ragnarok/alr.bmp")
+     (moves
+        (move-type normal-type)
+        (alfr-step-frozen nw AlfrA) (alfr-step-frozen sw AlfrA)
+        (alfr-step-frozen ne AlfrA) (alfr-step-frozen se AlfrA)
+        (empty-step-frozen nww AlfrA) (empty-step-frozen nee AlfrA)
+        (empty-step-frozen sww AlfrA) (empty-step-frozen see AlfrA)
+        (common-strike-frozen nwnw AlfrA) (common-strike-frozen swsw AlfrA)
+        (common-strike-frozen nene AlfrA) (common-strike-frozen sese AlfrA)
+        (order-odin Odin A R) (order-odin Odin R A)
+        (order-odin SleipnirO A R) (order-odin SleipnirO R A)
+        (order-tyr A R) (order-tyr R A)
+        (order-thor A R) (order-thor R A)
+        (move-type capture-type)
+        (common-strike-frozen nwnw AlfrA) (common-strike-frozen swsw AlfrA)
+        (common-strike-frozen nene AlfrA) (common-strike-frozen sese AlfrA)
+     )
+  )
+  (piece
+     (name Alfr)
+     (help "Alfr")
+     (description "Alfr: Capturing the enemy piece can make an extra shot.")
+     (image Light "images/Ragnarok/al.bmp")
+     (moves
+        (move-type normal-type)
+        (alfr-step-frozen n Alfr) (alfr-step-frozen s Alfr)
+        (alfr-step-frozen w Alfr) (alfr-step-frozen e Alfr)
+        (alfr-step-frozen nw Alfr) (alfr-step-frozen sw Alfr)
+        (alfr-step-frozen ne Alfr) (alfr-step-frozen se Alfr)
+        (empty-step-frozen nnw Alfr) (empty-step-frozen nne Alfr)
+        (empty-step-frozen ssw Alfr) (empty-step-frozen sse Alfr)
+        (empty-step-frozen nww Alfr) (empty-step-frozen nee Alfr)
+        (empty-step-frozen sww Alfr) (empty-step-frozen see Alfr)
+        (common-strike-frozen nn Alfr) (common-strike-frozen ss Alfr)
+        (common-strike-frozen ww Alfr) (common-strike-frozen ee Alfr)
+        (common-strike-frozen nwnw Alfr) (common-strike-frozen swsw Alfr)
+        (common-strike-frozen nene Alfr) (common-strike-frozen sese Alfr)
+        (order-odin Odin A R) (order-odin Odin R A)
+        (order-odin SleipnirO A R) (order-odin SleipnirO R A)
+        (order-tyr A R) (order-tyr R A)
+        (order-thor A R) (order-thor R A)
+        (move-type capture-type)
+        (common-strike-frozen nn Alfr) (common-strike-frozen ss Alfr)
+        (common-strike-frozen ww Alfr) (common-strike-frozen ee Alfr)
+        (common-strike-frozen nwnw Alfr) (common-strike-frozen swsw Alfr)
+        (common-strike-frozen nene Alfr) (common-strike-frozen sese Alfr)
+     )
+  )
+  (piece
+     (name ValkyrieA)
+     (help "Valkyrie")
+     (description "Valkyrie: Is similar to the King in the ''Russian Checkers''.")
+     (image Light "images/Ragnarok/vla.bmp")
+     (moves
+        (move-type normal-type)
+        (valkyrie-slide nw ValkyrieR) (valkyrie-slide ne ValkyrieR)
+        (valkyrie-slide sw ValkyrieR) (valkyrie-slide se ValkyrieR)
+        (valkyrie-jump nw ValkyrieR) (valkyrie-jump ne ValkyrieR)
+        (valkyrie-jump sw ValkyrieR) (valkyrie-jump se ValkyrieR)
+        (order-odin Odin A R) (order-odin Odin R A)
+        (order-odin SleipnirO A R) (order-odin SleipnirO R A)
+        (order-tyr A R) (order-tyr R A)
+        (order-thor A R) (order-thor R A)
+        (move-type capture-type)
+        (valkyrie-jump nw ValkyrieR) (valkyrie-jump ne ValkyrieR)
+        (valkyrie-jump sw ValkyrieR) (valkyrie-jump se ValkyrieR)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-to Man)
+     )
+  )
+  (piece
+     (name ValkyrieR)
+     (help "Valkyrie")
+     (description "Valkyrie: Is similar to the King in the ''Russian Checkers''.")
+     (image Light "images/Ragnarok/vlr.bmp")
+     (moves
+        (move-type normal-type)
+        (valkyrie-slide n ValkyrieA) (valkyrie-slide e ValkyrieA)
+        (valkyrie-slide s ValkyrieA) (valkyrie-slide w ValkyrieA)
+        (valkyrie-jump n ValkyrieA) (valkyrie-jump e ValkyrieA)
+        (valkyrie-jump s ValkyrieA) (valkyrie-jump w ValkyrieA)
+        (order-odin Odin A R) (order-odin Odin R A)
+        (order-odin SleipnirO A R) (order-odin SleipnirO R A)
+        (order-tyr A R) (order-tyr R A)
+        (order-thor A R) (order-thor R A)
+        (move-type capture-type)
+        (valkyrie-jump n ValkyrieA) (valkyrie-jump e ValkyrieA)
+        (valkyrie-jump s ValkyrieA) (valkyrie-jump w ValkyrieA)
+     )
+  )
+  (piece
+     (name Valkyrie)
+     (help "Valkyrie")
+     (description "Valkyrie: Is similar to the King in the ''Russian Checkers''.")
+     (image Light "images/Ragnarok/vl.bmp")
+     (moves
+        (move-type normal-type)
+        (valkyrie-slide nw Valkyrie) (valkyrie-slide ne Valkyrie)
+        (valkyrie-slide sw Valkyrie) (valkyrie-slide se Valkyrie)
+        (valkyrie-slide n Valkyrie) (valkyrie-slide e Valkyrie)
+        (valkyrie-slide s Valkyrie) (valkyrie-slide w Valkyrie)
+        (valkyrie-jump nw Valkyrie) (valkyrie-jump ne Valkyrie)
+        (valkyrie-jump sw Valkyrie) (valkyrie-jump se Valkyrie)
+        (valkyrie-jump n Valkyrie) (valkyrie-jump e Valkyrie)
+        (valkyrie-jump s Valkyrie) (valkyrie-jump w Valkyrie)
+        (order-odin Odin A R) (order-odin Odin R A)
+        (order-odin SleipnirO A R) (order-odin SleipnirO R A)
+        (order-tyr A R) (order-tyr R A)
+        (order-thor A R) (order-thor R A)
+        (move-type capture-type)
+        (valkyrie-jump nw Valkyrie) (valkyrie-jump ne Valkyrie)
+        (valkyrie-jump sw Valkyrie) (valkyrie-jump se Valkyrie)
+        (valkyrie-jump n Valkyrie) (valkyrie-jump e Valkyrie)
+        (valkyrie-jump s Valkyrie) (valkyrie-jump w Valkyrie)
+     )
+  )
+  (piece
+     (name ZwergA)
+     (help "Zwerg")
+     (description "Zwerg: After the jump can attack an enemy piece by strike.")
+     (image Dark "images/Ragnarok/zwa.bmp")
+     (moves
+        (move-type normal-type)
+        (common-step-frozen n ZwergR) (common-step-frozen e ZwergR)
+        (common-step-frozen w ZwergR) (common-step-frozen s ZwergR)
+        (common-strike-frozen nw ZwergR) (common-strike-frozen ne ZwergR)
+        (common-strike-frozen sw ZwergR) (common-strike-frozen se ZwergR)
+        (zwerg-step-frozen nwnw ZwergR n e w s) (zwerg-step-frozen swsw ZwergR n e w s)
+        (zwerg-step-frozen nene ZwergR n e w s) (zwerg-step-frozen sese ZwergR n e w s)
+        (order-loki Loki) (order-loki SleipnirL) (order-hel)
+        (move-type capture-type)
+        (common-strike-frozen nw ZwergR) (common-strike-frozen ne ZwergR)
+        (common-strike-frozen sw ZwergR) (common-strike-frozen se ZwergR)
+     )
+     (drops
+        (move-type rune-type)
+        (drop-to Man)
+     )
+  )
+  (piece
+     (name ZwergR)
+     (help "Zwerg")
+     (description "Zwerg: After the jump can attack an enemy piece by strike.")
+     (image Dark "images/Ragnarok/zwr.bmp")
+     (moves
+        (move-type normal-type)
+        (common-step-frozen nw ZwergA) (common-step-frozen ne ZwergA)
+        (common-step-frozen sw ZwergA) (common-step-frozen se ZwergA)
+        (common-strike-frozen n ZwergA) (common-strike-frozen s ZwergA)
+        (common-strike-frozen w ZwergA) (common-strike-frozen e ZwergA)
+        (zwerg-step-frozen nn ZwergA nw sw ne se) (zwerg-step-frozen ee ZwergA nw sw ne se)
+        (zwerg-step-frozen ss ZwergA nw sw ne se) (zwerg-step-frozen ww ZwergA nw sw ne se)
+        (order-loki Loki) (order-loki SleipnirL) (order-hel)
+        (move-type capture-type)
+        (common-strike-frozen n ZwergA) (common-strike-frozen s ZwergA)
+        (common-strike-frozen w ZwergA) (common-strike-frozen e ZwergA)
+     )
+  )
+  (piece
+     (name Zwerg)
+     (help "Zwerg")
+     (description "Zwerg: After the jump can attack an enemy piece by strike.")
+     (image Dark "images/Ragnarok/zw.bmp")
+     (moves
+        (move-type normal-type)
+        (common-strike-frozen nw Zwerg) (common-strike-frozen ne Zwerg)
+        (common-strike-frozen sw Zwerg) (common-strike-frozen se Zwerg)
+        (common-strike-frozen n Zwerg) (common-strike-frozen s Zwerg)
+        (common-strike-frozen w Zwerg) (common-strike-frozen e Zwerg)
+        (zwadv-step-frozen nn Zwerg nw ne sw se n s w e) (zwadv-step-frozen ee Zwerg nw ne sw se n s w e)
+        (zwadv-step-frozen ww Zwerg nw ne sw se n s w e) (zwadv-step-frozen ss Zwerg nw ne sw se n s w e)
+        (zwadv-step-frozen nwnw Zwerg nw ne sw se n s w e) (zwadv-step-frozen nene Zwerg nw ne sw se n s w e)
+        (zwadv-step-frozen swsw Zwerg nw ne sw se n s w e) (zwadv-step-frozen sese Zwerg nw ne sw se n s w e)
+        (order-loki Loki) (order-loki SleipnirL) (order-hel)
+        (move-type capture-type)
+        (common-strike-frozen nw Zwerg) (common-strike-frozen ne Zwerg)
+        (common-strike-frozen sw Zwerg) (common-strike-frozen se Zwerg)
+        (common-strike-frozen n Zwerg) (common-strike-frozen s Zwerg)
+        (common-strike-frozen w Zwerg) (common-strike-frozen e Zwerg)
+     )
+  )
+  (piece
+     (name JotunnA)
+     (help "Jotunn")
+     (description "Jotunn: Is similar to the pieces in the ''Fanorona''.")
+     (image Dark "images/Ragnarok/jta.bmp")
+     (moves
+        (move-type normal-type)
+        (jotunn-step nw se JotunnR) (jotunn-step sw ne JotunnR)
+        (jotunn-step ne sw JotunnR) (jotunn-step se nw JotunnR)
+        (jotunn-push nw se JotunnR) (jotunn-push sw ne JotunnR)
+        (jotunn-push ne sw JotunnR) (jotunn-push se nw JotunnR)
+        (order-loki Loki) (order-loki SleipnirL) (order-hel)
+        (move-type capture-type)
+        (jotunn-push nw se JotunnR) (jotunn-push sw ne JotunnR)
+        (jotunn-push ne sw JotunnR) (jotunn-push se nw JotunnR)
+     )
+     (drops
+        (move-type normal-type)
+        (drop-jotunn)
+     )
+  )
+  (piece
+     (name JotunnR)
+     (help "Jotunn")
+     (description "Jotunn: Is similar to the pieces in the ''Fanorona''.")
+     (image Dark "images/Ragnarok/jtr.bmp")
+     (moves
+        (move-type normal-type)
+        (jotunn-step n s JotunnA) (jotunn-step s n JotunnA)
+        (jotunn-step e w JotunnA) (jotunn-step w e JotunnA)
+        (jotunn-push n s JotunnA) (jotunn-push s n JotunnA)
+        (jotunn-push e w JotunnA) (jotunn-push w e JotunnA)
+        (order-loki Loki) (order-loki SleipnirL) (order-hel)
+        (move-type capture-type)
+        (jotunn-push n s JotunnA) (jotunn-push s n JotunnA)
+        (jotunn-push e w JotunnA) (jotunn-push w e JotunnA)
+     )
+  )
+  (piece
+     (name Jotunn)
+     (help "Jotunn")
+     (description "Jotunn: Is similar to the pieces in the ''Fanorona''.")
+     (image Dark "images/Ragnarok/jt.bmp")
+     (moves
+        (move-type normal-type)
+        (jotunn-step nw se Jotunn) (jotunn-step sw ne Jotunn)
+        (jotunn-step ne sw Jotunn) (jotunn-step se nw Jotunn)
+        (jotunn-push nw se Jotunn) (jotunn-push sw ne Jotunn)
+        (jotunn-push ne sw Jotunn) (jotunn-push se nw Jotunn)
+        (jotunn-step n  s  Jotunn) (jotunn-step s  n  Jotunn)
+        (jotunn-step e  w  Jotunn) (jotunn-step w  e  Jotunn)
+        (jotunn-push n  s  Jotunn) (jotunn-push s  n  Jotunn)
+        (jotunn-push e  w  Jotunn) (jotunn-push w  e  Jotunn)
+        (order-loki Loki) (order-loki SleipnirL) (order-hel)
+        (move-type capture-type)
+        (jotunn-push nw se Jotunn) (jotunn-push sw ne Jotunn)
+        (jotunn-push ne sw Jotunn) (jotunn-push se nw Jotunn)
+        (jotunn-push n  s  Jotunn) (jotunn-push s  e  Jotunn)
+        (jotunn-push e  w  Jotunn) (jotunn-push w  n  Jotunn)
+     )
+  )
+  (piece
+     (name Man)
+     (help " ")
+     (image Light "images/Ragnarok/i.bmp"
+            Dark "images/Ragnarok/i.bmp")
+     (drops
+        (move-type normal-type)
+        (drop-man)
+     )
+  )
+  (piece
+     (name Mark)
+     (help " ")
+     (image Light "images/Ragnarok/i.bmp"
+            Dark "images/Ragnarok/i.bmp")
+  )
+  (piece
+     (name Beast)
+     (help " ")
+     (image Dark "images/Ragnarok/i.bmp")
+     (drops
+        (move-type normal-type)
+        (drop-beast)
+     )
+  )
+
+  (board-setup
+     (Light
+       (Mount c5 g5 e4 e6)
+       (OdinA c1)
+       (ThorA g1)
+       (WarriorR c3 g3 a1 i1)
+       (WarriorA a3 i3 off 3)
+       (AlfrA b2 d2 f2 h2 off 3)
+       (AlfrR b3 d3 f3 h3 e3)
+       (ValkyrieA e1 off 2)
+       (Man off 5)
+       (Wyrd off 20)
+       (Ehwaz off 5)
+       (Berkana off 5)
+       (Algiz off 5)
+       (Fehu off 5)
+       (Thurisaz off 5)
+       (Ansuz off 5)
+       (Mannaz off 5)
+       (Othila off 5)
+       (Isa off 5)
+       (Nauthiz off 5)
+       (Hagalaz off 5)
+       (Eihwaz off 5)
+       (Sowelu off 5)
+     )
+     (Dark
+       (LokiA e9)
+       (JotunnA c7 g7 e7)
+       (JotunnR a7 i7)
+       (WarriorR b7 d7 f7 h7)
+       (ZwergA b8 d8 f8 h8 a9 c9 g9 i9)
+       (SleipnirA off 1)
+       (JormungandrA off 1)
+       (FenrirA off 1)
+       (Beast off 3)
+       (Wyrd off 10)
+       (Ehwaz off 3)
+       (Berkana off 3)
+       (Algiz off 3)
+       (Fehu off 3)
+       (Thurisaz off 3)
+       (Ansuz off 3)
+       (Mannaz off 3)
+       (Othila off 3)
+       (Nauthiz off 3)
+     )
+  )
+
+  (loss-condition (Light) (and (pieces-remaining 0 OdinA) (pieces-remaining 0 OdinR) (pieces-remaining 0 SleipnirOA) (pieces-remaining 0 SleipnirOR) (pieces-remaining 0 ThorA) (pieces-remaining 0 ThorR) (pieces-remaining 0 TyrA) (pieces-remaining 0 TyrR) ) )
+  (loss-condition (Dark) (pieces-remaining 0) )
+)
+
+(variant
+  (title "Ragnarok (Hel)")
+  (description "Dark will lose if it loses all the pieces.\
+                Light lose if it loses Odin and Tyr.")
+  (turn-order 
+     (Light normal-type)
+     (?R Light rune-type)
+     (Dark normal-type)
+     (?R Dark rune-type)
+  )
+  (board-setup
+     (Light
+       (Mount c5 g5)
+       (SleipnirOA c1)
+       (TyrA g1)
+       (WarriorA c3 e3 g3 a4 i4 e4 off 2)
+       (WarriorR c4 g4 a2 e2 i2)
+       (AlfrA b3 d3 f3 h3 off 2)
+       (ValkyrieA a3 i3 off 2)
+       (Man off 4)
+       (Wyrd off 20)
+       (Ehwaz off 5)
+       (Berkana off 5)
+       (Algiz off 5)
+       (Fehu off 5)
+       (Thurisaz off 5)
+       (Ansuz off 5)
+       (Mannaz off 5)
+       (Othila off 5)
+       (Isa off 5)
+       (Nauthiz off 5)
+       (Hagalaz off 5)
+       (Eihwaz off 5)
+       (Sowelu e5 off 5)
+     )
+     (Dark
+       (HelA e9)
+       (GarmrA off 1)
+       (JotunnA c8 g8 off 2)
+       (JotunnR a8 i8)
+       (WarriorA a6 e6 i6)
+       (ZwergA a7 e7 i7 d7 f7 b7 h7)
+       (ZwergR c7 g7)
+     )
+  )
+)
+
+(variant
+  (title "Ragnarok (Surtr)")
+  (description "Dark will lose if it loses all the pieces.\
+                Light lose if it loses Thor and Tyr.")
+  (turn-order 
+     (Light normal-type)
+     (?R Light rune-type)
+     (Dark normal-type)
+     (?R Dark rune-type)
+  )
+  (board-setup
+     (Light
+       (Mount b4 b6 e5 h4 h6)
+       (ThorA c1)
+       (TyrA g1)
+       (WarriorA e4 off 2)
+       (WarriorR d4 f4 a4 i4)
+       (AlfrA a3 c3 g3 i3 off 2)
+       (AlfrR e3 b3 d3 f3 h3)
+       (ValkyrieA b2 h2 off 2)
+       (ValkyrieR a2 c2 g2 i2)
+       (Man off 4)
+     )
+     (Dark
+       (SurtrA e9)
+       (EldthursarA off 2)
+       (WarriorA b7 d7 f7 h7)
+       (WarriorR a7 c7 e7 g7 i7)
+       (ZwergA a8 b8 c8 d6 f6 g8 h8 i8)
+       (ZwergR e6)
+     )
+  )
+)
